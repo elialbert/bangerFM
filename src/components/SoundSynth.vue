@@ -103,6 +103,7 @@ export default {
     }
   },
   mounted: function () {
+    soundBridge.constructInstruments()
     this.clearWatchers()
     this.reconstructWatchers()
     this.idefLookup = soundsynthUtils.createIDefLookup(this.defs1)
@@ -116,9 +117,6 @@ export default {
     }
   },
   methods: {
-    testt: function () {
-      console.log('hi')
-    },
     redoDefs: function () {
       this.clearWatchers()
       if (this.user) {
@@ -204,6 +202,10 @@ export default {
       this.deep = !this.deep
     },
     handleRestore: function (toRestore) {
+      if (toRestore.key !== this.soundBankChoice) {
+        this.$emit('updateMessage', 'Cannot undo across sound banks - please switch back to bank ' + (parseInt(toRestore.key) + 1))
+        return
+      }
       this.defs = toRestore.obj
       this.saveDef(toRestore.key, true)
     },

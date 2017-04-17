@@ -85,7 +85,7 @@ var save = function (user, obj, num, skipHistory = false) {
   }
   loaderVm.$localStorage.set('instrumentDefs' + String(num), obj)
   if (!skipHistory) {
-    actionHistory.push('ss', num, obj)
+    actionHistory.push('ss', num, clone(obj))
   }
 }
 
@@ -118,7 +118,7 @@ var saveBeat = function (user, obj, num, skipFB, skipHistory = false) {
   }
   loaderVm.$localStorage.set('beatDef' + String(num), JSON.stringify(obj))
   if (!skipHistory) {
-    actionHistory.push('bm', num, obj)
+    actionHistory.push('bm', num, clone(obj))
   }
 }
 

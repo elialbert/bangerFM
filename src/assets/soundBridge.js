@@ -26,6 +26,9 @@ var highsynth
 
 var constructInstruments = function () {
   ms = new MediumSynth()
+  if (window.location.href.includes('simple')) {
+    return
+  }
   bass = new Bass()
   noise = new Noise()
   // noise2 = new Noise()
@@ -38,7 +41,6 @@ var constructInstruments = function () {
   // ride = new MediumDrum()
   // backgroundSynth = new MediumSynth()
 }
-constructInstruments()
 
 var reconstructInstruments = function (cb) {
   let audioContext = new window.AudioContext()
@@ -50,6 +52,9 @@ var reconstructInstruments = function (cb) {
 }
 
 var instrumentLookup = function (index) {
+  if (window.location.href.includes('simple')) {
+    return {0: ms}[index]
+  }
   return {
     0: ms,
     1: bass,
@@ -187,6 +192,7 @@ var precision = function (a) {
 export default {
   constructWatchers: constructWatchers,
   reconstructInstruments: reconstructInstruments,
+  constructInstruments: constructInstruments,
   startSound: startSound,
   stopSound: stopSound,
   startBeat: startBeat,

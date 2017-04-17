@@ -151,7 +151,7 @@ export default {
       this.message = message
       setTimeout(() => {
         this.message = 'Hi! If (when) anything goes wrong, just refresh!'
-      }, 1500)
+      }, 3000)
     },
     doAuth: function (user) {
       this.user = user

@@ -44,24 +44,20 @@ export default class BaseInstrument {
   }
 
   start () {
-    this.waveLoop()
-    this.instrument.connect(waveform)
+    if (!window.location.href.includes('simple')) {
+      this.waveLoop()
+      this.instrument.connect(waveform)
+    }
 
     if (!this.startNote) {
       this.instrument.triggerAttack('+0.05')
     } else {
       this.instrument.triggerAttack(this.startNote, '+0.05')
     }
-    // if (this.hasOwnProperty('noiseEnv')) {
-    //   this.noiseEnv.triggerAttack('+0.05')
-    // }
   }
 
   stop () {
     this.instrument.triggerRelease()
-    // if (this.hasOwnProperty('noiseEnv')) {
-    //   this.noiseEnv.triggerRelease()
-    // }
     waveform.dispose()
     waveform = newAnalyser()
   }

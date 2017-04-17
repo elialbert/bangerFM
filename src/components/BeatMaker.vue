@@ -227,6 +227,10 @@ export default {
       this.saveBeat()
     },
     handleRestore: function (toRestore) {
+      if (toRestore.key !== this.beatBankChoice) {
+        this.$emit('updateMessage', 'Cannot undo across beats - please switch back to beat ' + (parseInt(toRestore.key) + 1))
+        return
+      }
       this.dataArray = toRestore.obj
       this.saveBeat(false, toRestore.key, true)
     },

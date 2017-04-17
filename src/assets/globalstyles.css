@@ -2,3 +2,6 @@
   user-select: none;
   cursor: default;
 }
+button.selected {
+  font-weight: 900;
+}

@@ -252,9 +252,6 @@ export default {
   #sound-synth.active {
     border: 2px solid red;
   }  
-  button.selected {
-    background-color: #a9f26a;
-  }
   .instrumentBox.selected {
     background-color: #a9f26a;
   }

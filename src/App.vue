@@ -126,7 +126,7 @@ export default {
     }
   },
   mounted: function () {
-    document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
+    document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
     this.cbcb()
     StartAudioContext(Tone.context)
     var self = this

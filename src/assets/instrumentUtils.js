@@ -75,7 +75,7 @@ var createDataArray = function (perMeasure = 4, numInstruments = 12) {
 }
 
 var createSongArray = function () {
-  return {0: {0: 0, 1: 1, 2: 0, 3: 1}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+  return {0: {0: 0, 1: 1, 2: 0, 3: 1}, 1: {}, 2: {}, 3: {}, 4: {}}
 }
 
 var calcNumCols = function (perMeasure) {

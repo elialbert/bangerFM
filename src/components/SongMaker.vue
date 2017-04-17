@@ -188,7 +188,7 @@ export default {
     },
     redrawBackgrounds: function () { // take this out entirely? seems expensive
       for (var i = 0; i < 10; i++) { // for each possible beat
-        let beat = defLoader.loadBeat(this.user, this.workspace, i, null, true)
+        let beat = false // defLoader.loadBeat(this.user, this.workspace, i, null, true)
         if (beat) {
           for (var j = 0; j < 5; j++) { // for each row
             if (this.songData[j] && this.$refs['songMakerRow' + j]) {

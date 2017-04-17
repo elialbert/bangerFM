@@ -50,7 +50,7 @@
       :message="message"
       :crashEvent="crashEvent"
       :workspace="workspace"
-      :wsToggle="wsToggle"
+      :wsToggle="toggleWS"
     ></nav-header>
     <help-overlay
       v-bind:class="{ visible: helpOverlayEnabled == 1, hidden: helpOverlayEnabled == 0}"
@@ -116,6 +116,7 @@ import StartAudioContext from 'startaudiocontext'
 import HistoryModifier from './components/mixins/HistoryModifier'
 import WorkspaceManager from './components/WorkspaceManager'
 import defLoader from './assets/instrumentDefs/defLoader'
+import soundsynthUtils from './assets/soundsynthUtils'
 
 export default {
   name: 'app',
@@ -172,7 +173,7 @@ export default {
         this.message = 'Hi! If (when) anything goes wrong, just refresh!'
       }, 3000)
     },
-    wsToggle: function () {
+    toggleWS: function () {
       this.wsEnabled = !this.wsEnabled
     },
     doAuth: function (user) {
@@ -226,30 +227,24 @@ export default {
       dest[functionName]()
     },
     cbcb: function () {
-      this.$refs['beatmaker'].defs = this.$refs['soundsynth'].defs1
-      this.$refs['songmaker'].defs = this.$refs['soundsynth'].defs1
+      this.$refs.beatmaker.defs = this.$refs.soundsynth.defs1
+      this.$refs.songmaker.defs = this.$refs.soundsynth.defs1
+      this.$refs.soundsynth.idefLookup = soundsynthUtils.createIDefLookup(this.$refs.soundsynth.defs1)
     },
     changeBank: function (num, event) {
       var dest = this.getDest()
-      var cb
-      if (this.visible === 'soundsynth') {
-        var self = this
-        cb = self.cbcb
-      }
-      dest.changeBank(num - 1, dest.bankType, event.shiftKey, false, cb)
-      if (this.visible === 'soundsynth') {
-        cb()
-      }
+      dest.changeBank(num - 1, dest.bankType, event.shiftKey, false, this.cbcb)
     },
     changeWorkspace: function (workspaceName) {
       this.workspace = workspaceName
       defLoader.clearCookies()
       this.$nextTick(() => {
-        this.$refs.beatmaker.changeBank(0, 'beatBank', false)
         this.$refs.songmaker.doFBBinding()
         this.$refs.soundsynth.clearWatchers()
         this.$refs.soundsynth.changeBank(0, 'soundBank', false, false, this.cbcb)
         this.$refs.controlpanel.doFBBinding()
+        this.$refs.beatmaker.changeBank(0, 'beatBank', false)
+        this.toggleWS()
       })
     },
     oneArg: function (functionName, argument, event) {

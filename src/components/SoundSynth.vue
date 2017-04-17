@@ -139,6 +139,9 @@ export default {
     },
     spaceDown: function () {
       if (!this.playing) {
+        if (!this.idefLookup) {
+          this.idefLookup = soundsynthUtils.createIDefLookup(this.defs1)
+        }
         this.playing = true
         soundBridge.startSound(this.instrumentIndex(), this.selected)
       }

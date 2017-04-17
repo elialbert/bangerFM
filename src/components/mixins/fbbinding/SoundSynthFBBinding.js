@@ -8,7 +8,9 @@ module.exports = {
       this.$bindAsObject('defs', firebaseBridge.idefRef(this.user, this.workspace, sbnum), null, () => {
         this.loading = false
         this.reconstructWatchers()
-        if (cb) { cb() }
+        if (cb) {
+          cb()
+        }
         if (this.cbcb) { this.cbcb() }
         this.idefLookup = soundsynthUtils.createIDefLookup(this.defs1)
       })

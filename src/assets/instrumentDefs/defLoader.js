@@ -44,7 +44,7 @@ var clearCookies = function () {
   loaderVm.$localStorage.remove('CPDef')
 }
 
-var load = function (user, workspace, num, reset, nonUserResetCB) {
+var load = function (user, workspace, num, reset, nonUserResetCB, fbcb) {
   // grab from local storage
   let storedDefs = loaderVm.$localStorage.get('instrumentDefs' + String(num))
   if (!storedDefs || !Object.keys(storedDefs).length) {
@@ -64,7 +64,10 @@ var load = function (user, workspace, num, reset, nonUserResetCB) {
     if (user) { // if logged in
       firebaseBridge.idefRef(user, num).once('value', snapshot => {
         if (!snapshot.val()) {
-          firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(storedDefs))
+          firebaseBridge.fbdb.ref('defs/' + num).once('value', snapshot2 => {
+            firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(snapshot2.val()))
+            if (fbcb) { fbcb() }
+          })
         }
       })
     }

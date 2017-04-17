@@ -237,6 +237,7 @@ export default {
     randomize: function () {
       this.$emit('updateMessage', 'Randomizing!')
       this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure)
+      this.saveBeat()
     },
     clearInstrumentRow: function () {
       this.$emit('updateMessage', 'Clearing row.')

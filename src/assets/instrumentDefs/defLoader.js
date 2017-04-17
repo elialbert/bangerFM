@@ -44,7 +44,7 @@ var clearCookies = function () {
   loaderVm.$localStorage.remove('CPDef')
 }
 
-var load = function (user, num, reset, nonUserResetCB) {
+var load = function (user, workspace, num, reset, nonUserResetCB) {
   // grab from local storage
   let storedDefs = loaderVm.$localStorage.get('instrumentDefs' + String(num))
   if (!storedDefs || !Object.keys(storedDefs).length) {
@@ -57,14 +57,14 @@ var load = function (user, num, reset, nonUserResetCB) {
       if (nonUserResetCB && !user) {
         nonUserResetCB(snapshot.val())
       } else if (user) {
-        firebaseBridge.idefRef(user, num).set(firebaseBridge.removeKey(snapshot.val() || storedDefs))
+        firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(snapshot.val() || storedDefs))
       }
     })
   } else { // if it's not there at all, put it there
     if (user) { // if logged in
       firebaseBridge.idefRef(user, num).once('value', snapshot => {
         if (!snapshot.val()) {
-          firebaseBridge.idefRef(user, num).set(firebaseBridge.removeKey(storedDefs))
+          firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(storedDefs))
         }
       })
     }
@@ -76,12 +76,12 @@ var clone = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
-var save = function (user, obj, num, skipHistory = false) {
+var save = function (user, workspace, obj, num, skipHistory = false) {
   if (Object.keys(obj).length === 0) {
     return
   }
   if (user) {
-    firebaseBridge.idefRef(user, num).set(firebaseBridge.removeKey(obj))
+    firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(obj))
   }
   loaderVm.$localStorage.set('instrumentDefs' + String(num), obj)
   if (!skipHistory) {
@@ -89,7 +89,7 @@ var save = function (user, obj, num, skipHistory = false) {
   }
 }
 
-var loadBeat = function (user, num, perMeasure = 4, skipFB = false, numInstruments = 8) {
+var loadBeat = function (user, workspace, num, perMeasure = 4, skipFB = false, numInstruments = 8) {
   // grab beat from cookie (cheap & synchronous)
   let storedBeat = loaderVm.$localStorage.get('beatDef' + String(num))
   if (typeof (storedBeat) === 'string') {
@@ -101,9 +101,9 @@ var loadBeat = function (user, num, perMeasure = 4, skipFB = false, numInstrumen
   }
 
   if (user && !skipFB) { // if logged in and no fb beat, save the cookie/new beat to fb
-    firebaseBridge.bmdefRef(user, num).once('value', snapshot => {
+    firebaseBridge.bmdefRef(user, workspace, num).once('value', snapshot => {
       if (!snapshot.val()) {
-        firebaseBridge.bmdefRef(user, num).set(firebaseBridge.removeKey(storedBeat))
+        firebaseBridge.bmdefRef(user, workspace, num).set(firebaseBridge.removeKey(storedBeat))
       }
     })
   }
@@ -112,9 +112,9 @@ var loadBeat = function (user, num, perMeasure = 4, skipFB = false, numInstrumen
   }
 }
 
-var saveBeat = function (user, obj, num, skipFB, skipHistory = false) {
+var saveBeat = function (user, workspace, obj, num, skipFB, skipHistory = false) {
   if (user && !skipFB) {
-    firebaseBridge.bmdefRef(user, num).set(firebaseBridge.removeKey(obj))
+    firebaseBridge.bmdefRef(user, workspace, num).set(firebaseBridge.removeKey(obj))
   }
   loaderVm.$localStorage.set('beatDef' + String(num), JSON.stringify(obj))
   if (!skipHistory) {
@@ -122,32 +122,32 @@ var saveBeat = function (user, obj, num, skipFB, skipHistory = false) {
   }
 }
 
-var loadSong = function (user) {
+var loadSong = function (user, workspace) {
   let data = loadGeneric('songData') || iutils.createSongArray()
   if (user) {
-    firebaseBridge.smdefRef(user).once('value', snapshot => {
+    firebaseBridge.smdefRef(user, workspace).once('value', snapshot => {
       if (!snapshot.val()) {
-        firebaseBridge.smdefRef(user).set(firebaseBridge.removeKey(data))
+        firebaseBridge.smdefRef(user, workspace).set(firebaseBridge.removeKey(data))
       }
     })
   }
 }
 
-var saveSong = function (user, obj, skipHistory = false) {
+var saveSong = function (user, workspace, obj, skipHistory = false) {
   if (user) {
-    firebaseBridge.smdefRef(user).set(firebaseBridge.removeKey(obj))
+    firebaseBridge.smdefRef(user, workspace).set(firebaseBridge.removeKey(obj))
   }
   saveGeneric('songData', obj, skipHistory)
 }
 
-var saveGeneric = function (key, obj, skipHistory = false) {
+var saveGeneric = function (key, workspace, obj, skipHistory = false) {
   loaderVm.$localStorage.set(key, JSON.stringify(obj))
   if (!skipHistory) {
     actionHistory.push('generic_' + key, key, clone(obj))
   }
 }
 
-var loadGeneric = function (key) {
+var loadGeneric = function (key, workspace) {
   var data = loaderVm.$localStorage.get(key)
   data = JSON.parse(data)
   if (data && Object.keys(data).length) {

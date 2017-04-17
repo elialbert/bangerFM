@@ -14,7 +14,7 @@ module.exports = {
       this.songData[this.selected[1]][this.selected[0]] = num
       this.takeOutEmptyOnChange()
       this.fixNullSong()
-      defLoader.saveSong(this.user, this.songData)
+      defLoader.saveSong(this.user, this.workspace, this.songData)
 
       this.selected = [this.selected[0], this.selected[1]] // force redraw
       this.fixNullSong()

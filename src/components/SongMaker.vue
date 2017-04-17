@@ -33,7 +33,7 @@ import SongMakerChangeBank from './mixins/changebank/SongMakerChangeBank'
 export default {
   name: 'song-maker',
   mixins: [SongMakerFBBinding, SongMakerChangeBank],
-  props: ['visible', 'user', 'cbcb'],
+  props: ['visible', 'user', 'cbcb', 'workspace'],
   components: {
     SongMakerRow
   },
@@ -163,7 +163,7 @@ export default {
       this.totalTime[songIndex] = this.totalTime[songIndex].add(this.loop.loopEnd)
     },
     doBeat: function (beatChoice, songIndex) {
-      let dataArray = defLoader.loadBeat(this.user, beatChoice)
+      let dataArray = defLoader.loadBeat(this.user, this.workspace, beatChoice)
       if (!this.defs1) {
         console.log('no defs!')
       }
@@ -184,11 +184,11 @@ export default {
     },
     handleRestore: function (toRestore) {
       this.songData = toRestore.obj
-      defLoader.saveSong(this.user, this.songData, true)
+      defLoader.saveSong(this.user, this.workspace, this.songData, true)
     },
-    redrawBackgrounds: function () {
+    redrawBackgrounds: function () { // take this out entirely? seems expensive
       for (var i = 0; i < 10; i++) { // for each possible beat
-        let beat = defLoader.loadBeat(this.user, i, null, true)
+        let beat = defLoader.loadBeat(this.user, this.workspace, i, null, true)
         if (beat) {
           for (var j = 0; j < 5; j++) { // for each row
             if (this.songData[j] && this.$refs['songMakerRow' + j]) {

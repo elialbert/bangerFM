@@ -74,7 +74,7 @@ export default {
     BankChoice,
     SoundSynthDeep
   },
-  props: ['visible', 'user', 'cbcb'],
+  props: ['visible', 'user', 'workspace', 'cbcb'],
   mixins: [Network, SoundSynthFBBinding, SoundSynthChangeBank],
   directives: { focus: focus },
   data: function () {
@@ -87,7 +87,7 @@ export default {
       watcherList: [],
       loading: false,
       idefLookup: {},
-      defs: defLoader.load(false, 0, false, (data) => {
+      defs: defLoader.load(false, 0, 0, false, (data) => {
         this.defs = data
         this.saveDef(0)
       })
@@ -175,7 +175,7 @@ export default {
       Vue.nextTick(() => {
         this.networkWait('sssave', () => {
           let a = () => {
-            defLoader.save(this.user, this.defs1, explicitNum || this.soundBankChoice, skipHistory)
+            defLoader.save(this.user, this.workspace, this.defs1, explicitNum || this.soundBankChoice, skipHistory)
           }
           a()
         })

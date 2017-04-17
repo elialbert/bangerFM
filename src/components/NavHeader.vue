@@ -5,9 +5,10 @@
     v-on:crashEvent="crashEvent" ref='soundmeter'
   ></sound-meter>
   <div id='message'>{{ message }}</div>
-
   <Auth
     :user="user"
+    :workspace="workspace"
+    :wsToggle="wsToggle"
     v-on:signedIn="authCB"
     v-on:signedOut="signedOutCB"
   ></Auth>
@@ -19,7 +20,7 @@ import Auth from './Auth'
 
 export default {
   name: 'control-panel',
-  props: ['user', 'authCB', 'signedOutCB', 'crashEvent', 'message'],
+  props: ['user', 'authCB', 'signedOutCB', 'crashEvent', 'message', 'workspace', 'wsToggle'],
   components: { SoundMeter, Auth }
 }
 </script>
@@ -34,5 +35,8 @@ export default {
 }
 #message {
   margin-left: 20px;
+}
+#workspace-display {
+  float: right;
 }
 </style>

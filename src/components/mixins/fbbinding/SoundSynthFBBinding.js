@@ -5,7 +5,7 @@ module.exports = {
   methods: {
     doFBBinding: function (sbnum, cb) {
       this.loading = true
-      this.$bindAsObject('defs', firebaseBridge.idefRef(this.user, sbnum), null, () => {
+      this.$bindAsObject('defs', firebaseBridge.idefRef(this.user, this.workspace, sbnum), null, () => {
         this.loading = false
         this.reconstructWatchers()
         if (cb) { cb() }

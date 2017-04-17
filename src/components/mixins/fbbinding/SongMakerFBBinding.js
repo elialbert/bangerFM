@@ -7,11 +7,11 @@ module.exports = {
   methods: {
     doFBBinding: function () {
       this.loading = true
-      firebaseBridge.smdefRef(this.user).on('value', snapshot => {
+      firebaseBridge.smdefRef(this.user, this.workspace).on('value', snapshot => {
         this.loading = false
         let v = snapshot.val()
         if (!v || !Object.keys(v).length) {
-          defLoader.loadSong(this.user)
+          defLoader.loadSong(this.user, this.workspace)
         } else {
           if (v[0] === undefined) {
             v[0] = []

@@ -36,7 +36,7 @@ import Network from './mixins/Network'
 
 export default {
   name: 'control-panel',
-  props: ['user'],
+  props: ['user', 'workspace'],
   mixins: [Network],
   components: { Equalizer },
   data: function () {
@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     doFBBinding: function () {
-      firebaseBridge.cpdefRef(this.user).on('value', snapshot => {
+      firebaseBridge.cpdefRef(this.user, this.workspace).on('value', snapshot => {
         this.restoreState = true
         let v = snapshot.val()
         this.loadData(v)
@@ -131,7 +131,7 @@ export default {
       defLoader.saveGeneric('CPDef', data, this.restoreState)
       if (this.user) {
         this.networkWait('cpdef', () => {
-          firebaseBridge.cpdefRef(this.user).set(data)
+          firebaseBridge.cpdefRef(this.user, this.workspace).set(data)
         })
       }
       this.restoreState = false
@@ -145,7 +145,7 @@ export default {
   border: 2px solid black;
   padding: 15px;
   left: 60%;
-  top: 20%;
+  top: 40%;
   position: absolute;
   background-color: #63676d;
   color: white;

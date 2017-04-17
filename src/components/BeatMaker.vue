@@ -53,7 +53,7 @@ import BeatMakerChangeBank from './mixins/changebank/BeatMakerChangeBank'
 
 export default {
   name: 'beat-maker',
-  props: ['visible', 'user'],
+  props: ['visible', 'workspace', 'user'],
   mixins: [Network, BeatMakerFBBinding, BeatMakerChangeBank],
   components: {
     InstrumentRow,
@@ -215,11 +215,11 @@ export default {
         explicitNum = this.beatBankChoice
       }
       Vue.nextTick(() => {
-        defLoader.saveBeat(this.user, this.dataArray, explicitNum, skipFB, skipHistory)
+        defLoader.saveBeat(this.user, this.workspace, this.dataArray, explicitNum, skipFB, skipHistory)
       })
     },
     loadBeat: function (num, perMeasure) {
-      return defLoader.loadBeat(this.user, num, perMeasure, false, this.doFBObjLength())
+      return defLoader.loadBeat(this.user, this.workspace, num, perMeasure, false, this.doFBObjLength())
     },
     resetBeat: function () {
       this.dataArray = iutils.createDataArray(this.perMeasure, this.doFBObjLength())

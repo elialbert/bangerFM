@@ -43,20 +43,20 @@ var fbObjLength = function (obj) {
   return Object.keys(obj).filter(key => !['.key'].includes(key)).length
 }
 
-var idefRef = function (user, soundBankNum) {
-  return db.ref('userDefs/' + user + '/' + soundBankNum)
+var idefRef = function (user, workspace, soundBankNum) {
+  return db.ref('userDefs/' + user + '/' + workspace + '/sounds/' + soundBankNum)
 }
 
-var bmdefRef = function (user, beatBankNum) {
-  return db.ref('userDefs/' + user + '/beats/' + beatBankNum)
+var bmdefRef = function (user, workspace, beatBankNum) {
+  return db.ref('userDefs/' + user + '/' + workspace + '/beats/' + beatBankNum)
 }
 
-var smdefRef = function (user) {
-  return db.ref('userDefs/' + user + '/song')
+var smdefRef = function (user, workspace) {
+  return db.ref('userDefs/' + user + '/' + workspace + '/song')
 }
 
-var cpdefRef = function (user) {
-  return db.ref('userDefs/' + user + '/cp')
+var cpdefRef = function (user, workspace) {
+  return db.ref('userDefs/' + user + '/' + workspace + '/cp')
 }
 
 export default {

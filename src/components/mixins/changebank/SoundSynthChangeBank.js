@@ -24,7 +24,7 @@ module.exports = {
     },
     changeBankInner: function (soundBankNum, reset, nonUserResetCB, fbcb) {
       this.clearWatchers()
-      var stored = defLoader.load(this.user, soundBankNum, reset, nonUserResetCB)
+      var stored = defLoader.load(this.user, this.workspace, soundBankNum, reset, nonUserResetCB)
       if (!this.user) {
         this.defs = stored
         this.reconstructWatchers()

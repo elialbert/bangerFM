@@ -49,24 +49,36 @@
       :signedOutCB="doSignout"
       :message="message"
       :crashEvent="crashEvent"
+      :workspace="workspace"
+      :wsToggle="wsToggle"
     ></nav-header>
     <help-overlay
       v-bind:class="{ visible: helpOverlayEnabled == 1, hidden: helpOverlayEnabled == 0}"
     >
     </help-overlay>
+    <workspace-manager
+      :user="user"
+      :workspace="workspace"
+      :publicWorkspace="publicWorkspace"
+      v-bind:class="{ visible: wsEnabled == 1, hidden: wsEnabled == 0}"
+      v-on:changeWorkspace="changeWorkspace"
+    ></workspace-manager>
     <control-panel ref='controlpanel'
       :user="user"
+      :workspace="workspace"
       v-bind:class="{ visible: cpEnabled == 1, hidden: cpEnabled == 0}"
     ></control-panel>
     <sound-synth ref='soundsynth'
       v-bind:visible="visible"
       v-bind:user="user"
+      :workspace="workspace"
       v-on:updateMessage="updateMessage"
       v-on:switchView="switchView"
     ></sound-synth>
     <beat-maker ref='beatmaker'
       v-bind:visible="visible"
       v-bind:user="user"
+      :workspace="workspace"
       v-bind:cbcb="cbcb"
       v-on:updateMessage="updateMessage"
       v-on:switchView="switchView"
@@ -75,6 +87,7 @@
       v-bind:visible="visible"
       v-on:animateSong="animateSong"
       v-bind:user="user"
+      :workspace="workspace"
       v-bind:cbcb="cbcb"
       v-on:updateMessage="updateMessage"
       v-on:changeBMBank="changeBMBank"
@@ -101,6 +114,8 @@ import firebaseBridge from './assets/instrumentDefs/firebaseBridge'
 import Tone from './assets/tone.js'
 import StartAudioContext from 'startaudiocontext'
 import HistoryModifier from './components/mixins/HistoryModifier'
+import WorkspaceManager from './components/WorkspaceManager'
+import defLoader from './assets/instrumentDefs/defLoader'
 
 export default {
   name: 'app',
@@ -112,17 +127,21 @@ export default {
     SongMaker,
     HelpOverlay,
     NavHeader,
-    NavFooter
+    NavFooter,
+    WorkspaceManager
   },
   data: function () {
     return {
       visible: 'beatmaker',
       helpOverlayEnabled: 0,
       cpEnabled: 0,
+      wsEnabled: 0,
       user: false,
       message: '',
       windowWidth: 0,
-      windowHeight: 0
+      windowHeight: 0,
+      workspace: 0,
+      publicWorkspace: false
     }
   },
   mounted: function () {
@@ -152,6 +171,9 @@ export default {
       setTimeout(() => {
         this.message = 'Hi! If (when) anything goes wrong, just refresh!'
       }, 3000)
+    },
+    wsToggle: function () {
+      this.wsEnabled = !this.wsEnabled
     },
     doAuth: function (user) {
       this.user = user
@@ -218,6 +240,17 @@ export default {
       if (this.visible === 'soundsynth') {
         cb()
       }
+    },
+    changeWorkspace: function (workspaceName) {
+      this.workspace = workspaceName
+      defLoader.clearCookies()
+      this.$nextTick(() => {
+        this.$refs.beatmaker.changeBank(0, 'beatBank', false)
+        this.$refs.songmaker.doFBBinding()
+        this.$refs.soundsynth.clearWatchers()
+        this.$refs.soundsynth.changeBank(0, 'soundBank', false, false, this.cbcb)
+        this.$refs.controlpanel.doFBBinding()
+      })
     },
     oneArg: function (functionName, argument, event) {
       var dest = this.getDest()

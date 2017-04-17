@@ -2,6 +2,9 @@
   <div id='firebaseui-auth-container'>
     <div id="loaded" v-if="!loading">
       <span v-if="signedIn">
+        <span id='workspace-picker'
+          @click="wsToggle"
+        ><a href="#">Current Workspace: {{workspace + 1}}</a></span>
         <span id="email">{{userInfo.email}}</span>    
         <button id="sign-out"
           v-on:click="signOut"
@@ -20,7 +23,7 @@ import firebaseBridge from '../assets/instrumentDefs/firebaseBridge'
 
 export default {
   name: 'auth',
-  props: ['user'],
+  props: ['user', 'workspace', 'wsToggle'],
   data: function () {
     return {
       loading: true,
@@ -131,5 +134,8 @@ export default {
   }
   h1.firebaseui-title {
     color: black;
+  }
+  #workspace-picker {
+    margin-right: 10px;
   }
 </style>

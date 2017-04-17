@@ -4,7 +4,7 @@ module.exports = {
   methods: {
     doFBBinding: function (beatBankNum, cb) {
       this.loading = true
-      firebaseBridge.bmdefRef(this.user, this.beatBankChoice).on('value', snapshot => {
+      firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).on('value', snapshot => {
         this.loading = false
         let v = snapshot.val()
         if (!v || !Object.keys(v).length) {

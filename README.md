@@ -16,6 +16,6 @@ npm run build
 
 # run unit tests
 npm run unit
-
-# Development
+```
+## Development
 This project is open source and I'm happy for collaboration. Feel free to submit PRs and I'll review as soon as possible. 

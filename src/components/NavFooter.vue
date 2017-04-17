@@ -6,7 +6,9 @@
   >
     <span>?</span>
   </div>
-
+  <div id='help-overlay-pointer'>
+    Press ? or click here for help:
+  </div>
 </div>
 </template>
 <script>
@@ -27,22 +29,22 @@ export default {
 .hidden {
   display: none;
 }
+#help-overlay-pointer {
+  float: right;
+  font-weight: bolder;
+}
 #help-overlay-button {
+  margin-left: 10px;
   background-color: yellow;
   width: 30px;
-  height: 30px;
   border-radius: 50%;
-  border: 2px solid black;
   box-shadow: 1px 1px 1px black;
-  padding: 3px 3px 0 3px;
   text-align: center;
   cursor: pointer; cursor: hand;
   float: right;
-  margin-bottom: -2%;
 }
 #help-overlay-button span {
   display: inline-block;
-  font-size: 20px;
   font-weight: bolder;
   vertical-align: middle;
   color: black;

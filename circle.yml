@@ -1,5 +1,9 @@
+test:
+  override:
+    - npm run unit
 deployment:
   prod:
     branch: master
     commands:
+      - npm run build
       - aws s3 sync dist/ s3://aws-website-bangerfm-3p7g1/ --delete

@@ -9,7 +9,7 @@
   >
   </BankChoice>
   </p>
-  <p>
+<!--   <p>
   Or create a public space:
   <br/>
   <input class='workspace-name-picker'
@@ -20,7 +20,7 @@
     @click="changeWorkspace"
   >Go</button>
   </p>
-</div>
+ --></div>
 </template>
 
 <script>
@@ -56,11 +56,11 @@ export default {
   border: 2px solid black;
   padding: 15px;
   left: 50%;
-  top: 5%;
+  top: 4.4%;
   position: absolute;
   background-color: #63676d;
   color: white;
-  height: 30%;
+  height: 10%;
   width: 30%;
   z-index: 39;
 }

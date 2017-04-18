@@ -35,11 +35,13 @@
     <beat-maker-deep ref='beatmakerdeep'
       v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
       v-bind:visible="visible"
+      v-bind:selected="selected"
       v-bind:selectedRow="selected[1]"
       v-bind:dataArray="dataArray[selected[1]]"
       v-bind:def="defs[sortedDefKeys[selected[1]]]"
       v-bind:numCols="numCols"
       v-bind:perMeasure="perMeasure"
+      v-on:changeSelect="changeSelect"
     >  
     </beat-maker-deep>
     </div>
@@ -131,6 +133,9 @@ export default {
       if (event.buttons === 1) {
         this.select()
       }
+    },
+    changeSelect: function (x, y) {
+      this.selected = [x, y]
     },
     doFBObjLength: function () {
       this.defsLength = firebaseBridge.fbObjLength(this.defs) || 8

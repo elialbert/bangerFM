@@ -87,10 +87,20 @@ div.beat-column.enabled {
   color: blue;
   font-size: 12px;
 }
-div.beat-column.triplet {
-  background: linear-gradient(to right, red, yellow, green);
+div.beat-column.triplet.enabled {
+  background: linear-gradient(to right, red, green, blue);
 }
-div.beat-column.measureSub {
+div.beat-column.triplet.enabled.selected {
+  background: linear-gradient(to right, red, green, yellow);
+}
+.beat-column.measureSub {
   background: linear-gradient(to right, white, red, black);
 }
+.beat-column.measureSub.enabled {
+  background: linear-gradient(to right, white, red, black);
+}
+.beat-column.measureSub.enabled.selected {
+  background: linear-gradient(to right, white, yellow, black);
+}
+
 </style>

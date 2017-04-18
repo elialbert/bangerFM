@@ -1,6 +1,3 @@
-test:
-  override:
-    - npm run unit
 deployment:
   prod:
     branch: master

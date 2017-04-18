@@ -21,7 +21,7 @@
     <div v-if="loading">Loading...</div>
     <div v-if="!loading && defs && dataArray && Object.keys(dataArray).length">
       <instrument-row v-for="(key, index) in sortedDefKeys"
-        v-if="(key != '.key') && !loading && dataArray[index]"
+        v-if="(key != '.key') && !loading && dataArray[index] && !deep"
         v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
         v-bind:ref="'instrumentrow' + defs[key].index"
         v-bind:def="defs[key]"
@@ -31,6 +31,14 @@
         v-bind:perMeasure="perMeasure"
         v-bind:visible="visible"
       ></instrument-row>
+    <beat-maker-deep ref='beatmakerdeep'
+      v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
+      v-bind:visible="deep == 1"
+      v-bind:selected="selected"
+      v-bind:dataArray="dataArray[selected[1]]"
+      v-bind:def="defs[sortedDefKeys[selected[1]]]"
+    >  
+    </beat-maker-deep>
     </div>
   </div>
 </template>
@@ -50,6 +58,7 @@ import mutils from '../assets/movementUtils'
 import Network from './mixins/Network'
 import BeatMakerFBBinding from './mixins/fbbinding/BeatMakerFBBinding'
 import BeatMakerChangeBank from './mixins/changebank/BeatMakerChangeBank'
+import BeatMakerDeep from '../components/BeatMakerDeep'
 
 export default {
   name: 'beat-maker',
@@ -58,7 +67,8 @@ export default {
   components: {
     InstrumentRow,
     Instrument,
-    BankChoice
+    BankChoice,
+    BeatMakerDeep
   },
   data: function () {
     return {
@@ -73,7 +83,8 @@ export default {
       autoFillHistory: {},
       loading: false,
       defsLength: 8,
-      idefLookup: {}
+      idefLookup: {},
+      deep: 1
     }
   },
   beforeCreate: function () {
@@ -155,6 +166,9 @@ export default {
       this.networkWait('select', () => {
         this.saveBeat()
       })
+    },
+    enterUp: function () {
+      this.deep = !this.deep
     },
     animate: function (col, clear) {
       for (var i = 0; i < this.defsLength; i++) {

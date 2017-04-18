@@ -183,12 +183,11 @@ export default {
     },
     crashEvent: function () {
       console.log('crash event!')
-      this.message = 'Web Audio has crashed, refreshing now. :( All your musics have been saved.'
-      // window.location.reload()
-      window.t = soundBridge
+      this.message = 'Web Audio has crashed, restarting nodes now. Should be back in no time.'
       soundBridge.reconstructInstruments(() => {
         waveform.analyser = waveform.newAnalyser()
         this.$refs.controlpanel.doSetEQ()
+        this.$refs.soundsynth.redoDefs()
         StartAudioContext(Tone.context)
       })
     },

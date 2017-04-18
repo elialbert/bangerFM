@@ -32,7 +32,7 @@
         v-bind:visible="visible"
         v-bind:bmDeep="false"
       ></instrument-row>
-    <beat-maker-deep ref='beatmakerdeep'
+    <beat-maker-deep ref='beatmakerdeep' v-if="deep == 1"
       v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
       v-bind:visible="visible"
       v-bind:selected="selected"
@@ -43,6 +43,7 @@
       v-bind:perMeasure="perMeasure"
       v-on:changeSelect="changeSelect"
       v-on:resetBeatRow="resetBeatRow"
+      v-on:needsToSave="saveBeat"
     >  
     </beat-maker-deep>
     </div>
@@ -90,7 +91,7 @@ export default {
       loading: false,
       defsLength: 8,
       idefLookup: {},
-      deep: 1,
+      deep: 0,
       deepPlaying: 0
     }
   },

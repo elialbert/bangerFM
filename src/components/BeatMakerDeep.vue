@@ -76,6 +76,7 @@ export default {
       for (let index of toChangeArray) {
         this.deepChange(index)
       }
+      this.$emit('needsToSave')
     },
     deepChange: function (index) {
       if (this.active === 'Timing') {
@@ -100,6 +101,7 @@ export default {
       for (let key in this.dataArray) {
         this.dataArray[key].measureSub = iutils.qTimeLookup(num)
       }
+      this.$emit('needsToSave')
     }
   },
   computed: {

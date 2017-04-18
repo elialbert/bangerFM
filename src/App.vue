@@ -185,6 +185,10 @@ export default {
       this.message = 'Web Audio has crashed, refreshing now. :( All your musics have been saved.'
       // window.location.reload()
       window.t = soundBridge
+      soundBridge.reconstructInstruments(() => {
+        this.$refs.controlpanel.doSetEQ()
+        StartAudioContext(Tone.context)
+      })
     },
     doSignout: function () {
       this.user = false

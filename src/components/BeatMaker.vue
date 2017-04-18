@@ -30,13 +30,16 @@
         v-bind:enabledArray="dataArray[index]"
         v-bind:perMeasure="perMeasure"
         v-bind:visible="visible"
+        v-bind:bmDeep="false"
       ></instrument-row>
     <beat-maker-deep ref='beatmakerdeep'
       v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
-      v-bind:visible="deep == 1"
-      v-bind:selected="selected"
+      v-bind:visible="visible"
+      v-bind:selectedRow="selected[1]"
       v-bind:dataArray="dataArray[selected[1]]"
       v-bind:def="defs[sortedDefKeys[selected[1]]]"
+      v-bind:numCols="numCols"
+      v-bind:perMeasure="perMeasure"
     >  
     </beat-maker-deep>
     </div>

@@ -2,33 +2,92 @@
   <div id="beatmakerdeep" v-if="dataArray">
     <div class='bmd-nav'>
       <div class='bmd-nav-item' v-for="key of navItems"
-        v-bind:class="{selected: active == key}"
+        v-bind:class="{selectedNav: active == key}"
         @click="changeNav(key)"
       >{{key}}</div>
     </div>
     <div class='bmd-container'>
       <div class='bmdeep-inner'>
+        <div class='bmd-nav' v-if="active == 'Timing'">
+          <div class='bmd-nav-item' v-for="key of navItemsTiming"
+            v-bind:class="{selectedNav: activeTiming == key}"
+            @click="activeTiming = key"
+          >{{key}}</div>
+        </div>
+
+        <instrument-row v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
+          v-bind:def="def"
+          v-bind:numCols="numCols"
+          v-bind:enabledArray="dataArray"
+          v-bind:perMeasure="perMeasure"
+          v-bind:visible="visible"
+          v-bind:selected="selected"
+          v-bind:bmDeep="active"
+        ></instrument-row>
       </div>
-      <div class='bmd-instrument-name'>{{def.name}}</div>
     </div>
   </div>
 </template>
 
 <script>
+import InstrumentRow from './InstrumentRow'
+import mutils from '../assets/movementUtils'
+import iutils from '../assets/instrumentUtils'
+
 export default {
   name: 'beat-maker-deep',
   components: {
+    InstrumentRow
   },
-  props: ['visible', 'selected', 'def', 'dataArray'],
+  props: ['visible', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure'],
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Timing'
+      navItemsTiming: ['3 Beats', '4 Beats'],
+      active: 'Timing',
+      activeTiming: '3 Beats',
+      selected: [0, this.def.index]
     }
   },
   methods: {
     changeNav: function (key) {
       this.active = key
+    },
+    hoverSelect: function (x, y, event) {
+      if (this.visible === 'songmaker') {
+        return
+      }
+      this.selected = [x, y]
+      if (event.buttons === 1) {
+        this.select()
+      }
+    },
+    select: function () {
+      let toChangeArray = [this.selected[0]]
+      if (this.active === 'Timing') {
+        toChangeArray = this.getTimingChange()
+      }
+      for (let index of toChangeArray) {
+        this.deepChange(index)
+      }
+    },
+    deepChange: function (index) {
+      if (this.active === 'Timing') {
+        console.log(iutils.qTimeLookup(this.activeTiming))
+        console.log(index)
+        this.dataArray[index].measureSub = iutils.qTimeLookup(this.activeTiming)
+      }
+    },
+    getTimingChange: function () {
+      let offsets = mutils.perMeasureOffsets(this.selected, this.perMeasure)
+      let toChangeArray = []
+      for (let i = 0; i <= offsets[0]; i++) {
+        toChangeArray.push(this.selected[0] - i)
+      }
+      for (let i = 0; i <= offsets[1] - 1; i++) {
+        toChangeArray.push(this.selected[0] + i)
+      }
+      return toChangeArray
     }
   },
   computed: {
@@ -39,18 +98,14 @@ export default {
 <style>
 .bmd-container {
   padding-left: 10px;
-  width: 70%;
+  width: 80%;
   height: 200px;
-  display: flex;
 }
 .bmdeep-inner {
   border: 1px solid black;
   height: 80%;
   width: 100%;
-  flex-shrink: 0;
-}
-.bmd-instrument-name {
-  margin-left: 10px;
+  padding: 10px;
 }
 .bmd-nav {
   display: flex;
@@ -60,9 +115,11 @@ export default {
   padding: 4px;
   border: 1px solid black;
   background-color: white;
+  cursor: pointer; cursor: hand;
 }
-.bmd-nav-item.selected {
+.bmd-nav-item.selectedNav {
   background-color: grey;
+  color: white;
 }
 .bmd-nav-item:nth-of-type(1) {
   margin-left: 10px;

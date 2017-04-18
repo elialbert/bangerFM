@@ -110,6 +110,7 @@ import HelpOverlay from './components/HelpOverlay'
 import NavHeader from './components/NavHeader'
 import NavFooter from './components/NavFooter'
 import mutils from './assets/movementUtils'
+import soundBridge from './assets/soundBridge'
 import firebaseBridge from './assets/instrumentDefs/firebaseBridge'
 import Tone from './assets/tone.js'
 import StartAudioContext from 'startaudiocontext'
@@ -182,7 +183,8 @@ export default {
     crashEvent: function () {
       console.log('crash event!')
       this.message = 'Web Audio has crashed, refreshing now. :( All your musics have been saved.'
-      window.location.reload()
+      // window.location.reload()
+      window.t = soundBridge
     },
     doSignout: function () {
       this.user = false

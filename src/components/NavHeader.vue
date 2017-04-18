@@ -15,7 +15,7 @@
 </div>
 </template>
 <script>
-import SoundMeter from './soundMeter'
+import SoundMeter from './SoundMeter'
 import Auth from './Auth'
 
 export default {

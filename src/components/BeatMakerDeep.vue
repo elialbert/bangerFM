@@ -23,6 +23,7 @@
           v-bind:visible="visible"
           v-bind:selected="selected"
           v-bind:bmDeep="active"
+          v-bind:ref="'instrumentrow'"
         ></instrument-row>
       </div>
     </div>

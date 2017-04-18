@@ -89,7 +89,8 @@ export default {
       loading: false,
       defsLength: 8,
       idefLookup: {},
-      deep: 1
+      deep: 1,
+      deepPlaying: 0
     }
   },
   beforeCreate: function () {
@@ -180,15 +181,23 @@ export default {
     },
     animate: function (col, clear) {
       for (var i = 0; i < this.defsLength; i++) {
-        if (this.$refs['instrumentrow' + String(i)][0] === undefined) {
-          return
+        if (this.deep) {
+          i = this.selected[1]
+          this.$refs.beatmakerdeep.$refs.instrumentrow.playing = col
+        } else {
+          if (this.$refs['instrumentrow' + String(i)][0] === undefined) {
+            return
+          }
+          this.$refs['instrumentrow' + String(i)][0].playing = col
         }
-        this.$refs['instrumentrow' + String(i)][0].playing = col
-        if (col === 29 && clear) {
+        if (col === 29 && clear && !this.deep) {
           var self = this
           setTimeout(function (ii) {
             self.$refs['instrumentrow' + String(ii)][0].playing = -1
           }, 100, i)
+        }
+        if (this.deep) {
+          break
         }
       }
     },
@@ -202,12 +211,16 @@ export default {
       if (this.loop) {
         beatBridge.stopTransport()
       }
+      this.deepPlaying = false
       this.running = false
       this.$emit('updateMessage', 'Playing: ' + this.running)
     },
     startPlaying: function () {
       this.stopPlaying()
       beatBridge.startTransport()
+      if (this.deep) {
+        this.deepPlaying = true
+      }
       this.loop = beatBridge.makeLoop(beatBridge.dataFunc(this, this.animate, this.defs), this.numCols)
       this.loop.start(0)
       this.running = true

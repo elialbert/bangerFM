@@ -118,6 +118,7 @@ import HistoryModifier from './components/mixins/HistoryModifier'
 import WorkspaceManager from './components/WorkspaceManager'
 import defLoader from './assets/instrumentDefs/defLoader'
 import soundsynthUtils from './assets/soundsynthUtils'
+import baseInstrument from './assets/instruments/base_instrument'
 
 export default {
   name: 'app',
@@ -186,6 +187,7 @@ export default {
       // window.location.reload()
       window.t = soundBridge
       soundBridge.reconstructInstruments(() => {
+        baseInstrument.waveform = baseInstrument.newAnalyser()
         this.$refs.controlpanel.doSetEQ()
         StartAudioContext(Tone.context)
       })

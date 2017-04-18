@@ -74,8 +74,17 @@ div.beat-column.enabled.selected {
 div.beat-column.playing {
   background: yellow;
 }
+div.beat-column.enabled.playing {
+  background: orange;
+}
 div.beat-column.selected {
   background: #a9f26a;
+}
+div.beat-column.selected.playing {
+  background: #d9f169;
+}
+div.beat-column.selected.enabled.playing {
+  background: #d9f169;
 }
 div.beat-column.enabled {
   background: red;
@@ -88,10 +97,10 @@ div.beat-column.enabled {
   font-size: 12px;
 }
 div.beat-column.triplet.enabled {
-  background: linear-gradient(to right, red, green, blue);
+  background: linear-gradient(to right, red, orange, blue);
 }
 div.beat-column.triplet.enabled.selected {
-  background: linear-gradient(to right, red, green, yellow);
+  background: linear-gradient(to right, red, orange, green);
 }
 .beat-column.measureSub {
   background: linear-gradient(to right, white, red, black);
@@ -100,7 +109,10 @@ div.beat-column.triplet.enabled.selected {
   background: linear-gradient(to right, white, red, black);
 }
 .beat-column.measureSub.enabled.selected {
-  background: linear-gradient(to right, white, yellow, black);
+  background: linear-gradient(to right, white, green, black);
+}
+.beat-column.measureSub.enabled.selected.playing {
+  background: linear-gradient(to right, white, green, yellow);
 }
 
 </style>

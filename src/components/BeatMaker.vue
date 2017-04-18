@@ -42,6 +42,7 @@
       v-bind:numCols="numCols"
       v-bind:perMeasure="perMeasure"
       v-on:changeSelect="changeSelect"
+      v-on:resetBeatRow="resetBeatRow"
     >  
     </beat-maker-deep>
     </div>
@@ -261,6 +262,9 @@ export default {
       this.dataArray = iutils.createDataArray(this.perMeasure, this.doFBObjLength())
       if (this.running) { this.stopPlaying() }
       this.saveBeat()
+    },
+    resetBeatRow: function () {
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false)
     },
     handleRestore: function (toRestore) {
       if ((toRestore.key !== this.beatBankChoice) || (toRestore.objType !== 'bm')) {

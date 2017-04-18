@@ -13,6 +13,12 @@
             v-bind:class="{selectedNav: activeTiming == key}"
             @click="activeTiming = key"
           >{{key}}</div>
+          <span class='control-span'>
+            <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
+            <button id="fill-3" type="button" v-on:click="changePerMeasure('3 Beats')">Fill 3</button>
+            <button id="fill-4" type="button" v-on:click="changePerMeasure('4 Beats')">Fill 4</button>
+          </span>
+
         </div>
 
         <instrument-row v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
@@ -86,6 +92,14 @@ export default {
         toChangeArray.push(this.selected[0] + i)
       }
       return toChangeArray
+    },
+    resetBeat: function () {
+      this.$emit('resetBeatRow')
+    },
+    changePerMeasure: function (num) {
+      for (let key in this.dataArray) {
+        this.dataArray[key].measureSub = iutils.qTimeLookup(num)
+      }
     }
   },
   computed: {

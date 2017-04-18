@@ -1,0 +1,7 @@
+build/*.js
+config/*.js
+src/assets/tone.js
+src/assets/tone.unmin.js
+src/assets/StartAudioContext.js
+src/assets/jquery.min.js
+src/assets/vuefire.js

@@ -205,8 +205,8 @@ export default {
       this.deep = !this.deep
     },
     handleRestore: function (toRestore) {
-      if (toRestore.key !== this.soundBankChoice) {
-        this.$emit('updateMessage', 'Cannot undo across sound banks - please switch back to bank ' + (parseInt(toRestore.key) + 1))
+      if ((toRestore.key !== this.soundBankChoice) || (toRestore.objType !== 'ss')) {
+        this.$emit('updateMessage', 'Nothing to undo/redo right now.')
         return
       }
       this.defs = toRestore.obj

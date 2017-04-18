@@ -119,6 +119,10 @@ export default {
       }
     },
     handleRestore: function (toRestore) {
+      if (toRestore.objType !== 'generic_CPDef') {
+        this.$emit('updateMessage', 'Nothing to undo/redo right now.')
+        return
+      }
       this.restoreState = true
       this.loadData(toRestore.obj)
     },

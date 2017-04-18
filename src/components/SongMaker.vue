@@ -183,6 +183,10 @@ export default {
       this.redrawBackgrounds()
     },
     handleRestore: function (toRestore) {
+      if (toRestore.objType !== 'generic_songData') {
+        this.$emit('updateMessage', 'Nothing to undo/redo right now.')
+        return
+      }
       this.songData = toRestore.obj
       defLoader.saveSong(this.user, this.workspace, this.songData, true)
     },

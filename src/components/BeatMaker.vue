@@ -102,6 +102,7 @@ export default {
   },
   methods: {
     changePerMeasure: function (dir) {
+      if ((dir === 1 && this.perMeasure === 7) || (dir === -1 && this.perMeasure === 3)) { return }
       this.perMeasure += dir
       this.resetBeat()
     },
@@ -227,8 +228,8 @@ export default {
       this.saveBeat()
     },
     handleRestore: function (toRestore) {
-      if (toRestore.key !== this.beatBankChoice) {
-        this.$emit('updateMessage', 'Cannot undo across beats - please switch back to beat ' + (parseInt(toRestore.key) + 1))
+      if ((toRestore.key !== this.beatBankChoice) || (toRestore.objType !== 'bm')) {
+        this.$emit('updateMessage', 'Nothing to undo/redo right now.')
         return
       }
       this.dataArray = toRestore.obj

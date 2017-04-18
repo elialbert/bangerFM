@@ -2,6 +2,7 @@ import Vue from 'vue'
 import SoundSynth from 'src/components/SoundSynth'
 import defLoader from 'src/assets/instrumentDefs/defLoader'
 import firebaseBridge from 'src/assets/instrumentDefs/firebaseBridge'
+import actionHistory from 'src/assets/actionHistory'
 
 describe('SoundSynth.vue', () => {
   var vm
@@ -65,5 +66,41 @@ describe('SoundSynth.vue', () => {
         done()
       })
     })
+  })
+
+  it('can undo and redo a slider change', done => {
+    setTimeout(() => {
+      // reset the history
+      actionHistory.historyArray = []
+      actionHistory.historyIndex = 0
+
+      var startVal = component.$refs['instrument0'][0].$children[0].sdata.val
+      component.sendKey(0, 1)
+      setTimeout(() => {
+        var newVal = component.$refs['instrument0'][0].$children[0].sdata.val
+        expect(newVal).to.be.above(startVal)
+        component.sendKey(0, 1)
+        setTimeout(() => {
+          Vue.nextTick(() => {
+            let toRestore = actionHistory.undo()
+            expect(toRestore.key).to.equal(0)
+            done()
+            component.handleRestore(toRestore)
+            Vue.nextTick(() => {
+              var newVal2 = component.$refs['instrument0'][0].$children[0].sdata.val
+              expect(newVal2).to.equal(newVal)
+              done()
+              let toRestore2 = actionHistory.redo()
+              component.handleRestore(toRestore2)
+              Vue.nextTick(() => {
+                var newVal3 = component.$refs['instrument0'][0].$children[0].sdata.val      
+                expect(newVal3).to.be.above(newVal2)
+                done()
+              })
+            })
+          })
+        }, 500)
+      }, 500)
+    }, 500)
   })
 })

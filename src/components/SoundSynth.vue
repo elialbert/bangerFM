@@ -246,6 +246,7 @@ export default {
   #sound-synth {
     overflow-x: scroll;
     overflow-y: hidden;
+    min-width: 1200px;
     border: 2px solid black;
     width: 98.5%;
     margin: 2px;

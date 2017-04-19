@@ -312,6 +312,7 @@ export default {
 <style>
 #beat-maker {
   width: 98.5%;
+  min-width: 1200px;
   overflow-x: scroll;
   overflow-y: hidden;
   border: 2px solid black;

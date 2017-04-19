@@ -2,8 +2,8 @@
   <div id="app" tabindex="0" ref='app' class='unselectable'
     @keydown.down.prevent="noArg('moveDown', $event)" 
     @keydown.up.prevent="noArg('moveUp', $event)"
-    @keydown.right="noArg('moveRight', $event)"
-    @keydown.left="noArg('moveLeft', $event)"
+    @keydown.right.prevent="noArg('moveRight', $event)"
+    @keydown.left.prevent="noArg('moveLeft', $event)"
     @keydown.space.prevent="noArg('spaceDown')" 
     @keyup.space="noArg('spaceUp')"
     @keyup.8="noArg('backspace')"
@@ -329,7 +329,7 @@ export default {
   color: #2c3e50;
   margin-top: 1px;
   width: auto;
-/*  height: 96.5vh;*/
+  min-width: 1238px;
   border: 4px solid black;
   padding: 2px;
   outline: none;

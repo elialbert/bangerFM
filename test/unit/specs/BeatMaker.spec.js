@@ -41,22 +41,19 @@ describe('BeatMaker.vue', () => {
     component.select()
     component.moveRight()
     component.select()
-    Vue.nextTick(() => {
+    check(Vue, done, () => {
       expect(component.$el.querySelectorAll('.beat-column.enabled').length).to.equal(2)
-      done()
     })
   })
 
   it('changes pitch on selected square', done => {
     component.select()
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       component.sendKey(0, 1)
-      done()
-      Vue.nextTick(() => {
+      check(Vue, done, () => {
         expect(component.dataArray[0][0].pitch).to.equal('C#3')
         expect(component.dataArray[0][0].enabled).to.equal(true)
         expect(component.$refs['instrumentrow0'][0].$el.querySelectorAll('.beat-column')[0].querySelector('span').innerHTML).to.equal('C#3')
-        done()
       })
     })
   })
@@ -65,17 +62,15 @@ describe('BeatMaker.vue', () => {
     component.moveRight()
     component.select()
     expect(component.soundBankChoice).to.equal(0)
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       setTimeout(() => {
         expect(component.dataArray[0][1].enabled).to.equal(true)
-        done()
         component.changeBank(1, 'beatBank')
-        Vue.nextTick(() => {
+        check(Vue, false, () => {
           expect(component.dataArray[0][1].enabled).to.equal(false)
           expect(component.beatBankChoice).to.equal(1)
-          done()
           component.changeBank(0, 'beatBank')
-          Vue.nextTick(() => {
+          check(Vue, done, () => {
             expect(component.beatBankChoice).to.equal(0)
             expect(component.dataArray[0][1].enabled).to.equal(true)
             done()
@@ -88,17 +83,15 @@ describe('BeatMaker.vue', () => {
   it ('can autofill', done => {
     component.moveDown()
     component.moveDown()
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       component.autoFill('moveRight')
-      done()
-      Vue.nextTick(() => {
+      check(Vue, false, () => {
         expect(component.dataArray[2][15].enabled).to.equal(true)
         expect(component.dataArray[2][16].enabled).to.equal(true)
         expect(component.dataArray[2][0].enabled).to.equal(true)
         expect(component.dataArray[2][1].enabled).to.equal(true)
-        done()
         component.autoFill('moveRight')
-        Vue.nextTick(() => {
+        check(Vue, done, () => {
           expect(component.dataArray[2][0].enabled).to.equal(true)
           expect(component.dataArray[2][1].enabled).to.equal(false)
           expect(component.dataArray[2][2].enabled).to.equal(true)
@@ -112,21 +105,18 @@ describe('BeatMaker.vue', () => {
   it ('has separate permeasure for each beat', done => {
     component.changePerMeasure(1)
     component.select()
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       expect(component.dataArray[0][0].enabled).to.equal(true)
       expect(Object.keys(component.dataArray[0]).length).to.equal(20)
-      done()
       component.changeBank(1, 'beatBank')
-      Vue.nextTick(() => {
+      check(Vue, false, () => {
         expect(component.dataArray[0][0].enabled).to.equal(false)
-        done()
         component.select()
-        Vue.nextTick(() => {
+        check(Vue, false, () => {
           expect(component.dataArray[0][0].enabled).to.equal(true)
           expect(Object.keys(component.dataArray[0]).length).to.equal(32)
-          done()
           component.changeBank(0, 'beatBank')
-          Vue.nextTick(() => {
+          check(Vue, done, () => {
             expect(component.dataArray[0][0].enabled).to.equal(true)
             expect(Object.keys(component.dataArray[0]).length).to.equal(20)
             done()

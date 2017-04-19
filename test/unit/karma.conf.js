@@ -48,7 +48,7 @@ module.exports = function (config) {
     // 2. add it to the `browsers` array below.
     browsers: ['Chrome'],
     frameworks: ['mocha', 'sinon-chai'],
-    reporters: ['spec', 'coverage'],
+    reporters: ['spec'],
     port: 9876,
     autoWatch: true,
     singleRun: false,

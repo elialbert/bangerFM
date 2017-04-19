@@ -1,3 +1,15 @@
+function check( Vue, done, f ) {
+  Vue.nextTick(() => {
+    try {
+      f();
+      if (done) { done() };
+    } catch( e ) {
+      done( e );
+    }
+  })
+}
+
+
 var setupVm = function (Vue, Component, testData, template) {
   return new Vue({
     template: '<div>' + template + '</div>',

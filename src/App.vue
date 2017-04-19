@@ -1,7 +1,7 @@
 <template>
   <div id="app" tabindex="0" ref='app' class='unselectable'
-    @keydown.down="noArg('moveDown', $event)" 
-    @keydown.up="noArg('moveUp', $event)"
+    @keydown.down.prevent="noArg('moveDown', $event)" 
+    @keydown.up.prevent="noArg('moveUp', $event)"
     @keydown.right="noArg('moveRight', $event)"
     @keydown.left="noArg('moveLeft', $event)"
     @keydown.space.prevent="noArg('spaceDown')" 
@@ -184,11 +184,15 @@ export default {
     crashEvent: function () {
       console.log('crash event!')
       this.message = 'Web Audio has crashed, restarting nodes now. Should be back in no time.'
+      let wasPlaying = this.$refs.songmaker.running
+      this.$refs.songmaker.stopPlaying()
+      this.$refs.beatmaker.stopPlaying()
       soundBridge.reconstructInstruments(() => {
         waveform.analyser = waveform.newAnalyser()
         this.$refs.controlpanel.doSetEQ()
         this.$refs.soundsynth.redoDefs()
         StartAudioContext(Tone.context)
+        if (wasPlaying) { this.$refs.songmaker.startPlaying() }
       })
     },
     doSignout: function () {

@@ -69,7 +69,16 @@ var qTimeLookup = function (perMeasure) {
   }[perMeasure]
 }
 
-var createDataArray = function (perMeasure = 4, numInstruments = 12) {
+var pitchKeys = ['C Major', 'D Major']
+var makePitchKeyOptions = function () {
+  var r = []
+  for (let pkey of pitchKeys) {
+    r.push({value: pkey})
+  }
+  return r
+}
+
+var createDataArray = function (perMeasure = 4, numInstruments = 12, pitchKey = 'C Major') {
   var numCols = calcNumCols(perMeasure)
   var a = {}
   for (var i = 0; i < numInstruments; i++) {
@@ -80,6 +89,7 @@ var createDataArray = function (perMeasure = 4, numInstruments = 12) {
     a[i] = inner
   }
   a.perMeasure = perMeasure
+  a.pitchKey = pitchKey
   return a
 }
 
@@ -97,7 +107,11 @@ var getInstrumentByIndex = function (defs, index) {
   })
 }
 
-var createRandomIBeat = function (perMeasure, randomize = true) {
+var randomPitchForKey = function (pitchKey) {
+  return 'D4'
+}
+
+var createRandomIBeat = function (perMeasure, randomize = true, pitchKey = 'C Major') {
   let numCols = calcNumCols(perMeasure)
   var inner = {}
   for (var j = 0; j < numCols; j++) {
@@ -110,6 +124,16 @@ var createRandomIBeat = function (perMeasure, randomize = true) {
   return inner
 }
 
+var createRandomIPitch = function (selectedArray, pitchKey) {
+  for (var j = 0; j < Object.keys(selectedArray).length; j++) {
+    let obj = selectedArray[j]
+    if (obj.enabled) {
+      obj.pitch = randomPitchForKey(pitchKey)
+    }
+  }
+  return selectedArray
+}
+
 export default {
   getOscillatorType: getOscillatorType,
   getNoiseType: getNoiseType,
@@ -119,7 +143,10 @@ export default {
   calcNumCols: calcNumCols,
   getInstrumentByIndex: getInstrumentByIndex,
   createRandomIBeat: createRandomIBeat,
+  createRandomIPitch: createRandomIPitch,
   PITCHES: PITCHES,
   pitchToOffset: pitchToOffset,
-  qTimeLookup: qTimeLookup
+  qTimeLookup: qTimeLookup,
+  pitchKeys: pitchKeys,
+  pitchKeyOptions: makePitchKeyOptions
 }

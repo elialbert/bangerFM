@@ -12,10 +12,22 @@
         v-bind:ref="'beatBankChoice'"
       ></bank-choice>
       <span class='control-span'>
-        <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat</button>
+        <span class='control-span-container'>
+          <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat</button>
+        </span>
+        <span class='control-span-container'>
         Per Measure: {{ perMeasure }}
         <button id="pm-up" type="button" v-on:click="changePerMeasure(1)">UP</button> || 
         <button id="pm-down" type="button" v-on:click="changePerMeasure(-1)">DOWN</button>
+        </span>
+        <span class='control-span-container'>
+          Pitch Key:
+          <select v-model="pitchKey">
+            <option v-for="key in pitchKeyOptions" v-bind:value="key.value">
+              {{ key.value }}
+            </option>
+          </select>          
+        </span>
       </span>
     </div>
     <div v-if="loading">Loading...</div>
@@ -43,10 +55,12 @@
       v-bind:def="defs[sortedDefKeys[selected[1]]]"
       v-bind:numCols="numCols"
       v-bind:perMeasure="perMeasure"
+      v-bind:pitchKey="pitchKey"
       v-on:changeSelect="changeSelect"
       v-on:resetBeatRow="resetBeatRow"
       v-on:needsToSave="saveBeat"
       v-on:toggleDeep="enterUp"
+      v-on:randomizePitch="randomizePitchRow"
     >  
     </beat-maker-deep>
     </div>
@@ -94,12 +108,15 @@ export default {
       loading: false,
       defsLength: 8,
       idefLookup: {},
-      deep: 0,
-      deepPlaying: 0
+      deep: 1,
+      deepPlaying: 0,
+      pitchKey: 'C Major',
+      pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
   beforeCreate: function () {
     this.perMeasure = this.dataArray && this.dataArray.perMeasure || 4
+    this.pitchKey = this.dataArray && this.dataArray.pitchKey || 'C Major'
   },
   watch: {
     user: function (val1, val2) {
@@ -127,6 +144,9 @@ export default {
       if ((dir === 1 && this.perMeasure === 7) || (dir === -1 && this.perMeasure === 3)) { return }
       this.perMeasure += dir
       this.resetBeat()
+    },
+    randomizePitchRow: function () {
+      this.dataArray[this.selected[1]] = iutils.createRandomIPitch(this.dataArray[this.selected[1]], this.pitchKey)
     },
     curSquare: function () {
       return this.dataArray[this.selected[1]][this.selected[0]]
@@ -277,8 +297,8 @@ export default {
         defLoader.saveBeat(this.user, this.workspace, this.dataArray, explicitNum, skipFB, skipHistory)
       })
     },
-    loadBeat: function (num, perMeasure) {
-      return defLoader.loadBeat(this.user, this.workspace, num, perMeasure, false, this.doFBObjLength())
+    loadBeat: function (num) {
+      return defLoader.loadBeat(this.user, this.workspace, num, this.perMeasure, this.pitchKey, false, this.doFBObjLength())
     },
     resetBeat: function () {
       this.dataArray = iutils.createDataArray(this.perMeasure, this.doFBObjLength())
@@ -286,7 +306,7 @@ export default {
       this.saveBeat()
     },
     resetBeatRow: function () {
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false, this.pitchKey)
     },
     handleRestore: function (toRestore) {
       if ((toRestore.key !== this.beatBankChoice) || (toRestore.objType !== 'bm')) {
@@ -298,12 +318,12 @@ export default {
     },
     randomize: function () {
       this.$emit('updateMessage', 'Randomizing!')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, true, this.pitchKey)
       this.saveBeat()
     },
     clearInstrumentRow: function () {
       this.$emit('updateMessage', 'Clearing row.')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false, this.pitchKey)
     }
   }
 }
@@ -338,7 +358,10 @@ export default {
   margin-left: 30px;
 }
 span.control-span {
-  padding-left: 6px;
+  padding-left: 4px;
   margin: 4px;
+}
+span.control-span-container {
+  margin-left: 20px;
 }
 </style>

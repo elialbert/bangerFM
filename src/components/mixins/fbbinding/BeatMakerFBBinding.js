@@ -8,7 +8,7 @@ module.exports = {
         this.loading = false
         let v = snapshot.val()
         if (!v || !Object.keys(v).length) {
-          this.loadBeat(this.beatBankChoice, this.perMeasure)
+          this.loadBeat(this.beatBankChoice)
         } else {
           this.perMeasure = v.perMeasure
           this.dataArray = v

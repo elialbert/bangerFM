@@ -14,7 +14,13 @@
             <button id="fill-3" type="button" v-on:click="changePerMeasure('3 Beats')">Fill 3</button>
             <button id="fill-4" type="button" v-on:click="changePerMeasure('4 Beats')">Fill 4</button>
           </span>
+        </div>
 
+        <div class='bmd-nav' v-if="active == 'Pitch'">
+          <span class='control-span'>
+            <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
+            <button id='randomize-beat' type='button' v-on:click="randomizePitch()">Randomize Beat Row Pitch</button>
+          </span>
         </div>
 
         <instrument-row v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
@@ -43,11 +49,12 @@ export default {
   components: {
     InstrumentRow
   },
-  props: ['visible', 'selected', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure'],
+  props: ['visible', 'selected', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure', 'pitchKey'],
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Timing'
+      active: 'Pitch',
+      pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
   methods: {
@@ -95,6 +102,9 @@ export default {
     },
     resetBeat: function () {
       this.$emit('resetBeatRow')
+    },
+    randomizePitch: function () {
+      this.$emit('randomizePitch')
     },
     changePerMeasure: function (num) {
       for (let key in this.dataArray) {

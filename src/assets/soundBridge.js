@@ -132,13 +132,6 @@ var stopSound = function (selected, index) {
   instrumentLookup(selected) && instrumentLookup(selected).stop(index)
 }
 var startBeat = function (selected, note, time, index) {
-  if (selected === 8) {
-    note = utils.pitchToOffset(note)
-  } else if (selected === 1 || selected === 5) {
-    note = utils.PITCHES[Math.max(0, utils.PITCHES.indexOf(note) - 24)]
-  } else if (selected === 3 || selected === 9) {
-    note = utils.PITCHES[Math.min(utils.PITCHES.length - 1, utils.PITCHES.indexOf(note) + 12)]
-  }
   try {
     instrumentLookup(selected).beat(note, time, index)
   } catch (err) {

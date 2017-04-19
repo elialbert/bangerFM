@@ -1,6 +1,7 @@
 import Tone from './tone.js'
+import Tonal from 'tonal'
 import soundBridge from './soundBridge.js'
-import utils from './instrumentUtils.js'
+// import utils from './instrumentUtils.js'
 
 var startTransport = function () {
   Tone.Transport.start()
@@ -11,12 +12,21 @@ var stopTransport = function () {
   Tone.Transport.stop()
 }
 
-var changePitch = function (cur, direction) {
-  var curPitchIndex = utils.PITCHES.indexOf(cur)
-  if ((curPitchIndex + direction) >= 0 && (curPitchIndex + direction) < utils.PITCHES.length) {
-    return utils.PITCHES[curPitchIndex + direction]
+var changePitch = function (cur, direction, pitchKey) {
+  let notes = Tonal.scale(pitchKey.toLowerCase())
+  let note = Tonal.note.pc(cur)
+  let octave = Tonal.note.oct(cur) || 3
+  let index = notes.indexOf(note) + direction
+
+  if (index < 0 && octave > 1) {
+    octave = 1
+    index = notes.length - 1
+  } else if (index >= notes.length && octave < 5) {
+    octave += 1
+    index = 0
   }
-  return cur
+  let attempt = notes[index] + octave
+  return attempt || cur
 }
 
 var tripletTime = new Tone.Time('32t').toSeconds()

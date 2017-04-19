@@ -110,13 +110,16 @@ export default {
       idefLookup: {},
       deep: 1,
       deepPlaying: 0,
-      pitchKey: 'C Major',
+      pitchKey: 'C Minor Blues',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
   beforeCreate: function () {
     this.perMeasure = this.dataArray && this.dataArray.perMeasure || 4
     this.pitchKey = this.dataArray && this.dataArray.pitchKey || 'C Major'
+  },
+  mounted: function () {
+    this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
     user: function (val1, val2) {
@@ -146,7 +149,7 @@ export default {
       this.resetBeat()
     },
     randomizePitchRow: function () {
-      this.dataArray[this.selected[1]] = iutils.createRandomIPitch(this.dataArray[this.selected[1]], this.pitchKey)
+      this.dataArray[this.selected[1]] = iutils.createRandomIPitch(this.dataArray[this.selected[1]], this.pitchKey, this.idefLookup[this.selected[1]])
     },
     curSquare: function () {
       return this.dataArray[this.selected[1]][this.selected[0]]
@@ -270,6 +273,7 @@ export default {
       this.$emit('updateMessage', 'Playing: ' + this.running)
     },
     instrumentIndex: function () {
+      // could be this.idefLookup[selected[1]] ???
       return this.$refs['instrument' + String(this.selected[1])].def.instrumentIndex
     },
     pipeDown: function () {
@@ -284,7 +288,7 @@ export default {
         this.saveBeat()
         return
       }
-      this.curSquare().pitch = beatBridge.changePitch(this.curSquare().pitch, direction)
+      this.curSquare().pitch = beatBridge.changePitch(this.curSquare().pitch, direction, this.pitchKey)
       this.networkWait('pitch', () => {
         this.saveBeat()
       })
@@ -318,7 +322,7 @@ export default {
     },
     randomize: function () {
       this.$emit('updateMessage', 'Randomizing!')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, true, this.pitchKey)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, true, this.pitchKey, this.idefLookup[this.selected[1]])
       this.saveBeat()
     },
     clearInstrumentRow: function () {

@@ -8,6 +8,7 @@ export default class BaseInstrument {
   }
 
   start () {
+    window.t = this
     if (!window.location.href.includes('simple')) {
       this.waveLoop()
       this.instrument.connect(waveform.analyser)

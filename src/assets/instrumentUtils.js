@@ -1,22 +1,4 @@
 import Tonal from 'tonal'
-window.t = Tonal
-var makePitches = function () {
-  var p = []
-  var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
-  for (var i = 1; i < 6; i++) {
-    for (var j = 0; j < notes.length; j++) {
-      p.push(notes[j] + String(i))
-    }
-  }
-  return p.slice(3, -1)
-}
-
-var pitchToOffset = function (pitch) {
-  let curPitchIndex = PITCHES.indexOf(pitch)
-  return curPitchIndex - PITCHES.indexOf('C3')
-}
-
-const PITCHES = makePitches()
 
 var getOscillatorType = function (val) {
   return {
@@ -50,6 +32,7 @@ var getNoiseType = function (val) {
   }[val]
 }
 
+// TODO!
 var innerDataArrayObj = function () {
   var pitch = 'C3'
 
@@ -71,7 +54,7 @@ var qTimeLookup = function (perMeasure) {
   }[perMeasure]
 }
 
-var pitchKeys = ['C Major', 'D Major']
+var pitchKeys = ['C Major', 'G Major', 'C Minor Blues', 'G Minor Blues']
 
 var makePitchKeyOptions = function () {
   var r = []
@@ -110,31 +93,51 @@ var getInstrumentByIndex = function (defs, index) {
   })
 }
 
-var randomPitchForKey = function (pitchKey) {
-  let notes = Tonal.key.scale(pitchKey)
-  let choice = notes[Math.floor(Math.random() * notes.length)]
-  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
-  return choice + octave
+var transposeNote = function (note, direction) {
+  let intervals
+  if (direction === 'up') {
+    intervals = ['P16', 'P8', 'P1']
+  } else {
+    intervals = ['P-16', 'P-8', 'P1']
+  }
+  for (let interval of intervals) {
+    let attempt = Tonal.transpose(note, interval)
+    if (attempt) { return attempt }
+  }
+  return note
 }
 
-var createRandomIBeat = function (perMeasure, randomize = true, pitchKey = 'C Major') {
+var randomPitchForKey = function (pitchKey, selected) {
+  let notes = Tonal.scale(pitchKey.toLowerCase())
+  let choice = notes[Math.floor(Math.random() * notes.length)]
+  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
+  let note = choice + octave
+  if (selected === 1 || selected === 5) {
+    note = transposeNote(note, 'down')
+  } else if (selected === 3 || selected === 9) {
+    note = transposeNote(note, 'up')
+  }
+  return note
+}
+
+var createRandomIBeat = function (perMeasure, randomize = true, pitchKey, instrumentIndex) {
   let numCols = calcNumCols(perMeasure)
   var inner = {}
   for (var j = 0; j < numCols; j++) {
     inner[j] = innerDataArrayObj()
     if (randomize) {
       inner[j].enabled = !!(Math.random() < 0.3)
-      inner[j].pitch = randomPitchForKey(pitchKey)
+      inner[j].pitch = randomPitchForKey(pitchKey, instrumentIndex)
     }
   }
   return inner
 }
 
-var createRandomIPitch = function (selectedArray, pitchKey) {
+var createRandomIPitch = function (selectedArray, pitchKey, instrumentIndex) {
   for (var j = 0; j < Object.keys(selectedArray).length; j++) {
     let obj = selectedArray[j]
     if (obj.enabled) {
-      obj.pitch = randomPitchForKey(pitchKey)
+      obj.pitch = randomPitchForKey(pitchKey, instrumentIndex)
     }
   }
   return selectedArray
@@ -150,9 +153,8 @@ export default {
   getInstrumentByIndex: getInstrumentByIndex,
   createRandomIBeat: createRandomIBeat,
   createRandomIPitch: createRandomIPitch,
-  PITCHES: PITCHES,
-  pitchToOffset: pitchToOffset,
   qTimeLookup: qTimeLookup,
   pitchKeys: pitchKeys,
-  pitchKeyOptions: makePitchKeyOptions
+  pitchKeyOptions: makePitchKeyOptions,
+  transposeNote: transposeNote
 }

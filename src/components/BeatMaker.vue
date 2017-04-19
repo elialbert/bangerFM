@@ -146,15 +146,28 @@ export default {
     },
     moveRight: function () {
       this.selected = mutils.moveRight(this.selected, this.numCols)
+      if (this.isHiddenSquare()) {
+        if (this.selected[0] === this.numCols - 1) {
+          return this.moveLeft()
+        }
+        return this.moveRight()
+      }
     },
     moveLeft: function () {
       this.selected = mutils.moveLeft(this.selected)
+      if (this.isHiddenSquare()) { return this.moveLeft() }
+    },
+    isHiddenSquare: function () {
+      if (!this.curSquare().measureSub) { return false }
+      return this.selected[0] % this.perMeasure === this.perMeasure - 1
     },
     moveDown: function () {
       this.selected = mutils.moveDown(this.selected, this.doFBObjLength() - 1)
+      if (this.isHiddenSquare()) { return this.moveLeft() }
     },
     moveUp: function () {
       this.selected = mutils.moveUp(this.selected)
+      if (this.isHiddenSquare()) { return this.moveLeft() }
     },
     autoFill: function (direction) {
       let result = mutils.autoFill(direction, this.selected, this.dataArray, this.autoFillHistory)
@@ -172,7 +185,9 @@ export default {
       if (!curSquare.enabled) {
         curSquare.enabled = true
       } else {
+        let prevMeasureSub = this.curSquare().measureSub
         this.dataArray[this.selected[1]][this.selected[0]] = iutils.innerDataArrayObj()
+        this.curSquare().measureSub = prevMeasureSub
       }
       this.networkWait('select', () => {
         this.saveBeat()

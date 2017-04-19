@@ -33,6 +33,7 @@
             v-bind:ref="'instrument' + defs1[key].index"
             v-bind:def="defs1[key]"
             v-on:needsToSaveDef="saveDef"
+            v-on:toggleDeep="enterUp"
           >
           </instrument>
         </div>
@@ -46,6 +47,7 @@
       v-bind:soundBankChoice="soundBankChoice"
       v-bind:user="user"
       v-if="!loading"
+      v-on:toggleDeep="enterUp"
     >  
     </sound-synth-deep>
   </div>

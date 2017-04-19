@@ -12,6 +12,7 @@
           v-bind:ref="'instrumentDeep' + def.index"
           v-bind:def="def"
           v-on:needsToSaveDef="saveDef"
+          v-on:toggleDeep="$emit('toggleDeep')"
         >
         </instrument>
       </div>

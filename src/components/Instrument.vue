@@ -1,6 +1,8 @@
 <template>
   <div class="instrument">
-    <div class="instrumentName">{{ def.name }}</div>
+    <div class="instrumentName"
+      @click="$emit('toggleDeep')"
+    >{{ def.name }}</div>
     <div class="sliderName">{{ sliderName }}</div>
       <div class="sliders">
         <slider 
@@ -91,11 +93,14 @@
     margin-right: -3px;
     margin-top: -3px;
     margin-bottom: -3px;
-
   }
   .instrumentName {
     padding-right: 10px;
     padding-left: 10px;
+    cursor: pointer; cursor: hand;
+  }
+  .instrumentName:hover {
+    background-color: yellow;
   }
   .instrumentBox {
     width: auto;

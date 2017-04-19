@@ -70,8 +70,7 @@ export default {
   },
   mounted: function () {
     this.loadData()
-    Tone.Transport.bpm.value = this.bpm
-    Tone.Transport.swing = this.swing
+    this.doSetSpeeds()
     this.doSetEQ()
   },
   watch: {
@@ -82,12 +81,15 @@ export default {
     }
   },
   methods: {
+    doSetSpeeds: function () {
+      Tone.Transport.bpm.value = this.bpm
+      Tone.Transport.swing = this.swing
+    },
     doSetEQ: function () {
       Effects.setEQ(this.eqProps.low.val, this.eqProps.mid.val, this.eqProps.high.val)
     },
     doFBBinding: function () {
       firebaseBridge.cpdefRef(this.user, this.workspace).on('value', snapshot => {
-        this.restoreState = true
         let v = snapshot.val()
         this.loadData(v)
       })
@@ -114,8 +116,11 @@ export default {
       if (!data) {
         return
       }
-      this.bpm = data.bpm
-      this.swing = data.swing
+      if (this.bpm !== data.bpm || this.swing !== data.swing) {
+        this.bpm = data.bpm
+        this.swing = data.swing
+        this.doSetSpeeds()
+      }
       if (data.eqProps.low.val !== this.eqProps.low.val || data.eqProps.mid.val !== this.eqProps.mid.val || data.eqProps.high.val !== this.eqProps.high.val) {
         this.eqProps = data.eqProps
         this.doSetEQ()
@@ -126,7 +131,6 @@ export default {
         this.$emit('updateMessage', 'Nothing to undo/redo right now.')
         return
       }
-      this.restoreState = true
       this.loadData(toRestore.obj)
     },
     saveData: function () {
@@ -135,13 +139,12 @@ export default {
         swing: this.swing,
         eqProps: this.eqProps
       }
-      defLoader.saveGeneric('CPDef', data, this.restoreState)
+      defLoader.saveGeneric('CPDef', this.workspace, data, this.restoreState)
       if (this.user) {
         this.networkWait('cpdef', () => {
           firebaseBridge.cpdefRef(this.user, this.workspace).set(data)
         })
       }
-      this.restoreState = false
     }
   }
 }

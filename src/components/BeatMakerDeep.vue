@@ -9,10 +9,6 @@
     <div class='bmd-container'>
       <div class='bmdeep-inner'>
         <div class='bmd-nav' v-if="active == 'Timing'">
-          <div class='bmd-nav-item' v-for="key of navItemsTiming"
-            v-bind:class="{selectedNav: activeTiming == key}"
-            @click="activeTiming = key"
-          >{{key}}</div>
           <span class='control-span'>
             <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
             <button id="fill-3" type="button" v-on:click="changePerMeasure('3 Beats')">Fill 3</button>
@@ -51,9 +47,7 @@ export default {
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      navItemsTiming: ['3 Beats', '4 Beats'],
-      active: 'Timing',
-      activeTiming: '3 Beats'
+      active: 'Timing'
     }
   },
   methods: {
@@ -74,14 +68,18 @@ export default {
       if (this.active === 'Timing') {
         toChangeArray = this.getTimingChange()
       }
-      for (let index of toChangeArray) {
+      for (let index of toChangeArray.filter(this.onlyUnique)) {
         this.deepChange(index)
       }
       this.$emit('needsToSave')
     },
     deepChange: function (index) {
       if (this.active === 'Timing') {
-        this.dataArray[index].measureSub = iutils.qTimeLookup(this.activeTiming)
+        if (this.dataArray[index].measureSub) {
+          this.dataArray[index].measureSub = false
+        } else {
+          this.dataArray[index].measureSub = '8t'
+        }
       }
     },
     getTimingChange: function () {
@@ -103,7 +101,11 @@ export default {
         this.dataArray[key].measureSub = iutils.qTimeLookup(num)
       }
       this.$emit('needsToSave')
+    },
+    onlyUnique: function (value, index, self) {
+      return self.indexOf(value) === index
     }
+
   },
   computed: {
   }

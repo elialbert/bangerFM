@@ -18,7 +18,10 @@
     <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
     </div>
   </div>
-  <div class="instrument-name">{{ def.name }}</div>
+  <div class="instrument-name"
+    @mouseover="$emit('mouseOverName', def.index)"
+    @click="$emit('toggleDeep')"
+  >{{ def.name }}</div>
 </div>
 </template>
 
@@ -55,6 +58,9 @@ export default {
     },
     isSelected: function (n) {
       return this.selected[1] === this.def.index && this.selected[0] === (n - 1) && this.visible === 'beatmaker'
+    },
+    toggleDeep: function () {
+
     }
   }
 }
@@ -64,6 +70,11 @@ export default {
 .instrument-name {
   padding-left: 10px;
   padding-top: 4px;
+  padding-right: 10px;
+  cursor: pointer; cursor: hand;
+}
+.instrument-name:hover {
+  background-color: lightgrey;
 }
 .instrument-row {
   display: flex;

@@ -30,6 +30,7 @@
           v-bind:selected="selected"
           v-bind:bmDeep="active"
           v-bind:ref="'instrumentrow'"
+          v-on:toggleDeep="$emit('toggleDeep')"
         ></instrument-row>
       </div>
     </div>

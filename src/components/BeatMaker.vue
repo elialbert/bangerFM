@@ -31,6 +31,8 @@
         v-bind:perMeasure="perMeasure"
         v-bind:visible="visible"
         v-bind:bmDeep="false"
+        v-on:toggleDeep="enterUp"
+        v-on:mouseOverName="mouseOverName"
       ></instrument-row>
     <beat-maker-deep ref='beatmakerdeep' v-if="deep == 1"
       v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
@@ -44,6 +46,7 @@
       v-on:changeSelect="changeSelect"
       v-on:resetBeatRow="resetBeatRow"
       v-on:needsToSave="saveBeat"
+      v-on:toggleDeep="enterUp"
     >  
     </beat-maker-deep>
     </div>
@@ -195,6 +198,9 @@ export default {
     },
     enterUp: function () {
       this.deep = !this.deep
+    },
+    mouseOverName: function (rowIndex) {
+      this.selected = [this.selected[0], rowIndex]
     },
     animate: function (col, clear) {
       for (var i = 0; i < this.defsLength; i++) {

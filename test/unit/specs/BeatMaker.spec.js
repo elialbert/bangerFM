@@ -166,4 +166,16 @@ describe('BeatMaker.vue', () => {
       })
     })
   })
+
+  it ('can toggle deep mode', done => {
+    expect(component.$el.querySelectorAll('#beatmakerdeep').length).to.equal(0)
+    component.enterUp()
+    check(Vue, false, () => {
+      expect(component.$el.querySelectorAll('#beatmakerdeep').length).to.equal(1)
+      component.enterUp()
+      check(Vue, done, () => {
+        expect(component.$el.querySelectorAll('#beatmakerdeep').length).to.equal(0)
+      })
+    })
+  })
 })

@@ -1,3 +1,5 @@
+import Tonal from 'tonal'
+window.t = Tonal
 var makePitches = function () {
   var p = []
   var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#']
@@ -70,6 +72,7 @@ var qTimeLookup = function (perMeasure) {
 }
 
 var pitchKeys = ['C Major', 'D Major']
+
 var makePitchKeyOptions = function () {
   var r = []
   for (let pkey of pitchKeys) {
@@ -108,7 +111,10 @@ var getInstrumentByIndex = function (defs, index) {
 }
 
 var randomPitchForKey = function (pitchKey) {
-  return 'D4'
+  let notes = Tonal.key.scale(pitchKey)
+  let choice = notes[Math.floor(Math.random() * notes.length)]
+  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
+  return choice + octave
 }
 
 var createRandomIBeat = function (perMeasure, randomize = true, pitchKey = 'C Major') {
@@ -118,7 +124,7 @@ var createRandomIBeat = function (perMeasure, randomize = true, pitchKey = 'C Ma
     inner[j] = innerDataArrayObj()
     if (randomize) {
       inner[j].enabled = !!(Math.random() < 0.3)
-      inner[j].pitch = PITCHES[Math.floor(Math.random() * PITCHES.length)]
+      inner[j].pitch = randomPitchForKey(pitchKey)
     }
   }
   return inner

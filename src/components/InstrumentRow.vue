@@ -1,15 +1,20 @@
 <template>
 <div class="instrument-row">
-  <div v-for="n in numColsSafe" 
-    class="beat-column" v-on:mouseover="hoverSelect(n-1, $event)" v-on:click="hoverClick"
-    v-bind:class="{ selected: isSelected(n), selectedDeep: isSelectedDeep(n),
-      enabled: enabledArray[n - 1].enabled,
-      playing: playing == n - 1,
-      downbeat: (n-1) % perMeasure == 0,
-      triplet: enabledArray[n-1].triplet.enabled,
-      measureSub: enabledArray[n-1].measureSub}"
-  >
+  <div v-for="n in numColsSafe">
+    <triplet-beat-column 
+      v-if="enabledArray[n-1].triplet.enabled" v-on:click="hoverClick"
+      v-on:mouseover="hoverSelect(n-1, $event)"
+    ></triplet-beat-column>
+    <div 
+      class="beat-column" v-on:mouseover="hoverSelect(n-1, $event)" v-on:click="hoverClick"
+      v-bind:class="{ selected: isSelected(n), selectedDeep: isSelectedDeep(n),
+        enabled: enabledArray[n - 1].enabled,
+        playing: playing == n - 1,
+        downbeat: (n-1) % perMeasure == 0,
+        measureSub: enabledArray[n-1].measureSub}"
+      >
     <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
+    </div>
   </div>
   <div class="instrument-name">{{ def.name }}</div>
 </div>
@@ -17,10 +22,12 @@
 
 <script>
 import mutils from '../assets/movementUtils'
+import TripletBeatColumn from './TripletBeatColumn'
 
 export default {
   name: 'instrument-row',
   props: ['def', 'selected', 'numCols', 'enabledArray', 'perMeasure', 'visible', 'bmDeep'],
+  components: { TripletBeatColumn },
   data: function () {
     return {
       playing: -1
@@ -104,13 +111,13 @@ div.beat-column.enabled {
   color: blue;
   font-size: 12px;
 }
-div.beat-column.triplet.enabled {
+/*div.beat-column.triplet.enabled {
   background: linear-gradient(to right, red, orange, blue);
 }
 div.beat-column.triplet.enabled.selected {
   background: linear-gradient(to right, red, orange, green);
 }
-.beat-column.measureSub {
+*/.beat-column.measureSub {
   background: linear-gradient(to right, white, red, black);
 }
 .beat-column.measureSub.enabled {

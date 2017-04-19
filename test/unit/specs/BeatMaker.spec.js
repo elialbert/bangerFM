@@ -125,4 +125,45 @@ describe('BeatMaker.vue', () => {
       })
     })
   })
+
+  it ('can have 3beat measures in 4 time and move left/right', done => {
+    for (let i = 0; i < 4; i++) {
+      component.dataArray[0][i].measureSub = '8t'
+    }
+    expect(component.selected[0]).to.equal(0)
+    component.moveRight()
+    component.moveRight()
+    component.moveRight()
+    check(Vue, false, () => {
+      expect(component.selected[0]).to.equal(4)
+      component.moveLeft()
+      check(Vue, done, () => {
+        expect(component.selected[0]).to.equal(2)
+      })
+    })
+  })
+
+  it ('can have 3beat measures in 4 time and move at row end', done => {
+    for (let i = 28; i < 32; i++) {
+      component.dataArray[1][i].measureSub = '8t'
+    }
+    component.selected[0] = 28
+    component.selected[1] = 1
+    component.moveRight()
+    component.moveRight()
+    component.moveRight()
+    component.moveRight()
+    component.moveRight()
+    check(Vue, false, () => {
+      expect(component.selected[1]).to.equal(1)
+      expect(component.selected[0]).to.equal(30)
+      component.moveUp()
+      component.moveRight()
+      component.moveDown()
+      check(Vue, done, () => {
+        expect(component.selected[1]).to.equal(1)
+        expect(component.selected[0]).to.equal(30)
+      })
+    })
+  })
 })

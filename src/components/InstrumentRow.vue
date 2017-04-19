@@ -1,23 +1,26 @@
 <template>
 <div class="instrument-row">
-    <div v-for="n in numColsSafe" 
-      class="beat-column" v-on:mouseover="hoverSelect(n-1, $event)" v-on:click="hoverClick"
-      v-bind:class="{ selected: selected[1] == def.index && selected[0] == n - 1 && visible == 'beatmaker', 
-        enabled: enabledArray[n - 1].enabled,
-        playing: playing == n - 1,
-        downbeat: (n-1) % perMeasure == 0,
-        triplet: enabledArray[n-1].triplet.enabled}"
-    >
-      <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
-    </div>
-    <div class="instrument-name">{{ def.name }}</div>
+  <div v-for="n in numColsSafe" 
+    class="beat-column" v-on:mouseover="hoverSelect(n-1, $event)" v-on:click="hoverClick"
+    v-bind:class="{ selected: isSelected(n), selectedDeep: isSelectedDeep(n),
+      enabled: enabledArray[n - 1].enabled,
+      playing: playing == n - 1,
+      downbeat: (n-1) % perMeasure == 0,
+      triplet: enabledArray[n-1].triplet.enabled,
+      measureSub: enabledArray[n-1].measureSub}"
+  >
+    <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
+  </div>
+  <div class="instrument-name">{{ def.name }}</div>
 </div>
 </template>
 
 <script>
+import mutils from '../assets/movementUtils'
+
 export default {
   name: 'instrument-row',
-  props: ['def', 'selected', 'numCols', 'enabledArray', 'perMeasure', 'visible'],
+  props: ['def', 'selected', 'numCols', 'enabledArray', 'perMeasure', 'visible', 'bmDeep'],
   data: function () {
     return {
       playing: -1
@@ -34,6 +37,15 @@ export default {
     },
     hoverClick: function () {
       this.$emit('hoverClick')
+    },
+    isSelectedDeep: function (n) {
+      if (this.bmDeep === 'Timing' && this.visible === 'beatmaker') {
+        let offsets = mutils.perMeasureOffsets(this.selected, this.perMeasure)
+        return (n <= this.selected[0] + offsets[1]) && (n > this.selected[0] - offsets[0])
+      }
+    },
+    isSelected: function (n) {
+      return this.selected[1] === this.def.index && this.selected[0] === (n - 1) && this.visible === 'beatmaker'
     }
   }
 }
@@ -43,7 +55,6 @@ export default {
 .instrument-name {
   padding-left: 10px;
   padding-top: 4px;
-  font-size: 12px;
 }
 .instrument-row {
   display: flex;
@@ -65,8 +76,23 @@ div.beat-column.enabled.selected {
 div.beat-column.playing {
   background: yellow;
 }
+div.beat-column.enabled.playing {
+  background: orange;
+}
 div.beat-column.selected {
   background: #a9f26a;
+}
+div.beat-column.selected.selectedDeep {
+  background: #a9f26a;
+}
+div.beat-column.selectedDeep {
+  background: #44c96a;
+}
+div.beat-column.selected.playing {
+  background: #d9f169;
+}
+div.beat-column.selected.enabled.playing {
+  background: #d9f169;
 }
 div.beat-column.enabled {
   background: red;
@@ -78,7 +104,40 @@ div.beat-column.enabled {
   color: blue;
   font-size: 12px;
 }
-div.beat-column.triplet {
-  background: linear-gradient(to right, red, yellow, green);
+div.beat-column.triplet.enabled {
+  background: linear-gradient(to right, red, orange, blue);
+}
+div.beat-column.triplet.enabled.selected {
+  background: linear-gradient(to right, red, orange, green);
+}
+.beat-column.measureSub {
+  background: linear-gradient(to right, white, red, black);
+}
+.beat-column.measureSub.enabled {
+  background: linear-gradient(to right, white, red, black);
+}
+.beat-column.measureSub.selectedDeep {
+  background: linear-gradient(to right, white, red, gray);
+}
+.beat-column.measureSub.selectedDeep.playing {
+  background: linear-gradient(to right, white, red, yellow);
+}
+.beat-column.measureSub.selected.selectedDeep {
+  background: linear-gradient(to right, white, red, green);
+}
+.beat-column.measureSub.enabled.selectedDeep {
+  background: linear-gradient(to right, white, green, black);
+}
+.beat-column.measureSub.enabled.selected.selectedDeep {
+  background: linear-gradient(to right, white, green, black);
+}
+.beat-column.measureSub.enabled.selected.playing {
+  background: linear-gradient(to right, white, green, yellow);
+}
+.beat-column.measureSub.enabled.selected.selectedDeep.playing {
+  background: linear-gradient(to right, white, green, yellow);
+}
+.beat-column.measureSub.enabled.selectedDeep.playing {
+  background: linear-gradient(to right, white, green, yellow);
 }
 </style>

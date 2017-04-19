@@ -72,7 +72,7 @@ export default {
     this.loadData()
     Tone.Transport.bpm.value = this.bpm
     Tone.Transport.swing = this.swing
-    Effects.setEQ(this.eqProps.low.val, this.eqProps.mid.val, this.eqProps.high.val)
+    this.doSetEQ()
   },
   watch: {
     user: function (val1, val2) {
@@ -82,6 +82,9 @@ export default {
     }
   },
   methods: {
+    doSetEQ: function () {
+      Effects.setEQ(this.eqProps.low.val, this.eqProps.mid.val, this.eqProps.high.val)
+    },
     doFBBinding: function () {
       firebaseBridge.cpdefRef(this.user, this.workspace).on('value', snapshot => {
         this.restoreState = true
@@ -115,7 +118,7 @@ export default {
       this.swing = data.swing
       if (data.eqProps.low.val !== this.eqProps.low.val || data.eqProps.mid.val !== this.eqProps.mid.val || data.eqProps.high.val !== this.eqProps.high.val) {
         this.eqProps = data.eqProps
-        Effects.setEQ(this.eqProps.low.val, this.eqProps.mid.val, this.eqProps.high.val)
+        this.doSetEQ()
       }
     },
     handleRestore: function (toRestore) {

@@ -21,7 +21,7 @@
     <div v-if="loading">Loading...</div>
     <div v-if="!loading && defs && dataArray && Object.keys(dataArray).length">
       <instrument-row v-for="(key, index) in sortedDefKeys"
-        v-if="(key != '.key') && !loading && dataArray[index]"
+        v-if="(key != '.key') && !loading && dataArray[index] && !deep"
         v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
         v-bind:ref="'instrumentrow' + defs[key].index"
         v-bind:def="defs[key]"
@@ -30,7 +30,22 @@
         v-bind:enabledArray="dataArray[index]"
         v-bind:perMeasure="perMeasure"
         v-bind:visible="visible"
+        v-bind:bmDeep="false"
       ></instrument-row>
+    <beat-maker-deep ref='beatmakerdeep' v-if="deep == 1"
+      v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
+      v-bind:visible="visible"
+      v-bind:selected="selected"
+      v-bind:selectedRow="selected[1]"
+      v-bind:dataArray="dataArray[selected[1]]"
+      v-bind:def="defs[sortedDefKeys[selected[1]]]"
+      v-bind:numCols="numCols"
+      v-bind:perMeasure="perMeasure"
+      v-on:changeSelect="changeSelect"
+      v-on:resetBeatRow="resetBeatRow"
+      v-on:needsToSave="saveBeat"
+    >  
+    </beat-maker-deep>
     </div>
   </div>
 </template>
@@ -50,6 +65,7 @@ import mutils from '../assets/movementUtils'
 import Network from './mixins/Network'
 import BeatMakerFBBinding from './mixins/fbbinding/BeatMakerFBBinding'
 import BeatMakerChangeBank from './mixins/changebank/BeatMakerChangeBank'
+import BeatMakerDeep from '../components/BeatMakerDeep'
 
 export default {
   name: 'beat-maker',
@@ -58,7 +74,8 @@ export default {
   components: {
     InstrumentRow,
     Instrument,
-    BankChoice
+    BankChoice,
+    BeatMakerDeep
   },
   data: function () {
     return {
@@ -73,7 +90,9 @@ export default {
       autoFillHistory: {},
       loading: false,
       defsLength: 8,
-      idefLookup: {}
+      idefLookup: {},
+      deep: 0,
+      deepPlaying: 0
     }
   },
   beforeCreate: function () {
@@ -118,6 +137,9 @@ export default {
         this.select()
       }
     },
+    changeSelect: function (x, y) {
+      this.selected = [x, y]
+    },
     doFBObjLength: function () {
       this.defsLength = firebaseBridge.fbObjLength(this.defs) || 8
       return this.defsLength
@@ -156,17 +178,28 @@ export default {
         this.saveBeat()
       })
     },
+    enterUp: function () {
+      this.deep = !this.deep
+    },
     animate: function (col, clear) {
       for (var i = 0; i < this.defsLength; i++) {
-        if (this.$refs['instrumentrow' + String(i)][0] === undefined) {
-          return
+        if (this.deep) {
+          i = this.selected[1]
+          this.$refs.beatmakerdeep.$refs.instrumentrow.playing = col
+        } else {
+          if (this.$refs['instrumentrow' + String(i)][0] === undefined) {
+            return
+          }
+          this.$refs['instrumentrow' + String(i)][0].playing = col
         }
-        this.$refs['instrumentrow' + String(i)][0].playing = col
-        if (col === 29 && clear) {
+        if (col === 29 && clear && !this.deep) {
           var self = this
           setTimeout(function (ii) {
             self.$refs['instrumentrow' + String(ii)][0].playing = -1
           }, 100, i)
+        }
+        if (this.deep) {
+          break
         }
       }
     },
@@ -180,12 +213,16 @@ export default {
       if (this.loop) {
         beatBridge.stopTransport()
       }
+      this.deepPlaying = false
       this.running = false
       this.$emit('updateMessage', 'Playing: ' + this.running)
     },
     startPlaying: function () {
       this.stopPlaying()
       beatBridge.startTransport()
+      if (this.deep) {
+        this.deepPlaying = true
+      }
       this.loop = beatBridge.makeLoop(beatBridge.dataFunc(this, this.animate, this.defs), this.numCols)
       this.loop.start(0)
       this.running = true
@@ -226,6 +263,9 @@ export default {
       this.dataArray = iutils.createDataArray(this.perMeasure, this.doFBObjLength())
       if (this.running) { this.stopPlaying() }
       this.saveBeat()
+    },
+    resetBeatRow: function () {
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false)
     },
     handleRestore: function (toRestore) {
       if ((toRestore.key !== this.beatBankChoice) || (toRestore.objType !== 'bm')) {

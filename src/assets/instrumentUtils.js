@@ -55,9 +55,18 @@ var innerDataArrayObj = function () {
     enabled: false,
     pitch: pitch,
     triplet: {enabled: false},
+    measureSub: false,
     e1: false,
     e2: false
   }
+}
+
+var qTimeLookup = function (perMeasure) {
+  return {
+    '3 Beats': '8t',
+    '4 Beats': undefined,
+    '5 Beats': undefined
+  }[perMeasure]
 }
 
 var createDataArray = function (perMeasure = 4, numInstruments = 12) {
@@ -111,5 +120,6 @@ export default {
   getInstrumentByIndex: getInstrumentByIndex,
   createRandomIBeat: createRandomIBeat,
   PITCHES: PITCHES,
-  pitchToOffset: pitchToOffset
+  pitchToOffset: pitchToOffset,
+  qTimeLookup: qTimeLookup
 }

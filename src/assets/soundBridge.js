@@ -10,6 +10,7 @@ import LowDrum from '../assets/instruments/lowDrum'
 import Bell from '../assets/instruments/bell'
 import sampler from '../assets/instruments/sampler'
 import Tone from './tone.js'
+import effects from '../assets/instruments/effects'
 
 var ms
 var bass
@@ -46,6 +47,7 @@ var reconstructInstruments = function (cb) {
   let audioContext = new window.AudioContext()
   Tone.context.close().then(() => {
     Tone.setContext(audioContext)
+    effects.newMeter()
     constructInstruments()
     cb()
   })

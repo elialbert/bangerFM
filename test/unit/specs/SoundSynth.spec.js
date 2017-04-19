@@ -53,17 +53,15 @@ describe('SoundSynth.vue', () => {
 
   it('can reset defs', done => {
     component.resetSoundbank()
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       var v1 = component.$refs['instrument0'][0].$children[0].sdata.val
-      done()
       component.sendKey(0, 1)
       var v2 = component.$refs['instrument0'][0].$children[0].sdata.val
       expect(v2).to.be.above(v1)
       component.resetSoundbank()
-      Vue.nextTick(() => {
+      check(Vue, done, () => {
         var v3 = component.$refs['instrument0'][0].$children[0].sdata.val
         expect(v3).to.equal(v1)
-        done()
       })
     })
   })
@@ -81,21 +79,18 @@ describe('SoundSynth.vue', () => {
         expect(newVal).to.be.above(startVal)
         component.sendKey(0, 1)
         setTimeout(() => {
-          Vue.nextTick(() => {
+          check(Vue, false, () => {
             let toRestore = actionHistory.undo()
             expect(toRestore.key).to.equal(0)
-            done()
             component.handleRestore(toRestore)
-            Vue.nextTick(() => {
+            check(Vue, false, () => {
               var newVal2 = component.$refs['instrument0'][0].$children[0].sdata.val
               expect(newVal2).to.equal(newVal)
-              done()
               let toRestore2 = actionHistory.redo()
               component.handleRestore(toRestore2)
-              Vue.nextTick(() => {
+              check(Vue, done, () => {
                 var newVal3 = component.$refs['instrument0'][0].$children[0].sdata.val      
                 expect(newVal3).to.be.above(newVal2)
-                done()
               })
             })
           })

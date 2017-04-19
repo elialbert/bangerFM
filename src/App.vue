@@ -1,7 +1,7 @@
 <template>
   <div id="app" tabindex="0" ref='app' class='unselectable'
-    @keydown.down="noArg('moveDown', $event)" 
-    @keydown.up="noArg('moveUp', $event)"
+    @keydown.down.prevent="noArg('moveDown', $event)" 
+    @keydown.up.prevent="noArg('moveUp', $event)"
     @keydown.right="noArg('moveRight', $event)"
     @keydown.left="noArg('moveLeft', $event)"
     @keydown.space.prevent="noArg('spaceDown')" 
@@ -110,6 +110,7 @@ import HelpOverlay from './components/HelpOverlay'
 import NavHeader from './components/NavHeader'
 import NavFooter from './components/NavFooter'
 import mutils from './assets/movementUtils'
+import soundBridge from './assets/soundBridge'
 import firebaseBridge from './assets/instrumentDefs/firebaseBridge'
 import Tone from './assets/tone.js'
 import StartAudioContext from 'startaudiocontext'
@@ -117,6 +118,7 @@ import HistoryModifier from './components/mixins/HistoryModifier'
 import WorkspaceManager from './components/WorkspaceManager'
 import defLoader from './assets/instrumentDefs/defLoader'
 import soundsynthUtils from './assets/soundsynthUtils'
+import waveform from './assets/instruments/waveform'
 
 export default {
   name: 'app',
@@ -181,8 +183,17 @@ export default {
     },
     crashEvent: function () {
       console.log('crash event!')
-      this.message = 'Web Audio has crashed, refreshing now. :( All your musics have been saved.'
-      window.location.reload()
+      this.message = 'Web Audio has crashed, restarting nodes now. Should be back in no time.'
+      let wasPlaying = this.$refs.songmaker.running
+      this.$refs.songmaker.stopPlaying()
+      this.$refs.beatmaker.stopPlaying()
+      soundBridge.reconstructInstruments(() => {
+        waveform.analyser = waveform.newAnalyser()
+        this.$refs.controlpanel.doSetEQ()
+        this.$refs.soundsynth.redoDefs()
+        StartAudioContext(Tone.context)
+        if (wasPlaying) { this.$refs.songmaker.startPlaying() }
+      })
     },
     doSignout: function () {
       this.user = false

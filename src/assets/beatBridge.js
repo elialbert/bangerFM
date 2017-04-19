@@ -21,19 +21,29 @@ var changePitch = function (cur, direction) {
 
 var tripletTime = new Tone.Time('32t').toSeconds()
 var doubledTripletTime = tripletTime + tripletTime
-
+window.Tone = Tone
 var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
   return function (time, col) {
     for (var i = 0; i < vm.defsLength; i++) {
+      if (vm.deep && vm.deepPlaying) {
+        i = vm.selected[1]
+      }
       var square = (vm.dataArray[i] || {})[col]
       if (!square) { break }
       let idef = vm.idefLookup[i]
+      let qTime = time
+      if (square.measureSub) {
+        qTime = Tone.Time(time).quantize(square.measureSub).toSeconds()
+      }
       if (square.enabled) {
-        soundBridge.startBeat(idef, square.pitch, time, i)
+        soundBridge.startBeat(idef, square.pitch, qTime, i)
       }
       if (square.triplet.enabled) {
-        soundBridge.startBeat(idef, square.pitch, time + tripletTime, i)
-        soundBridge.startBeat(idef, square.pitch, time + doubledTripletTime, i)
+        soundBridge.startBeat(idef, square.pitch, qTime + tripletTime, i)
+        soundBridge.startBeat(idef, square.pitch, qTime + doubledTripletTime, i)
+      }
+      if (vm.deep && vm.deepPlaying) {
+        break
       }
     }
     Tone.Draw.schedule(function () {

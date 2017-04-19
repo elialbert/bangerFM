@@ -43,24 +43,20 @@ describe('SongMaker.vue', () => {
     component.moveDown()
     component.changeBank(2)
     component.moveLeft()
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       let r = component.songData[1][0]
       expect(r).to.equal(2)
-      done()
       component.moveRight()
       component.changeBank(3)
-      Vue.nextTick(() => {
+      check(Vue, false, () => {
         component.changeBank(1)
-        done()
-        Vue.nextTick(() => {
+        check(Vue, false, () => {
           expect(component.songData[1][1]).to.equal(1)
-          done()
           component.moveLeft()
           component.backspace()
-          Vue.nextTick(() => {
+          check(Vue, done, () => {
             expect(component.songData[1][0]).to.equal(1)
             expect(Object.values(component.songData[1]).length).to.equal(1)
-            done()
           })
         })
       })

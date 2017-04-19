@@ -29,24 +29,21 @@ describe('SoundSynthFB.vue', () => {
     // spy(component.$bindAsObject)
     expect(firebaseBridge.idefRef(true, 1)).to.equal('path')
     vm.user = 'fakeuserid'
-    Vue.nextTick(() => {
+    check(Vue, done, () => {
       expect(component.$bindAsObject.called).to.be.true
-      done()
     })
   })
 
   it('can go deep', done => {
     component.enterUp()
-    Vue.nextTick(() => {
+    check(Vue, false, () => {
       expect(component.deep).to.be.true
       let envelope = component.$refs.soundsynthdeep.$refs.envelope0
       let event = {srcElement: {valueAsNumber: 50}}
       envelope.changeSlider('volume', event)
-      done()
-      Vue.nextTick(() => {
+      check(Vue, done, () => {
         component.enterUp()
         expect(component.deep).to.be.false
-        done()
       })
     })
   })

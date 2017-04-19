@@ -68,9 +68,8 @@ describe('InstrumentRow.vue', () => {
                  }, 
                  '<test :def="def" :selected="selected" :numCols="numCols" :enabledArray="enabledArray"></test>')
     component = getComponent(vm)
-    Vue.nextTick(() => {
+    check(Vue, done, () => {
       expect(component.$el.querySelectorAll('.enabled').length).to.equal(3)
-      done()
     })
   })
 })

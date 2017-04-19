@@ -51,6 +51,7 @@
       :crashEvent="crashEvent"
       :workspace="workspace"
       :wsToggle="toggleWS"
+      :helpOverlay="helpOverlay"
     ></nav-header>
     <help-overlay
       v-bind:class="{ visible: helpOverlayEnabled == 1, hidden: helpOverlayEnabled == 0}"

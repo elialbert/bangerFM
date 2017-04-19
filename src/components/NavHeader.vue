@@ -4,6 +4,11 @@
   <sound-meter
     v-on:crashEvent="crashEvent" ref='soundmeter'
   ></sound-meter>
+  <div id='help-overlay-button' 
+    v-on:click.stop="helpOverlay(undefined, true, false)"
+  >
+    <span>?</span>
+  </div>
   <div id='message'>{{ message }}</div>
   <Auth
     :user="user"
@@ -20,7 +25,7 @@ import Auth from './Auth'
 
 export default {
   name: 'control-panel',
-  props: ['user', 'authCB', 'signedOutCB', 'crashEvent', 'message', 'workspace', 'wsToggle'],
+  props: ['user', 'authCB', 'signedOutCB', 'crashEvent', 'message', 'workspace', 'wsToggle', 'helpOverlay'],
   components: { SoundMeter, Auth }
 }
 </script>

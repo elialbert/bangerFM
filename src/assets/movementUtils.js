@@ -24,6 +24,7 @@ export default {
         data[selected[1]][selected[0] + i * idirection].pitch = iutils.newPitch(pitchKey, instrumentIndex)
       } else {
         data[selected[1]][selected[0] + i * idirection].enabled = false
+        data[selected[1]][selected[0] + i * idirection].pitch = false
       }
     }
     var newHistory = {}

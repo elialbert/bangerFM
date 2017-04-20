@@ -90,6 +90,7 @@ describe('BeatMaker.vue', () => {
         expect(component.dataArray[2][16].enabled).to.equal(true)
         expect(component.dataArray[2][0].enabled).to.equal(true)
         expect(component.dataArray[2][1].enabled).to.equal(true)
+        expect(component.dataArray[2][1].pitch).not.to.equal(false)
         component.autoFill('moveRight')
         check(Vue, done, () => {
           expect(component.dataArray[2][0].enabled).to.equal(true)
@@ -176,6 +177,19 @@ describe('BeatMaker.vue', () => {
       component.enterUp()
       check(Vue, done, () => {
         expect(component.$el.querySelectorAll('#beatmakerdeep').length).to.equal(0)
+      })
+    })
+  })
+
+  it ('has different pitches for different instruments', done => {
+    component.selected = [0, 0]
+    component.select()
+    check(Vue, false, () => {
+      expect(component.dataArray[0][0].pitch).to.equal('C5')
+      component.moveDown()
+      component.select()
+      check(Vue, done, () => {
+        expect(component.dataArray[1][0].pitch).to.equal('C3')
       })
     })
   })

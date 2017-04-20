@@ -24,6 +24,19 @@
           </span>
         </div>
 
+        <div class='bmd-nav' v-if="active == 'Volume'">
+          <span class='control-span'>
+            <button id="reset-beat" type="button" v-on:click="$emit('resetBeatRow')">Reset Beat Row Volume</button>
+          </span>
+        </div>
+
+        <div class='bmd-nav' v-if="active == 'Probability'">
+          <span class='control-span'>
+            <button id="reset-beat" type="button" v-on:click="$emit('resetBeatRow')">Reset Beat Row Probability</button>
+            <button id='randomize-beat' type='button' v-on:click="$emit('randomizeRow')">Randomize Beat Row Probability</button>
+          </span>
+        </div>
+
         <DrawAutomation v-if="active != 'Timing'"
           :active="active"
           :dataArray="dataArray"

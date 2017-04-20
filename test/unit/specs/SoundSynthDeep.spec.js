@@ -8,11 +8,11 @@ describe('SoundSynthDeep.vue', () => {
   var component
 
   beforeEach(function() {
+    defLoader.clearCookies()
     let defs = defLoader.load(0)
     vm = setupVm(Vue, SoundSynthDeep, {visible: 'soundsynth', selected: 0, defs: defs, soundBankChoice: 0}, 
                  '<test :visible="visible" :user=false :defs="defs" :selected="selected" :soundBankChoice="soundBankChoice"></test>')
     component = getComponent(vm)
-    defLoader.clearCookies()
   })
 
   it('has def', function () {

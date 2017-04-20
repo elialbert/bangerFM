@@ -9,16 +9,18 @@
     <div class='bmd-container'>
       <div class='bmdeep-inner'>
         <div class='bmd-nav' v-if="active == 'Timing'">
-          <div class='bmd-nav-item' v-for="key of navItemsTiming"
-            v-bind:class="{selectedNav: activeTiming == key}"
-            @click="activeTiming = key"
-          >{{key}}</div>
           <span class='control-span'>
             <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
             <button id="fill-3" type="button" v-on:click="changePerMeasure('3 Beats')">Fill 3</button>
             <button id="fill-4" type="button" v-on:click="changePerMeasure('4 Beats')">Fill 4</button>
           </span>
+        </div>
 
+        <div class='bmd-nav' v-if="active == 'Pitch'">
+          <span class='control-span'>
+            <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
+            <button id='randomize-beat' type='button' v-on:click="randomizePitch()">Randomize Beat Row Pitch</button>
+          </span>
         </div>
 
         <instrument-row v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
@@ -30,6 +32,7 @@
           v-bind:selected="selected"
           v-bind:bmDeep="active"
           v-bind:ref="'instrumentrow'"
+          v-on:toggleDeep="$emit('toggleDeep')"
         ></instrument-row>
       </div>
     </div>
@@ -46,13 +49,12 @@ export default {
   components: {
     InstrumentRow
   },
-  props: ['visible', 'selected', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure'],
+  props: ['visible', 'selected', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure', 'pitchKey'],
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      navItemsTiming: ['3 Beats', '4 Beats'],
-      active: 'Timing',
-      activeTiming: '3 Beats'
+      active: 'Pitch',
+      pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
   methods: {
@@ -73,14 +75,18 @@ export default {
       if (this.active === 'Timing') {
         toChangeArray = this.getTimingChange()
       }
-      for (let index of toChangeArray) {
+      for (let index of toChangeArray.filter(this.onlyUnique)) {
         this.deepChange(index)
       }
       this.$emit('needsToSave')
     },
     deepChange: function (index) {
       if (this.active === 'Timing') {
-        this.dataArray[index].measureSub = iutils.qTimeLookup(this.activeTiming)
+        if (this.dataArray[index].measureSub) {
+          this.dataArray[index].measureSub = false
+        } else {
+          this.dataArray[index].measureSub = '8t'
+        }
       }
     },
     getTimingChange: function () {
@@ -97,12 +103,19 @@ export default {
     resetBeat: function () {
       this.$emit('resetBeatRow')
     },
+    randomizePitch: function () {
+      this.$emit('randomizePitch')
+    },
     changePerMeasure: function (num) {
       for (let key in this.dataArray) {
         this.dataArray[key].measureSub = iutils.qTimeLookup(num)
       }
       this.$emit('needsToSave')
+    },
+    onlyUnique: function (value, index, self) {
+      return self.indexOf(value) === index
     }
+
   },
   computed: {
   }

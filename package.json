@@ -18,6 +18,7 @@
     "firebaseui": "^1.0.0",
     "raven-js": "^3.12.1",
     "startaudiocontext": "^1.2.0",
+    "tonal": "^0.69.5",
     "vue": "^2.1.0",
     "vue-firebase-auth": "^0.1.0",
     "vue-focus": "^2.1.0",

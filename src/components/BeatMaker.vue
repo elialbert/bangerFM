@@ -12,10 +12,22 @@
         v-bind:ref="'beatBankChoice'"
       ></bank-choice>
       <span class='control-span'>
-        <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat</button>
+        <span class='control-span-container'>
+          <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat</button>
+        </span>
+        <span class='control-span-container'>
         Per Measure: {{ perMeasure }}
         <button id="pm-up" type="button" v-on:click="changePerMeasure(1)">UP</button> || 
         <button id="pm-down" type="button" v-on:click="changePerMeasure(-1)">DOWN</button>
+        </span>
+        <span class='control-span-container'>
+          Pitch Key:
+          <select v-model="pitchKey">
+            <option v-for="key in pitchKeyOptions" v-bind:value="key.value">
+              {{ key.value }}
+            </option>
+          </select>          
+        </span>
       </span>
     </div>
     <div v-if="loading">Loading...</div>
@@ -31,6 +43,8 @@
         v-bind:perMeasure="perMeasure"
         v-bind:visible="visible"
         v-bind:bmDeep="false"
+        v-on:toggleDeep="enterUp"
+        v-on:mouseOverName="mouseOverName"
       ></instrument-row>
     <beat-maker-deep ref='beatmakerdeep' v-if="deep == 1"
       v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
@@ -41,9 +55,12 @@
       v-bind:def="defs[sortedDefKeys[selected[1]]]"
       v-bind:numCols="numCols"
       v-bind:perMeasure="perMeasure"
+      v-bind:pitchKey="pitchKey"
       v-on:changeSelect="changeSelect"
       v-on:resetBeatRow="resetBeatRow"
       v-on:needsToSave="saveBeat"
+      v-on:toggleDeep="enterUp"
+      v-on:randomizePitch="randomizePitchRow"
     >  
     </beat-maker-deep>
     </div>
@@ -92,17 +109,29 @@ export default {
       defsLength: 8,
       idefLookup: {},
       deep: 0,
-      deepPlaying: 0
+      deepPlaying: 0,
+      pitchKey: 'C Minor Blues',
+      pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
   beforeCreate: function () {
     this.perMeasure = this.dataArray && this.dataArray.perMeasure || 4
+    this.pitchKey = this.dataArray && this.dataArray.pitchKey || 'C Minor Blues'
+  },
+  mounted: function () {
+    this.pitchKey = this.dataArray.pitchKey || 'C Minor Blues'
+    this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
     user: function (val1, val2) {
       if (val1 && !val2) {
         this.doFBBinding(this.beatBankChoice)
       }
+    },
+    pitchKey: function (newKey) {
+      this.dataArray = iutils.transposeBeat(this.dataArray, newKey, this.dataArray.pitchKey || 'C Major')
+      this.dataArray.pitchKey = newKey
+      this.saveBeat()
     }
   },
   computed: {
@@ -125,6 +154,10 @@ export default {
       this.perMeasure += dir
       this.resetBeat()
     },
+    randomizePitchRow: function () {
+      this.dataArray[this.selected[1]] = iutils.createRandomIPitch(this.dataArray[this.selected[1]], this.pitchKey, this.idefLookup[this.selected[1]])
+      this.saveBeat()
+    },
     curSquare: function () {
       return this.dataArray[this.selected[1]][this.selected[0]]
     },
@@ -146,18 +179,31 @@ export default {
     },
     moveRight: function () {
       this.selected = mutils.moveRight(this.selected, this.numCols)
+      if (this.isHiddenSquare()) {
+        if (this.selected[0] === this.numCols - 1) {
+          return this.moveLeft()
+        }
+        return this.moveRight()
+      }
     },
     moveLeft: function () {
       this.selected = mutils.moveLeft(this.selected)
+      if (this.isHiddenSquare()) { return this.moveLeft() }
+    },
+    isHiddenSquare: function () {
+      if (!this.curSquare().measureSub) { return false }
+      return this.selected[0] % this.perMeasure === this.perMeasure - 1
     },
     moveDown: function () {
       this.selected = mutils.moveDown(this.selected, this.doFBObjLength() - 1)
+      if (this.isHiddenSquare()) { return this.moveLeft() }
     },
     moveUp: function () {
       this.selected = mutils.moveUp(this.selected)
+      if (this.isHiddenSquare()) { return this.moveLeft() }
     },
     autoFill: function (direction) {
-      let result = mutils.autoFill(direction, this.selected, this.dataArray, this.autoFillHistory)
+      let result = mutils.autoFill(direction, this.selected, this.dataArray, this.autoFillHistory, this.pitchKey, this.idefLookup[this.selected[1]])
       this.dataArray = result.data
       this.autoFillHistory = result.history
       this.networkWait('autofill', () => {
@@ -171,8 +217,11 @@ export default {
       let curSquare = this.curSquare()
       if (!curSquare.enabled) {
         curSquare.enabled = true
+        curSquare.pitch = iutils.newPitch(this.pitchKey, this.idefLookup[this.selected[1]])
       } else {
+        let prevMeasureSub = this.curSquare().measureSub
         this.dataArray[this.selected[1]][this.selected[0]] = iutils.innerDataArrayObj()
+        this.curSquare().measureSub = prevMeasureSub
       }
       this.networkWait('select', () => {
         this.saveBeat()
@@ -180,6 +229,9 @@ export default {
     },
     enterUp: function () {
       this.deep = !this.deep
+    },
+    mouseOverName: function (rowIndex) {
+      this.selected = [this.selected[0], rowIndex]
     },
     animate: function (col, clear) {
       for (var i = 0; i < this.defsLength; i++) {
@@ -229,6 +281,7 @@ export default {
       this.$emit('updateMessage', 'Playing: ' + this.running)
     },
     instrumentIndex: function () {
+      // could be this.idefLookup[this.selected[1]] ???
       return this.$refs['instrument' + String(this.selected[1])].def.instrumentIndex
     },
     pipeDown: function () {
@@ -243,7 +296,7 @@ export default {
         this.saveBeat()
         return
       }
-      this.curSquare().pitch = beatBridge.changePitch(this.curSquare().pitch, direction)
+      this.curSquare().pitch = beatBridge.changePitch(this.curSquare().pitch, direction, this.pitchKey)
       this.networkWait('pitch', () => {
         this.saveBeat()
       })
@@ -256,8 +309,8 @@ export default {
         defLoader.saveBeat(this.user, this.workspace, this.dataArray, explicitNum, skipFB, skipHistory)
       })
     },
-    loadBeat: function (num, perMeasure) {
-      return defLoader.loadBeat(this.user, this.workspace, num, perMeasure, false, this.doFBObjLength())
+    loadBeat: function (num) {
+      return defLoader.loadBeat(this.user, this.workspace, num, this.perMeasure, this.pitchKey, false, this.doFBObjLength())
     },
     resetBeat: function () {
       this.dataArray = iutils.createDataArray(this.perMeasure, this.doFBObjLength())
@@ -265,7 +318,7 @@ export default {
       this.saveBeat()
     },
     resetBeatRow: function () {
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false, this.pitchKey)
     },
     handleRestore: function (toRestore) {
       if ((toRestore.key !== this.beatBankChoice) || (toRestore.objType !== 'bm')) {
@@ -277,12 +330,12 @@ export default {
     },
     randomize: function () {
       this.$emit('updateMessage', 'Randomizing!')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, true, this.pitchKey, this.idefLookup[this.selected[1]])
       this.saveBeat()
     },
     clearInstrumentRow: function () {
       this.$emit('updateMessage', 'Clearing row.')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false)
+      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false, this.pitchKey)
     }
   }
 }
@@ -291,6 +344,7 @@ export default {
 <style>
 #beat-maker {
   width: 98.5%;
+  min-width: 1200px;
   overflow-x: scroll;
   overflow-y: hidden;
   border: 2px solid black;
@@ -316,7 +370,10 @@ export default {
   margin-left: 30px;
 }
 span.control-span {
-  padding-left: 6px;
+  padding-left: 4px;
   margin: 4px;
+}
+span.control-span-container {
+  margin-left: 20px;
 }
 </style>

@@ -92,7 +92,7 @@ var save = function (user, workspace, obj, num, skipHistory = false) {
   }
 }
 
-var loadBeat = function (user, workspace, num, perMeasure = 4, skipFB = false, numInstruments = 8) {
+var loadBeat = function (user, workspace, num, perMeasure = 4, pitchKey = 'C Major', skipFB = false, numInstruments = 8) {
   // grab beat from cookie (cheap & synchronous)
   let storedBeat = loaderVm.$localStorage.get('beatDef' + String(num))
   if (typeof (storedBeat) === 'string') {
@@ -100,7 +100,7 @@ var loadBeat = function (user, workspace, num, perMeasure = 4, skipFB = false, n
   }
   // create fresh if DNE
   if (!storedBeat || !Object.keys(storedBeat).length) {
-    storedBeat = iutils.createDataArray(perMeasure, numInstruments)
+    storedBeat = iutils.createDataArray(perMeasure, numInstruments, pitchKey)
   }
 
   if (user && !skipFB) { // if logged in and no fb beat, save the cookie/new beat to fb

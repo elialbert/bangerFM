@@ -11,12 +11,17 @@
         enabled: enabledArray[n - 1].enabled,
         playing: playing == n - 1,
         downbeat: (n-1) % perMeasure == 0,
+        lastBeatInMeasure: (n-1) % perMeasure == (perMeasure - 1),
+        ['numInMeasure' + (n-1) % perMeasure]: true,
         measureSub: enabledArray[n-1].measureSub}"
       >
     <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
     </div>
   </div>
-  <div class="instrument-name">{{ def.name }}</div>
+  <div class="instrument-name"
+    @mouseover="$emit('mouseOverName', def.index)"
+    @click="$emit('toggleDeep')"
+  >{{ def.name }}</div>
 </div>
 </template>
 
@@ -53,6 +58,9 @@ export default {
     },
     isSelected: function (n) {
       return this.selected[1] === this.def.index && this.selected[0] === (n - 1) && this.visible === 'beatmaker'
+    },
+    toggleDeep: function () {
+
     }
   }
 }
@@ -62,6 +70,11 @@ export default {
 .instrument-name {
   padding-left: 10px;
   padding-top: 4px;
+  padding-right: 10px;
+  cursor: pointer; cursor: hand;
+}
+.instrument-name:hover {
+  background-color: lightgrey;
 }
 .instrument-row {
   display: flex;
@@ -79,7 +92,9 @@ export default {
 div.beat-column.enabled.selected {
   background: yellow;
 }
-
+div.beat-column.enabled.selected.selectedDeep {
+  background: yellow;
+}
 div.beat-column.playing {
   background: yellow;
 }
@@ -98,8 +113,14 @@ div.beat-column.selectedDeep {
 div.beat-column.selected.playing {
   background: #d9f169;
 }
+div.beat-column.selectedDeep.playing {
+  background: #d9f169;
+}
 div.beat-column.selected.enabled.playing {
   background: #d9f169;
+}
+div.beat-column.enabled.selectedDeep {
+  background: #dff169;
 }
 div.beat-column.enabled {
   background: red;
@@ -111,13 +132,28 @@ div.beat-column.enabled {
   color: blue;
   font-size: 12px;
 }
-/*div.beat-column.triplet.enabled {
-  background: linear-gradient(to right, red, orange, blue);
+.beat-column.measureSub.numInMeasure0 {
+  width: calc(90px / 3);
+  left: 0%;
 }
-div.beat-column.triplet.enabled.selected {
-  background: linear-gradient(to right, red, orange, green);
+.beat-column.measureSub.numInMeasure1 {
+  width: calc(90px / 3);
+  left: calc((90px / 3));
 }
-*/.beat-column.measureSub {
+.beat-column.measureSub.numInMeasure2 {
+  width: calc(90px / 3);
+  left: calc(2 * (90px / 3));
+}
+.beat-column.measureSub.numInMeasure3 {
+  width: 0;
+  left: 0%;
+}
+.beat-column.measureSub.lastBeatInMeasure {
+  visibility: hidden;
+  margin: 0px;
+  border: 0px;
+}
+/*.beat-column.measureSub {
   background: linear-gradient(to right, white, red, black);
 }
 .beat-column.measureSub.enabled {
@@ -147,4 +183,5 @@ div.beat-column.triplet.enabled.selected {
 .beat-column.measureSub.enabled.selectedDeep.playing {
   background: linear-gradient(to right, white, green, yellow);
 }
+*/
 </style>

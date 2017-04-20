@@ -14,6 +14,7 @@ module.exports = {
         } else {
           this.dataArray = stored
           this.perMeasure = stored.perMeasure
+          this.pitchKey = stored.pitchKey
           this.restartFromChange()
           this.saveBeat()
         }

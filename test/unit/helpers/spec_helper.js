@@ -4,6 +4,7 @@ function check( Vue, done, f ) {
       f();
       if (done) { done() };
     } catch( e ) {
+      console.log(e)
       done( e );
     }
   })

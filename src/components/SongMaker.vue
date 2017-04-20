@@ -219,6 +219,7 @@ export default {
 #song-maker {
   border: 2px solid black;
   width: 98.5%;
+  min-width: 1200px;
   margin-bottom: 4px;
   margin-left: 2px;
   margin-right: 2px;

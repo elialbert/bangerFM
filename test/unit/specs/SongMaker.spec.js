@@ -7,12 +7,12 @@ describe('SongMaker.vue', () => {
   var component
 
   beforeEach(function() {
+    defLoader.clearCookies()
     vm = setupVm(Vue, SongMaker, {visible: 'songmaker'}, 
                  '<test :visible="visible"></test>')
     component = getComponent(vm)
     component.defs = defLoader.load(0)
     component.songData = {0: {0: 0, 1: 1, 2: 0, 3: 1}, 1: {}}
-    defLoader.clearCookies()
   })
 
   it('has defs', () => {

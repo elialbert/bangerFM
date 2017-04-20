@@ -9,6 +9,7 @@ describe('SoundSynthFB.vue', () => {
   var component
 
   beforeEach(function() {
+    defLoader.clearCookies()
     stubFBBridge(firebaseBridge)
     let user = false
     vm = setupVm(Vue, SoundSynth, {visible: 'soundsynth', user: user}, 
@@ -16,7 +17,6 @@ describe('SoundSynthFB.vue', () => {
     component = getComponent(vm)
     component.defs = defLoader.load(0)
     component.$unbind = sinon.stub()
-    defLoader.clearCookies()
   })
 
   it('has sanity', function () {

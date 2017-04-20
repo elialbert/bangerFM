@@ -108,7 +108,7 @@ export default {
       loading: false,
       defsLength: 8,
       idefLookup: {},
-      deep: 1,
+      deep: 0,
       deepPlaying: 0,
       pitchKey: 'C Minor Blues',
       pitchKeyOptions: iutils.pitchKeyOptions()

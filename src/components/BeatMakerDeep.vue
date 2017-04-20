@@ -54,7 +54,7 @@ export default {
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Pitch',
+      active: 'Timing',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },

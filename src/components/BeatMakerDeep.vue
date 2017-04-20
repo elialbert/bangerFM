@@ -20,7 +20,7 @@
         <div class='bmd-nav' v-if="active == 'Pitch'">
           <span class='control-span'>
             <button id="reset-beat" type="button" v-on:click="$emit('resetBeatRow')">Reset Beat Row Pitch</button>
-            <button id='randomize-beat' type='button' v-on:click="$emit('randomizePitch')">Randomize Beat Row Pitch</button>
+            <button id='randomize-beat' type='button' v-on:click="$emit('randomizeRow')">Randomize Beat Row Pitch</button>
           </span>
         </div>
 
@@ -54,7 +54,7 @@ export default {
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Timing',
+      active: 'Pitch',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
@@ -82,11 +82,19 @@ export default {
       this.$emit('needsToSave')
     },
     deepChange: function (index) {
+      let curSquare = this.dataArray[index]
       if (this.active === 'Timing') {
-        if (this.dataArray[index].measureSub) {
-          this.dataArray[index].measureSub = false
+        if (curSquare.measureSub) {
+          curSquare.measureSub = false
         } else {
-          this.dataArray[index].measureSub = '8t'
+          curSquare.measureSub = '8t'
+        }
+      } else if (this.active === 'Pitch') {
+        curSquare.enabled = !curSquare.enabled
+        if (curSquare.enabled) {
+          curSquare.pitch = iutils.newPitch(this.pitchKey, this.def.instrumentIndex)
+        } else {
+          curSquare.pitch = false
         }
       }
     },

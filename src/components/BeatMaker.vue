@@ -60,7 +60,6 @@
       v-on:resetBeatRow="resetBeatRow"
       v-on:needsToSave="saveBeat"
       v-on:toggleDeep="enterUp"
-      v-on:randomizePitch="randomizePitchRow"
       v-on:randomizeRow="randomize"
     >  
     </beat-maker-deep>
@@ -154,10 +153,6 @@ export default {
       if ((dir === 1 && this.perMeasure === 7) || (dir === -1 && this.perMeasure === 3)) { return }
       this.perMeasure += dir
       this.resetBeat()
-    },
-    randomizePitchRow: function () {
-      this.dataArray[this.selected[1]] = iutils.createRandomIPitch(this.dataArray[this.selected[1]], this.pitchKey, this.idefLookup[this.selected[1]])
-      this.saveBeat()
     },
     curSquare: function () {
       return this.dataArray[this.selected[1]][this.selected[0]]
@@ -285,8 +280,7 @@ export default {
       this.$emit('updateMessage', 'Playing: ' + this.running)
     },
     instrumentIndex: function () {
-      // could be this.idefLookup[this.selected[1]] ???
-      return this.$refs['instrument' + String(this.selected[1])].def.instrumentIndex
+      return this.idefLookup[this.selected[1]]
     },
     pipeDown: function () {
       soundBridge.startSound(this.instrumentIndex(), this.selected[1])

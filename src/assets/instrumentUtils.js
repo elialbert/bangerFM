@@ -32,12 +32,12 @@ var getNoiseType = function (val) {
   }[val]
 }
 
-var innerDataArrayObj = function (measureSub = false, pitch = false) {
+var innerDataArrayObj = function () {
   return {
-    enabled: pitch || false,
-    pitch: pitch,
+    enabled: false,
+    pitch: false,
     triplet: {enabled: false},
-    measureSub: measureSub,
+    measureSub: false,
     e1: false,
     e2: false
   }
@@ -165,7 +165,7 @@ var newPitch = function (pitchKey, selected) {
 var randomPitchForKey = function (pitchKey, selected) {
   let notes = Tonal.scale(pitchKey.toLowerCase())
   let choice = notes[Math.floor(Math.random() * notes.length)]
-  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
+  let octave = 3 // [3][Math.floor(Math.random() * 3)] // maybe do more here?
   let note = choice + octave
   note = doTransposeForInstrument(note, selected)
   return note
@@ -194,32 +194,32 @@ var createNewIBeat = function (randomize, vm) {
   let data = vm.dataArray[vm.selected[1]]
   let instrumentIndex = vm.idefLookup[vm.selected[1]]
   let numCols = calcNumCols(perMeasure)
+  let activeDeep = vm.deep && vm.$refs.beatmakerdeep.active
   var inner = {}
+
+  // maintain or randomize measuresub in normal randomize mode?
+  let maintainMeasureSub = activeDeep && activeDeep !== 'Timing'
+  let maintainPitch = activeDeep && activeDeep !== 'Pitch'
+  let maintainEnabled = activeDeep
+
   for (var j = 0; j < numCols; j++) {
-    let maintainMeasureSub = (vm.deep && randomize) || (vm.deep && vm.$refs.beatmakerdeep.active !== 'Timing')
-    let maintainOldPitch = (vm.deep && vm.$refs.beatmakerdeep.active !== 'Pitch')
-    let oldMeasureSub = maintainMeasureSub && data[j].measureSub || false
-    let oldPitch = maintainOldPitch && data[j].enabled && data[j].pitch || false
-    inner[j] = innerDataArrayObj(oldMeasureSub, oldPitch)
-    if (randomize && !maintainOldPitch) {
-      inner[j].enabled = !!(Math.random() < 0.3)
-      inner[j].pitch = randomPitchForKey(pitchKey, instrumentIndex)
+    let curSquare = data[j]
+    inner[j] = innerDataArrayObj()
+    let newSquare = inner[j]
+    if (randomize) {
+      newSquare.enabled = maintainEnabled ? curSquare.enabled : !!(Math.random() < 0.3)
+      newSquare.pitch = maintainPitch ? curSquare.pitch : newSquare.enabled && randomPitchForKey(pitchKey, instrumentIndex)
+      newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false // will randomize after loop
+    } else {
+      newSquare.enabled = maintainEnabled ? curSquare.enabled : newSquare.enabled
+      newSquare.pitch = maintainPitch ? curSquare.pitch : curSquare.enabled && newPitch(pitchKey, instrumentIndex)
+      newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false
     }
   }
-  if (randomize && vm.deep && vm.$refs.beatmakerdeep.active === 'Timing') {
+  if (randomize && activeDeep === 'Timing') {
     inner = chooseRandomMeasureSubs(vm, inner)
   }
   return inner
-}
-
-var createRandomIPitch = function (selectedArray, pitchKey, instrumentIndex) {
-  for (var j = 0; j < Object.keys(selectedArray).length; j++) {
-    let obj = selectedArray[j]
-    if (obj.enabled) {
-      obj.pitch = randomPitchForKey(pitchKey, instrumentIndex)
-    }
-  }
-  return selectedArray
 }
 
 export default {
@@ -231,7 +231,6 @@ export default {
   calcNumCols: calcNumCols,
   getInstrumentByIndex: getInstrumentByIndex,
   createNewIBeat: createNewIBeat,
-  createRandomIPitch: createRandomIPitch,
   qTimeLookup: qTimeLookup,
   pitchKeys: pitchKeys,
   pitchKeyOptions: makePitchKeyOptions,

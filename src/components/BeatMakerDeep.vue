@@ -24,10 +24,12 @@
           </span>
         </div>
 
-        <DrawAutomation v-if="active == 'Pitch'"
+        <DrawAutomation v-if="active != 'Timing'"
+          :active="active"
           :dataArray="dataArray"
           :pitchKey="pitchKey"
           :visible="visible"
+          :def="def"
           v-on:drawSelect="drawSelect"
         >
         </DrawAutomation>
@@ -66,8 +68,8 @@ export default {
   mixins: [Network],
   data: function () {
     return {
-      navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Timing',
+      navItems: ['Timing', 'Pitch', 'Volume', 'Probability'],
+      active: 'Volume',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
@@ -133,16 +135,34 @@ export default {
     },
     drawSelect: function (drawSelected) {
       let curSquare = this.dataArray[drawSelected[1]]
-      curSquare.enabled = true
+      if (!curSquare.enabled) { return }
+
+      if (this.active === 'Pitch') {
+        this.drawSelectPitch(drawSelected, curSquare)
+      } else if (this.active === 'Volume') {
+        this.drawSelectVolume(drawSelected, curSquare)
+      } else if (this.active === 'Probability') {
+        this.drawSelectProbability(drawSelected, curSquare)
+      }
+      this.networkWait('bmdSelect', () => {
+        this.$emit('needsToSave')
+      })
+    },
+    drawSelectPitch: function (drawSelected, curSquare) {
       if (curSquare.pitch) {
         let octave = Tonal.note.oct(curSquare.pitch)
         curSquare.pitch = drawSelected[0] + octave
       } else {
         curSquare.pitch = iutils.doTransposeForInstrument(drawSelected[0] + '3', this.def.instrumentIndex)
       }
-      this.networkWait('bmdSelect', () => {
-        this.$emit('needsToSave')
-      })
+    },
+    drawSelectVolume: function (drawSelected, curSquare) {
+      curSquare.enabled = true
+      curSquare.e1 = drawSelected[0]
+    },
+    drawSelectProbability: function (drawSelected, curSquare) {
+      curSquare.enabled = true
+      curSquare.e2 = drawSelected[0]
     }
   },
   computed: {

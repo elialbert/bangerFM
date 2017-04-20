@@ -2,7 +2,7 @@
   <div class='draw-automation'>
     <div class='draw-box'>
       <div class='draw-row'
-        v-for="i in pitchKeyNotes"
+        v-for="i in colAxis"
       >
         <div class='draw-square'
           v-on:mouseover="hoverSelect(i, j - 1, $event)" v-on:click="select"
@@ -24,26 +24,58 @@ import Tonal from 'tonal'
 
 export default {
   name: 'draw-automation',
-  props: ['dataArray', 'pitchKey', 'visible'],
+  props: ['active', 'dataArray', 'pitchKey', 'visible', 'def'],
   data: function () {
     return {
       selected: [0, 0]
     }
   },
   computed: {
+    colAxis: function () {
+      if (this.active === 'Pitch') {
+        return this.pitchKeyNotes
+      } else if (this.active === 'Volume') {
+        return this.volumeValues
+      } else if (this.active === 'Probability') {
+        return [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+      }
+    },
     pitchKeyNotes: function () {
       let p = Tonal.scale(this.pitchKey.toLowerCase())
       let i = p.indexOf('C')
       if (i === -1) { i = p.indexOf('Db') }
       return p.slice(i).concat(p.slice(0, i)).reverse()
+    },
+    volumeValues: function () {
+      let start = this.def.properties.volume.start
+      let end = this.def.properties.volume.end
+      return Array.from({length: (end - start)},
+        (v, k) => k + start).reverse()
     }
   },
   methods: {
     isEnabled: function (i, j) {
-      let pc = Tonal.note.pc(this.dataArray[j].pitch)
-      if (!pc) { return false }
-      return (pc === i) ||
-        (this.pitchKeyNotes.indexOf(pc) < this.pitchKeyNotes.indexOf(i))
+      let curSquare = this.dataArray[j]
+      if (this.active === 'Pitch') {
+        let pc = Tonal.note.pc(curSquare.pitch)
+        if (!pc) { return false }
+        return (pc === i) ||
+          (this.pitchKeyNotes.indexOf(pc) < this.pitchKeyNotes.indexOf(i))
+      } else if (this.active === 'Volume') {
+        if (!curSquare.enabled) { return false }
+        if (curSquare.e1) {
+          return parseInt(i) <= parseInt(curSquare.e1)
+        } else {
+          return parseInt(i) <= parseInt(this.def.properties.volume.val)
+        }
+      } else if (this.active === 'Probability') {
+        if (!curSquare.enabled) { return false }
+        if (curSquare.e2) {
+          return parseInt(i) <= parseInt(curSquare.e2)
+        } else {
+          return 10
+        }
+      }
     },
     hoverSelect: function (i, j, event) {
       if (this.visible !== 'beatmaker') {

@@ -39,6 +39,16 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
       }
       var square = (vm.dataArray[i] || {})[col]
       if (!square) { break }
+      if (square.e2) {
+        let rand = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][Math.floor(Math.random() * 10)]
+        if (rand > square.e2) {
+          if (vm.deep && vm.deepPlaying) {
+            break
+          } else {
+            continue
+          }
+        }
+      }
       let idef = vm.idefLookup[i]
       let qTime = time
       if (square.measureSub) {

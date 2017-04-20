@@ -2,7 +2,7 @@
 <div class="instrument-row">
   <div v-for="n in numColsSafe">
     <triplet-beat-column 
-      v-if="enabledArray[n-1].triplet.enabled" v-on:click="hoverClick"
+      v-if="enabledArray[n-1].triplet.enabled && enabledArray[n-1].enabled" v-on:click="hoverClick"
       v-on:mouseover="hoverSelect(n-1, $event)"
     ></triplet-beat-column>
     <div 
@@ -132,6 +132,15 @@ div.beat-column.enabled {
   color: blue;
   font-size: 12px;
 }
+.beat-column.enabled span.pitchText {
+  color: white;
+}
+.beat-column.enabled.selected span.pitchText {
+  color: blue;
+}
+.beat-column.enabled.selectedDeep span.pitchText {
+  color: blue;
+}
 .beat-column.measureSub.numInMeasure0 {
   width: calc(90px / 3);
   left: 0%;
@@ -153,35 +162,4 @@ div.beat-column.enabled {
   margin: 0px;
   border: 0px;
 }
-/*.beat-column.measureSub {
-  background: linear-gradient(to right, white, red, black);
-}
-.beat-column.measureSub.enabled {
-  background: linear-gradient(to right, white, red, black);
-}
-.beat-column.measureSub.selectedDeep {
-  background: linear-gradient(to right, white, red, gray);
-}
-.beat-column.measureSub.selectedDeep.playing {
-  background: linear-gradient(to right, white, red, yellow);
-}
-.beat-column.measureSub.selected.selectedDeep {
-  background: linear-gradient(to right, white, red, green);
-}
-.beat-column.measureSub.enabled.selectedDeep {
-  background: linear-gradient(to right, white, green, black);
-}
-.beat-column.measureSub.enabled.selected.selectedDeep {
-  background: linear-gradient(to right, white, green, black);
-}
-.beat-column.measureSub.enabled.selected.playing {
-  background: linear-gradient(to right, white, green, yellow);
-}
-.beat-column.measureSub.enabled.selected.selectedDeep.playing {
-  background: linear-gradient(to right, white, green, yellow);
-}
-.beat-column.measureSub.enabled.selectedDeep.playing {
-  background: linear-gradient(to right, white, green, yellow);
-}
-*/
 </style>

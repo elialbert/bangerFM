@@ -72,7 +72,7 @@ var onlyUnique = function (value, index, self) {
 
 var pitchKeys = [
   'C Major', 'G Major', 'C Minor Blues', 'G Minor Blues',
-  'C Melodic Minor', 'G Melodic Minor', 'Chromatic',
+  'C Melodic Minor', 'G Melodic Minor', 'C Chromatic',
   'C in-sen', 'G Altered', 'F Hirajoshi'
 ]
 
@@ -192,7 +192,7 @@ var createNewIBeat = function (randomize, vm) {
   let pitchKey = vm.pitchKey
   let perMeasure = vm.perMeasure
   let data = vm.dataArray[vm.selected[1]]
-  let instrumentIndex = vm.idefLookup[vm.selected[1]]
+  let instrumentIndex = vm.idefLookup[vm.selected[1]].iindex
   let numCols = calcNumCols(perMeasure)
   let activeDeep = vm.deep && vm.$refs.beatmakerdeep.active
   var inner = {}
@@ -200,6 +200,8 @@ var createNewIBeat = function (randomize, vm) {
   // maintain or randomize measuresub in normal randomize mode?
   let maintainMeasureSub = activeDeep && activeDeep !== 'Timing'
   let maintainPitch = activeDeep && activeDeep !== 'Pitch'
+  let maintainVolume = activeDeep !== 'Volume' // leave vol alone in main randomize
+  let maintainProbability = activeDeep !== 'Probability' // no probability in main randomize
   let maintainEnabled = activeDeep
 
   for (var j = 0; j < numCols; j++) {
@@ -210,10 +212,14 @@ var createNewIBeat = function (randomize, vm) {
       newSquare.enabled = maintainEnabled ? curSquare.enabled : !!(Math.random() < 0.3)
       newSquare.pitch = maintainPitch ? curSquare.pitch : newSquare.enabled && randomPitchForKey(pitchKey, instrumentIndex)
       newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false // will randomize after loop
+      newSquare.triplet.enabled = maintainMeasureSub ? newSquare.triplet.enabled : !!(Math.random() < 0.3)
+      newSquare.e2 = maintainProbability ? curSquare.e2 : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][Math.floor(Math.random() * 10)]
     } else {
       newSquare.enabled = maintainEnabled ? curSquare.enabled : newSquare.enabled
-      newSquare.pitch = maintainPitch ? curSquare.pitch : curSquare.enabled && newPitch(pitchKey, instrumentIndex)
+      newSquare.pitch = maintainPitch ? curSquare.pitch : newSquare.enabled && newPitch(pitchKey, instrumentIndex)
       newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false
+      newSquare.e1 = activeDeep && maintainVolume ? curSquare.e1 : false // always clear vol except in bmdeep vol
+      newSquare.e2 = activeDeep && maintainProbability ? curSquare.e2 : false // always clear probability except in bmdeep prob
     }
   }
   if (randomize && activeDeep === 'Timing') {
@@ -236,5 +242,6 @@ export default {
   pitchKeyOptions: makePitchKeyOptions,
   newPitch: newPitch,
   transposeBeat: transposeBeat,
+  doTransposeForInstrument: doTransposeForInstrument,
   onlyUnique: onlyUnique
 }

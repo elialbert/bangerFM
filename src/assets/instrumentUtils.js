@@ -1,5 +1,5 @@
 import Tonal from 'tonal'
-
+window.t = Tonal
 var getOscillatorType = function (val) {
   return {
     1: 'square2',
@@ -32,13 +32,10 @@ var getNoiseType = function (val) {
   }[val]
 }
 
-// TODO!
 var innerDataArrayObj = function () {
-  var pitch = 'C3'
-
   return {
     enabled: false,
-    pitch: pitch,
+    pitch: false,
     triplet: {enabled: false},
     measureSub: false,
     e1: false,
@@ -96,7 +93,7 @@ var getInstrumentByIndex = function (defs, index) {
 var transposeNote = function (note, direction) {
   let intervals
   if (direction === 'up') {
-    intervals = ['P16', 'P8', 'P1']
+    intervals = ['P15', 'P8', 'P1']
   } else {
     intervals = ['P-16', 'P-8', 'P1']
   }
@@ -107,16 +104,25 @@ var transposeNote = function (note, direction) {
   return note
 }
 
-var randomPitchForKey = function (pitchKey, selected) {
-  let notes = Tonal.scale(pitchKey.toLowerCase())
-  let choice = notes[Math.floor(Math.random() * notes.length)]
-  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
-  let note = choice + octave
+var doTransposeForInstrument = function (note, selected) {
   if (selected === 1 || selected === 5) {
     note = transposeNote(note, 'down')
   } else if (selected === 3 || selected === 9) {
     note = transposeNote(note, 'up')
   }
+  return note
+}
+
+var newPitch = function (pitchKey, selected) {
+  return doTransposeForInstrument(Tonal.scale(pitchKey.toLowerCase())[0] + '3', selected)
+}
+
+var randomPitchForKey = function (pitchKey, selected) {
+  let notes = Tonal.scale(pitchKey.toLowerCase())
+  let choice = notes[Math.floor(Math.random() * notes.length)]
+  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
+  let note = choice + octave
+  note = doTransposeForInstrument(note, selected)
   return note
 }
 
@@ -156,5 +162,5 @@ export default {
   qTimeLookup: qTimeLookup,
   pitchKeys: pitchKeys,
   pitchKeyOptions: makePitchKeyOptions,
-  transposeNote: transposeNote
+  newPitch: newPitch
 }

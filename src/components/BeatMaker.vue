@@ -196,7 +196,7 @@ export default {
       if (this.isHiddenSquare()) { return this.moveLeft() }
     },
     autoFill: function (direction) {
-      let result = mutils.autoFill(direction, this.selected, this.dataArray, this.autoFillHistory)
+      let result = mutils.autoFill(direction, this.selected, this.dataArray, this.autoFillHistory, this.pitchKey, this.idefLookup[this.selected[1]])
       this.dataArray = result.data
       this.autoFillHistory = result.history
       this.networkWait('autofill', () => {
@@ -210,6 +210,7 @@ export default {
       let curSquare = this.curSquare()
       if (!curSquare.enabled) {
         curSquare.enabled = true
+        curSquare.pitch = iutils.newPitch(this.pitchKey, this.idefLookup[this.selected[1]])
       } else {
         let prevMeasureSub = this.curSquare().measureSub
         this.dataArray[this.selected[1]][this.selected[0]] = iutils.innerDataArrayObj()
@@ -273,7 +274,7 @@ export default {
       this.$emit('updateMessage', 'Playing: ' + this.running)
     },
     instrumentIndex: function () {
-      // could be this.idefLookup[selected[1]] ???
+      // could be this.idefLookup[this.selected[1]] ???
       return this.$refs['instrument' + String(this.selected[1])].def.instrumentIndex
     },
     pipeDown: function () {

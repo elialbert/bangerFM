@@ -3,6 +3,22 @@ import BeatMaker from 'src/components/BeatMaker'
 import firebaseBridge from 'src/assets/instrumentDefs/firebaseBridge'
 import defLoader from 'src/assets/instrumentDefs/defLoader'
 
+var testInner = function (component) {
+  let data = component.dataArray[0]
+  expect(component.deep).to.be.true
+  let found = []
+  let msFound = []
+  for (let i = 0; i < Object.keys(data).length; i++) {
+    if (data[i] && data[i].enabled) {
+      found.push(i)
+    }
+    if (data[i] && data[i].measureSub) {
+      msFound.push(data[i].measureSub)
+    }
+  }
+  return [found, msFound]
+}
+
 // still testing from beatmaker as they do not exist much separately
 describe('BeatMakerDeep.vue', () => {
   var vm
@@ -93,6 +109,45 @@ describe('BeatMakerDeep.vue', () => {
               check(Vue, done, () => {
                 expect(component.dataArray[0][0].measureSub).to.be.false
               })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('can randomize and clear in deep timing mode', done => {
+    expect(component.deep).to.equal(0)
+    component.randomize()
+    component.enterUp()
+    check(Vue, false, () => {
+      let data = component.dataArray[0]
+      expect(component.deep).to.be.true
+      let inner = testInner(component)
+      expect(inner[0].length).to.be.above(1)
+      expect(inner[1].length).to.equal(0)
+      check(Vue, false, () => {
+        component.select()
+        check(Vue, false, () => {
+          inner = testInner(component)
+          expect(inner[0].length).to.be.above(1)
+          expect(inner[1].length).to.be.above(1)
+          let oldInnerEnabled = inner[0].slice(0)
+          let oldInnerSM = inner[1].slice(0)
+          component.randomize()
+          check(Vue, false, () => {
+            inner = testInner(component)
+            expect(inner[0]).to.eql(oldInnerEnabled)
+            expect(inner[1]).not.to.eql(oldInnerSM)
+            expect(inner[1].length).to.be.above(1)
+            oldInnerEnabled = inner[0].slice(0)
+            oldInnerSM = inner[1].slice(0)
+            component.clearInstrumentRow()
+            check(Vue, done, () => {
+              inner = testInner(component)
+              expect(inner[0]).to.eql(oldInnerEnabled)
+              expect(inner[1]).not.to.eql(oldInnerSM)
+              expect(inner[1].length).to.equal(0)
             })
           })
         })

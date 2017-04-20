@@ -153,35 +153,4 @@ div.beat-column.enabled {
   margin: 0px;
   border: 0px;
 }
-/*.beat-column.measureSub {
-  background: linear-gradient(to right, white, red, black);
-}
-.beat-column.measureSub.enabled {
-  background: linear-gradient(to right, white, red, black);
-}
-.beat-column.measureSub.selectedDeep {
-  background: linear-gradient(to right, white, red, gray);
-}
-.beat-column.measureSub.selectedDeep.playing {
-  background: linear-gradient(to right, white, red, yellow);
-}
-.beat-column.measureSub.selected.selectedDeep {
-  background: linear-gradient(to right, white, red, green);
-}
-.beat-column.measureSub.enabled.selectedDeep {
-  background: linear-gradient(to right, white, green, black);
-}
-.beat-column.measureSub.enabled.selected.selectedDeep {
-  background: linear-gradient(to right, white, green, black);
-}
-.beat-column.measureSub.enabled.selected.playing {
-  background: linear-gradient(to right, white, green, yellow);
-}
-.beat-column.measureSub.enabled.selected.selectedDeep.playing {
-  background: linear-gradient(to right, white, green, yellow);
-}
-.beat-column.measureSub.enabled.selectedDeep.playing {
-  background: linear-gradient(to right, white, green, yellow);
-}
-*/
 </style>

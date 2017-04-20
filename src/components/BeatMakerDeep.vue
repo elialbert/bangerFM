@@ -24,6 +24,14 @@
           </span>
         </div>
 
+        <DrawAutomation v-if="active == 'Pitch'"
+          :dataArray="dataArray"
+          :pitchKey="pitchKey"
+          :visible="visible"
+          v-on:newPitches="newPitches"
+        >
+        </DrawAutomation>
+
         <instrument-row v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
           v-bind:def="def"
           v-bind:numCols="numCols"
@@ -42,19 +50,21 @@
 
 <script>
 import InstrumentRow from './InstrumentRow'
+import DrawAutomation from './DrawAutomation'
 import mutils from '../assets/movementUtils'
 import iutils from '../assets/instrumentUtils'
 
 export default {
   name: 'beat-maker-deep',
   components: {
-    InstrumentRow
+    InstrumentRow,
+    DrawAutomation
   },
   props: ['visible', 'selected', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure', 'pitchKey'],
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Timing',
+      active: 'Pitch',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
@@ -115,6 +125,9 @@ export default {
         this.dataArray[key].measureSub = iutils.qTimeLookup(num)
       }
       this.$emit('needsToSave')
+    },
+    newPitches: function (pitches) {
+      console.log(pitches)
     }
   },
   computed: {
@@ -126,7 +139,7 @@ export default {
 .bmd-container {
   padding-left: 10px;
   width: 96%;
-  height: 200px;
+  min-height: 200px;
 }
 .bmdeep-inner {
   border: 1px solid black;

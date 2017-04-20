@@ -9,12 +9,12 @@ describe('SoundSynth.vue', () => {
   var component
 
   beforeEach(function() {
+    defLoader.clearCookies()
     stubFBBridge(firebaseBridge)
     vm = setupVm(Vue, SoundSynth, {visible: 'soundsynth'}, 
                  '<test :visible="visible" :user=false></test>')
     component = getComponent(vm)
     component.defs = defLoader.load(0)
-    defLoader.clearCookies()
   })
 
   it('has defs', function () {

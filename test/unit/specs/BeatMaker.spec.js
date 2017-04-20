@@ -8,11 +8,11 @@ describe('BeatMaker.vue', () => {
   var component
 
   beforeEach(function() {
+    defLoader.clearCookies()
     stubFBBridge(firebaseBridge)
     vm = setupVm(Vue, BeatMaker, {visible: 'beatmaker'}, 
                  '<test :visible="visible"></test>')
     component = getComponent(vm)
-    defLoader.clearCookies()
   })
 
   it('has defs', () => {
@@ -191,6 +191,37 @@ describe('BeatMaker.vue', () => {
       check(Vue, done, () => {
         expect(component.dataArray[1][0].pitch).to.equal('C3')
       })
+    })
+  })
+
+  it ('can change key and store key per beat', done => {
+    component.select()
+    check(Vue, false, () => {
+      expect(component.dataArray[0][0].enabled).to.equal(true)
+      expect(component.dataArray[0][0].pitch).to.equal('C5')
+      component.pitchKey = 'G Major'
+      setTimeout(() => {
+        check(Vue, false, () => {
+          expect(component.dataArray[0][0].enabled).to.equal(true)
+          expect(component.dataArray[0][0].pitch).to.equal('G5')
+          component.changeBank(1, 'beatBank')
+          check(Vue, false, () => {
+            // for fresh beat, take the old key
+            expect(component.pitchKey).to.equal('G Major')
+            expect(component.dataArray[0][0].enabled).to.equal(false)
+            component.pitchKey = 'C Major'
+            check(Vue, false, () => {
+              expect(component.dataArray.pitchKey).to.equal('C Major')
+              component.changeBank(0, 'beatBank')
+              check(Vue, done, () => {
+                expect(component.dataArray.pitchKey).to.equal('G Major')
+                expect(component.dataArray[0][0].enabled).to.equal(true)
+                expect(component.dataArray[0][0].pitch).to.equal('G5')
+              })
+            })
+          })
+        })
+      }, 300)
     })
   })
 })

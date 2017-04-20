@@ -116,7 +116,7 @@ export default {
   },
   beforeCreate: function () {
     this.perMeasure = this.dataArray && this.dataArray.perMeasure || 4
-    this.pitchKey = this.dataArray && this.dataArray.pitchKey || 'C Major'
+    this.pitchKey = this.dataArray && this.dataArray.pitchKey || 'C Minor Blues'
   },
   mounted: function () {
     this.pitchKey = this.dataArray.pitchKey || 'C Minor Blues'

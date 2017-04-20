@@ -72,7 +72,7 @@ var onlyUnique = function (value, index, self) {
 
 var pitchKeys = [
   'C Major', 'G Major', 'C Minor Blues', 'G Minor Blues',
-  'C Melodic Minor', 'G Melodic Minor', 'Chromatic',
+  'C Melodic Minor', 'G Melodic Minor', 'C Chromatic',
   'C in-sen', 'G Altered', 'F Hirajoshi'
 ]
 
@@ -236,5 +236,6 @@ export default {
   pitchKeyOptions: makePitchKeyOptions,
   newPitch: newPitch,
   transposeBeat: transposeBeat,
+  doTransposeForInstrument: doTransposeForInstrument,
   onlyUnique: onlyUnique
 }

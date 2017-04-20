@@ -28,7 +28,7 @@
           :dataArray="dataArray"
           :pitchKey="pitchKey"
           :visible="visible"
-          v-on:newPitches="newPitches"
+          v-on:drawSelect="drawSelect"
         >
         </DrawAutomation>
 
@@ -53,6 +53,8 @@ import InstrumentRow from './InstrumentRow'
 import DrawAutomation from './DrawAutomation'
 import mutils from '../assets/movementUtils'
 import iutils from '../assets/instrumentUtils'
+import Tonal from 'tonal'
+import Network from './mixins/Network'
 
 export default {
   name: 'beat-maker-deep',
@@ -61,10 +63,11 @@ export default {
     DrawAutomation
   },
   props: ['visible', 'selected', 'selectedRow', 'def', 'dataArray', 'numCols', 'perMeasure', 'pitchKey'],
+  mixins: [Network],
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Pitch',
+      active: 'Timing',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
@@ -124,10 +127,22 @@ export default {
       for (let key in this.dataArray) {
         this.dataArray[key].measureSub = iutils.qTimeLookup(num)
       }
-      this.$emit('needsToSave')
+      this.networkWait('bmdSelect', () => {
+        this.$emit('needsToSave')
+      })
     },
-    newPitches: function (pitches) {
-      console.log(pitches)
+    drawSelect: function (drawSelected) {
+      let curSquare = this.dataArray[drawSelected[1]]
+      curSquare.enabled = true
+      if (curSquare.pitch) {
+        let octave = Tonal.note.oct(curSquare.pitch)
+        curSquare.pitch = drawSelected[0] + octave
+      } else {
+        curSquare.pitch = iutils.doTransposeForInstrument(drawSelected[0] + '3', this.def.instrumentIndex)
+      }
+      this.networkWait('bmdSelect', () => {
+        this.$emit('needsToSave')
+      })
     }
   },
   computed: {

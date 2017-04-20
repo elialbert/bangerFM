@@ -32,18 +32,20 @@ export default {
   },
   computed: {
     pitchKeyNotes: function () {
-      return Tonal.scale(this.pitchKey.toLowerCase()).reverse()
+      let p = Tonal.scale(this.pitchKey.toLowerCase())
+      let i = p.indexOf('C')
+      if (i === -1) { i = p.indexOf('Db') }
+      return p.slice(i).concat(p.slice(0, i)).reverse()
     }
   },
   methods: {
     isEnabled: function (i, j) {
       let pc = Tonal.note.pc(this.dataArray[j].pitch)
+      if (!pc) { return false }
       return (pc === i) ||
-        (Tonal.note.chroma(pc) > Tonal.note.chroma(i))
+        (this.pitchKeyNotes.indexOf(pc) < this.pitchKeyNotes.indexOf(i))
     },
     hoverSelect: function (i, j, event) {
-      console.log('in hoverselect with ' + i + ': ' + j)
-      console.log(event)
       if (this.visible !== 'beatmaker') {
         return
       }
@@ -53,8 +55,7 @@ export default {
       }
     },
     select: function () {
-      console.log('selecting ')
-      console.log(this.selected)
+      this.$emit('drawSelect', this.selected)
     }
   }
 }
@@ -82,6 +83,9 @@ export default {
 }
 .draw-square.enabled {
   background-color: red;
+}
+.draw-square.enabled:hover {
+  background-color: orange;
 }
 .note-name {
   padding-left: 10px;

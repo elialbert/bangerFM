@@ -2,7 +2,7 @@
 <div class="instrument-row">
   <div v-for="n in numColsSafe">
     <triplet-beat-column 
-      v-if="enabledArray[n-1].triplet.enabled" v-on:click="hoverClick"
+      v-if="enabledArray[n-1].triplet.enabled && enabledArray[n-1].enabled" v-on:click="hoverClick"
       v-on:mouseover="hoverSelect(n-1, $event)"
     ></triplet-beat-column>
     <div 
@@ -131,6 +131,15 @@ div.beat-column.enabled {
 .pitchText {
   color: blue;
   font-size: 12px;
+}
+.beat-column.enabled span.pitchText {
+  color: white;
+}
+.beat-column.enabled.selected span.pitchText {
+  color: blue;
+}
+.beat-column.enabled.selectedDeep span.pitchText {
+  color: blue;
 }
 .beat-column.measureSub.numInMeasure0 {
   width: calc(90px / 3);

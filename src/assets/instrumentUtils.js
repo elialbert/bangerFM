@@ -210,6 +210,7 @@ var createNewIBeat = function (randomize, vm) {
       newSquare.enabled = maintainEnabled ? curSquare.enabled : !!(Math.random() < 0.3)
       newSquare.pitch = maintainPitch ? curSquare.pitch : newSquare.enabled && randomPitchForKey(pitchKey, instrumentIndex)
       newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false // will randomize after loop
+      newSquare.triplet.enabled = maintainMeasureSub ? newSquare.triplet.enabled : !!(Math.random() < 0.3)
     } else {
       newSquare.enabled = maintainEnabled ? curSquare.enabled : newSquare.enabled
       newSquare.pitch = maintainPitch ? curSquare.pitch : curSquare.enabled && newPitch(pitchKey, instrumentIndex)

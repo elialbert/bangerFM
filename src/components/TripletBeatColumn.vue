@@ -23,7 +23,7 @@
   width: calc(100% / 3);
   left: 0%;
   height: 100%;
-  border: 1px solid white;
+  border: 1px solid lightgrey;
   pointer-events: none;
 }
 .tbc-2 {
@@ -32,7 +32,7 @@
   left: 33.33%;
   left: calc(100% / 3);
   height: 100%;
-  border: 1px solid white;
+  border: 1px solid lightgrey;
   pointer-events: none;
 }
 .tbc-3 {
@@ -41,7 +41,7 @@
   left: 66.33%;  
   left: calc(100% / 3 * 2);
   height: 100%;
-  border: 1px solid white;  
+  border: 1px solid lightgrey;  
   pointer-events: none;
 }
 </style>

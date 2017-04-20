@@ -16,12 +16,12 @@
           <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat</button>
         </span>
         <span class='control-span-container'>
-        Per Measure: {{ perMeasure }}
+        Per Measure (erases beat): {{ perMeasure }}
         <button id="pm-up" type="button" v-on:click="changePerMeasure(1)">UP</button> || 
         <button id="pm-down" type="button" v-on:click="changePerMeasure(-1)">DOWN</button>
         </span>
         <span class='control-span-container'>
-          Pitch Key:
+          Pitch Key (tranposes current pitches):
           <select v-model="pitchKey">
             <option v-for="key in pitchKeyOptions" v-bind:value="key.value">
               {{ key.value }}
@@ -364,9 +364,6 @@ export default {
   padding-right: 5px;
   padding-left: 10px;
   margin-top: 6px;
-}
-#reset-beat {
-  margin-left: 30px;
 }
 span.control-span {
   padding-left: 4px;

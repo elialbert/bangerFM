@@ -82,7 +82,7 @@ export default {
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Volume', 'Probability'],
-      active: 'Volume',
+      active: 'Timing',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
@@ -116,6 +116,9 @@ export default {
           curSquare.measureSub = false
         } else {
           curSquare.measureSub = '8t'
+          if (index % this.perMeasure === this.perMeasure - 1) {
+            curSquare.triplet.enabled = false
+          }
         }
       } else if (this.active === 'Pitch') {
         curSquare.enabled = !curSquare.enabled

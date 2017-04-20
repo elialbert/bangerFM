@@ -185,7 +185,8 @@ export default {
     crashEvent: function () {
       console.log('crash event!')
       this.message = 'Web Audio has crashed, restarting nodes now. Should be back in no time.'
-      let wasPlaying = this.$refs.songmaker.running
+      let wasPlayingSM = this.$refs.songmaker.running
+      let wasPlayingBM = this.$refs.beatmaker.running
       this.$refs.songmaker.stopPlaying()
       this.$refs.beatmaker.stopPlaying()
       soundBridge.reconstructInstruments(() => {
@@ -193,7 +194,8 @@ export default {
         this.$refs.controlpanel.doSetEQ()
         this.$refs.soundsynth.redoDefs()
         StartAudioContext(Tone.context)
-        if (wasPlaying) { this.$refs.songmaker.startPlaying() }
+        if (wasPlayingSM) { this.$refs.songmaker.startPlaying() }
+        if (wasPlayingBM) { this.$refs.beatmaker.startPlaying() }
       })
     },
     doSignout: function () {

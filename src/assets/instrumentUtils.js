@@ -1,5 +1,5 @@
 import Tonal from 'tonal'
-window.t = Tonal
+
 var getOscillatorType = function (val) {
   return {
     1: 'square2',
@@ -95,7 +95,7 @@ var transposeNote = function (note, direction) {
   if (direction === 'up') {
     intervals = ['P15', 'P8', 'P1']
   } else {
-    intervals = ['P-16', 'P-8', 'P1']
+    intervals = ['P-15', 'P-8', 'P1']
   }
   for (let interval of intervals) {
     let attempt = Tonal.transpose(note, interval)

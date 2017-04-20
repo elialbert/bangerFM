@@ -31,7 +31,6 @@ var changePitch = function (cur, direction, pitchKey) {
 
 var tripletTime = new Tone.Time('32t').toSeconds()
 var doubledTripletTime = tripletTime + tripletTime
-window.Tone = Tone
 var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
   return function (time, col) {
     for (var i = 0; i < vm.defsLength; i++) {

@@ -51,9 +51,9 @@ describe('BeatMaker.vue', () => {
     check(Vue, false, () => {
       component.sendKey(0, 1)
       check(Vue, done, () => {
-        expect(component.dataArray[0][0].pitch).to.equal('C#3')
+        expect(component.dataArray[0][0].pitch).to.equal('Eb5')
         expect(component.dataArray[0][0].enabled).to.equal(true)
-        expect(component.$refs['instrumentrow0'][0].$el.querySelectorAll('.beat-column')[0].querySelector('span').innerHTML).to.equal('C#3')
+        expect(component.$refs['instrumentrow0'][0].$el.querySelectorAll('.beat-column')[0].querySelector('span').innerHTML).to.equal('Eb5')
       })
     })
   })
@@ -110,6 +110,7 @@ describe('BeatMaker.vue', () => {
       expect(Object.keys(component.dataArray[0]).length).to.equal(20)
       component.changeBank(1, 'beatBank')
       check(Vue, false, () => {
+        component.changePerMeasure(-1)
         expect(component.dataArray[0][0].enabled).to.equal(false)
         component.select()
         check(Vue, false, () => {

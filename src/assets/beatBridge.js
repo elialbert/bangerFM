@@ -39,7 +39,7 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
       }
       var square = (vm.dataArray[i] || {})[col]
       if (!square) { break }
-      if (square.e2) {
+      if (square.e2 && square.e2 !== 10) {
         let rand = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][Math.floor(Math.random() * 10)]
         if (rand > square.e2) {
           if (vm.deep && vm.deepPlaying) {
@@ -55,11 +55,11 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
         qTime = Tone.Time(time).quantize(square.measureSub).toSeconds()
       }
       if (square.enabled) {
-        soundBridge.startBeat(idef, square.pitch, qTime, i)
+        soundBridge.startBeat(idef.iindex, square.pitch, qTime, i, square.e1)
       }
       if (square.triplet.enabled) {
-        soundBridge.startBeat(idef, square.pitch, qTime + tripletTime, i)
-        soundBridge.startBeat(idef, square.pitch, qTime + doubledTripletTime, i)
+        soundBridge.startBeat(idef.iindex, square.pitch, qTime + tripletTime, i, square.e1)
+        soundBridge.startBeat(idef.iindex, square.pitch, qTime + doubledTripletTime, i, square.e1)
       }
       if (vm.deep && vm.deepPlaying) {
         break

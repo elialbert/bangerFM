@@ -131,9 +131,13 @@ var startSound = function (selected, index) {
 var stopSound = function (selected, index) {
   instrumentLookup(selected) && instrumentLookup(selected).stop(index)
 }
-var startBeat = function (selected, note, time, index) {
+var startBeat = function (selected, note, time, index, volumeAutomation = false) {
+  let instr = instrumentLookup(selected)
+  if (volumeAutomation && instr.instrument.volume && Math.abs(volumeAutomation - instr.instrument.volume.value) > 1) {
+    instr.instrument.set('volume', volumeAutomation)
+  }
   try {
-    instrumentLookup(selected).beat(note, time, index)
+    instr.beat(note, time, index)
   } catch (err) {
     console.log(err)
   }

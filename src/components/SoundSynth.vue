@@ -137,7 +137,7 @@ export default {
       this.watcherList.forEach(function (unwatcher) { unwatcher() })
     },
     instrumentIndex: function () {
-      return this.idefLookup[this.selected]
+      return this.idefLookup[this.selected].iindex
     },
     spaceDown: function () {
       if (!this.playing) {

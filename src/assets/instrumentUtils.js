@@ -51,7 +51,11 @@ var qTimeLookup = function (perMeasure) {
   }[perMeasure]
 }
 
-var pitchKeys = ['C Major', 'G Major', 'C Minor Blues', 'G Minor Blues']
+var pitchKeys = [
+  'C Major', 'G Major', 'C Minor Blues', 'G Minor Blues',
+  'C Melodic Minor', 'G Melodic Minor', 'Chromatic',
+  'C in-sen', 'G Altered', 'F Hirajoshi'
+]
 
 var makePitchKeyOptions = function () {
   var r = []
@@ -88,6 +92,28 @@ var getInstrumentByIndex = function (defs, index) {
   return Object.keys(defs).find(function (key) {
     return defs[key].index === index
   })
+}
+window.t = Tonal
+var transposeBeat = function (data, newKey, oldKey) {
+  let newScale = Tonal.scale(newKey.toLowerCase())
+  let oldScale = Tonal.scale(oldKey.toLowerCase())
+  let intervals = {}
+  for (let index in oldScale) {
+    intervals[oldScale[index]] = Tonal.interval(oldScale[index], newScale[index] || newScale[newScale.length - 1])
+  }
+  // note the - 2 here: bug waiting to happen
+  for (var i = 0; i < Object.keys(data).length - 2; i++) {
+    for (var j = 0; j < Object.keys(data[i]).length; j++) {
+      let square = data[i][j]
+      if (square.enabled) {
+        let octave = Tonal.note.oct(square.pitch)
+        let newNote = Tonal.transpose(Tonal.note.pc(square.pitch), intervals[Tonal.note.pc(square.pitch)])
+        if (newNote) { square.pitch = (newNote + octave) }
+      }
+    }
+  }
+
+  return data
 }
 
 var transposeNote = function (note, direction) {
@@ -162,5 +188,6 @@ export default {
   qTimeLookup: qTimeLookup,
   pitchKeys: pitchKeys,
   pitchKeyOptions: makePitchKeyOptions,
-  newPitch: newPitch
+  newPitch: newPitch,
+  transposeBeat: transposeBeat
 }

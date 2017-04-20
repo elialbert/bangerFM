@@ -119,6 +119,7 @@ export default {
     this.pitchKey = this.dataArray && this.dataArray.pitchKey || 'C Major'
   },
   mounted: function () {
+    this.pitchKey = this.dataArray.pitchKey || 'C Minor Blues'
     this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
@@ -126,6 +127,11 @@ export default {
       if (val1 && !val2) {
         this.doFBBinding(this.beatBankChoice)
       }
+    },
+    pitchKey: function (newKey) {
+      this.dataArray = iutils.transposeBeat(this.dataArray, newKey, this.dataArray.pitchKey || 'C Major')
+      this.dataArray.pitchKey = newKey
+      this.saveBeat()
     }
   },
   computed: {
@@ -150,6 +156,7 @@ export default {
     },
     randomizePitchRow: function () {
       this.dataArray[this.selected[1]] = iutils.createRandomIPitch(this.dataArray[this.selected[1]], this.pitchKey, this.idefLookup[this.selected[1]])
+      this.saveBeat()
     },
     curSquare: function () {
       return this.dataArray[this.selected[1]][this.selected[0]]

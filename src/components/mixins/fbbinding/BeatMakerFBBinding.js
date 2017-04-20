@@ -11,6 +11,7 @@ module.exports = {
           this.loadBeat(this.beatBankChoice)
         } else {
           this.perMeasure = v.perMeasure
+          this.pitchKey = v.pitchKey || 'C Minor Blues'
           this.dataArray = v
           if (cb) {
             cb()

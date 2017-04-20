@@ -66,6 +66,6 @@ export default {
     return Object.values(songData[selected[1]])
   },
   perMeasureOffsets: function (selected, perMeasure) {
-    return [selected[0] % perMeasure, perMeasure - selected[0] % perMeasure]
+    return [selected % perMeasure, perMeasure - selected % perMeasure]
   }
 }

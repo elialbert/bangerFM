@@ -51,6 +51,25 @@ var qTimeLookup = function (perMeasure) {
   }[perMeasure]
 }
 
+function getRandomArrayElements (arr, count) {
+  var shuffled = arr.slice(0)
+  var i = arr.length
+  var min = i - count
+  var temp
+  var index
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random())
+    temp = shuffled[index]
+    shuffled[index] = shuffled[i]
+    shuffled[i] = temp
+  }
+  return shuffled.slice(min)
+}
+
+var onlyUnique = function (value, index, self) {
+  return self.indexOf(value) === index
+}
+
 var pitchKeys = [
   'C Major', 'G Major', 'C Minor Blues', 'G Minor Blues',
   'C Melodic Minor', 'G Melodic Minor', 'Chromatic',
@@ -146,33 +165,61 @@ var newPitch = function (pitchKey, selected) {
 var randomPitchForKey = function (pitchKey, selected) {
   let notes = Tonal.scale(pitchKey.toLowerCase())
   let choice = notes[Math.floor(Math.random() * notes.length)]
-  let octave = [2, 3, 4][Math.floor(Math.random() * 3)]
+  let octave = 3 // [3][Math.floor(Math.random() * 3)] // maybe do more here?
   let note = choice + octave
   note = doTransposeForInstrument(note, selected)
   return note
 }
 
-var createRandomIBeat = function (perMeasure, randomize = true, pitchKey, instrumentIndex) {
-  let numCols = calcNumCols(perMeasure)
-  var inner = {}
-  for (var j = 0; j < numCols; j++) {
-    inner[j] = innerDataArrayObj()
-    if (randomize) {
-      inner[j].enabled = !!(Math.random() < 0.3)
-      inner[j].pitch = randomPitchForKey(pitchKey, instrumentIndex)
+var chooseRandomMeasureSubs = function (vm, data) {
+  let toChange = getRandomArrayElements(Object.keys(data), parseInt(Object.keys(data).length / 5))
+  let toChangeAll = []
+  for (let i of toChange) {
+    toChangeAll.push(vm.$refs.beatmakerdeep.getTimingChange(i))
+  }
+  toChangeAll = Array.prototype.concat(...toChangeAll).filter(onlyUnique)
+  for (let i of toChangeAll) {
+    if (data[i].measureSub) {
+      data[i].measureSub = false
+    } else {
+      data[i].measureSub = '8t'
     }
   }
-  return inner
+  return data
 }
 
-var createRandomIPitch = function (selectedArray, pitchKey, instrumentIndex) {
-  for (var j = 0; j < Object.keys(selectedArray).length; j++) {
-    let obj = selectedArray[j]
-    if (obj.enabled) {
-      obj.pitch = randomPitchForKey(pitchKey, instrumentIndex)
+var createNewIBeat = function (randomize, vm) {
+  let pitchKey = vm.pitchKey
+  let perMeasure = vm.perMeasure
+  let data = vm.dataArray[vm.selected[1]]
+  let instrumentIndex = vm.idefLookup[vm.selected[1]]
+  let numCols = calcNumCols(perMeasure)
+  let activeDeep = vm.deep && vm.$refs.beatmakerdeep.active
+  var inner = {}
+
+  // maintain or randomize measuresub in normal randomize mode?
+  let maintainMeasureSub = activeDeep && activeDeep !== 'Timing'
+  let maintainPitch = activeDeep && activeDeep !== 'Pitch'
+  let maintainEnabled = activeDeep
+
+  for (var j = 0; j < numCols; j++) {
+    let curSquare = data[j]
+    inner[j] = innerDataArrayObj()
+    let newSquare = inner[j]
+    if (randomize) {
+      newSquare.enabled = maintainEnabled ? curSquare.enabled : !!(Math.random() < 0.3)
+      newSquare.pitch = maintainPitch ? curSquare.pitch : newSquare.enabled && randomPitchForKey(pitchKey, instrumentIndex)
+      newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false // will randomize after loop
+    } else {
+      newSquare.enabled = maintainEnabled ? curSquare.enabled : newSquare.enabled
+      newSquare.pitch = maintainPitch ? curSquare.pitch : curSquare.enabled && newPitch(pitchKey, instrumentIndex)
+      newSquare.measureSub = maintainMeasureSub ? curSquare.measureSub : false
     }
   }
-  return selectedArray
+  if (randomize && activeDeep === 'Timing') {
+    inner = chooseRandomMeasureSubs(vm, inner)
+  }
+  return inner
 }
 
 export default {
@@ -183,11 +230,11 @@ export default {
   innerDataArrayObj: innerDataArrayObj,
   calcNumCols: calcNumCols,
   getInstrumentByIndex: getInstrumentByIndex,
-  createRandomIBeat: createRandomIBeat,
-  createRandomIPitch: createRandomIPitch,
+  createNewIBeat: createNewIBeat,
   qTimeLookup: qTimeLookup,
   pitchKeys: pitchKeys,
   pitchKeyOptions: makePitchKeyOptions,
   newPitch: newPitch,
-  transposeBeat: transposeBeat
+  transposeBeat: transposeBeat,
+  onlyUnique: onlyUnique
 }

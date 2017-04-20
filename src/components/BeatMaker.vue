@@ -61,6 +61,7 @@
       v-on:needsToSave="saveBeat"
       v-on:toggleDeep="enterUp"
       v-on:randomizePitch="randomizePitchRow"
+      v-on:randomizeRow="randomize"
     >  
     </beat-maker-deep>
     </div>
@@ -108,7 +109,7 @@ export default {
       loading: false,
       defsLength: 8,
       idefLookup: {},
-      deep: 0,
+      deep: 1,
       deepPlaying: 0,
       pitchKey: 'C Minor Blues',
       pitchKeyOptions: iutils.pitchKeyOptions()
@@ -214,6 +215,9 @@ export default {
       if (this.visible === 'songmaker') {
         return
       }
+      if (this.deep) {
+        return this.$refs.beatmakerdeep.select()
+      }
       let curSquare = this.curSquare()
       if (!curSquare.enabled) {
         curSquare.enabled = true
@@ -318,7 +322,8 @@ export default {
       this.saveBeat()
     },
     resetBeatRow: function () {
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false, this.pitchKey)
+      this.dataArray[this.selected[1]] = iutils.createNewIBeat(false, this)
+      this.saveBeat()
     },
     handleRestore: function (toRestore) {
       if ((toRestore.key !== this.beatBankChoice) || (toRestore.objType !== 'bm')) {
@@ -330,12 +335,12 @@ export default {
     },
     randomize: function () {
       this.$emit('updateMessage', 'Randomizing!')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, true, this.pitchKey, this.idefLookup[this.selected[1]])
+      this.dataArray[this.selected[1]] = iutils.createNewIBeat(true, this)
       this.saveBeat()
     },
     clearInstrumentRow: function () {
       this.$emit('updateMessage', 'Clearing row.')
-      this.dataArray[this.selected[1]] = iutils.createRandomIBeat(this.perMeasure, false, this.pitchKey)
+      this.dataArray[this.selected[1]] = iutils.createNewIBeat(false, this)
     }
   }
 }

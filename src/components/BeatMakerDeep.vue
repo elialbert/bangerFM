@@ -10,7 +10,8 @@
       <div class='bmdeep-inner'>
         <div class='bmd-nav' v-if="active == 'Timing'">
           <span class='control-span'>
-            <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
+            <button id="reset-row" type="button" v-on:click="$emit('resetBeatRow')">Reset Beat Row Timing</button>
+            <button id="randomize-row" type="button" v-on:click="$emit('randomizeRow')">Randomize Beat Row Timing</button>
             <button id="fill-3" type="button" v-on:click="changePerMeasure('3 Beats')">Fill 3</button>
             <button id="fill-4" type="button" v-on:click="changePerMeasure('4 Beats')">Fill 4</button>
           </span>
@@ -18,8 +19,8 @@
 
         <div class='bmd-nav' v-if="active == 'Pitch'">
           <span class='control-span'>
-            <button id="reset-beat" type="button" v-on:click="resetBeat()">Reset Beat Row</button>
-            <button id='randomize-beat' type='button' v-on:click="randomizePitch()">Randomize Beat Row Pitch</button>
+            <button id="reset-beat" type="button" v-on:click="$emit('resetBeatRow')">Reset Beat Row Pitch</button>
+            <button id='randomize-beat' type='button' v-on:click="$emit('randomizePitch')">Randomize Beat Row Pitch</button>
           </span>
         </div>
 
@@ -53,7 +54,7 @@ export default {
   data: function () {
     return {
       navItems: ['Timing', 'Pitch', 'Effects'],
-      active: 'Pitch',
+      active: 'Timing',
       pitchKeyOptions: iutils.pitchKeyOptions()
     }
   },
@@ -75,7 +76,7 @@ export default {
       if (this.active === 'Timing') {
         toChangeArray = this.getTimingChange()
       }
-      for (let index of toChangeArray.filter(this.onlyUnique)) {
+      for (let index of toChangeArray.filter(iutils.onlyUnique)) {
         this.deepChange(index)
       }
       this.$emit('needsToSave')
@@ -89,33 +90,24 @@ export default {
         }
       }
     },
-    getTimingChange: function () {
-      let offsets = mutils.perMeasureOffsets(this.selected, this.perMeasure)
+    getTimingChange: function (explicit = null) {
+      let selected = parseInt(explicit || this.selected[0])
+      let offsets = mutils.perMeasureOffsets(selected, this.perMeasure)
       let toChangeArray = []
       for (let i = 0; i <= offsets[0]; i++) {
-        toChangeArray.push(this.selected[0] - i)
+        toChangeArray.push(selected - i)
       }
       for (let i = 0; i <= offsets[1] - 1; i++) {
-        toChangeArray.push(this.selected[0] + i)
+        toChangeArray.push(selected + i)
       }
       return toChangeArray
-    },
-    resetBeat: function () {
-      this.$emit('resetBeatRow')
-    },
-    randomizePitch: function () {
-      this.$emit('randomizePitch')
     },
     changePerMeasure: function (num) {
       for (let key in this.dataArray) {
         this.dataArray[key].measureSub = iutils.qTimeLookup(num)
       }
       this.$emit('needsToSave')
-    },
-    onlyUnique: function (value, index, self) {
-      return self.indexOf(value) === index
     }
-
   },
   computed: {
   }

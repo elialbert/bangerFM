@@ -52,7 +52,7 @@ export default {
     },
     isSelectedDeep: function (n) {
       if (this.bmDeep === 'Timing' && this.visible === 'beatmaker') {
-        let offsets = mutils.perMeasureOffsets(this.selected, this.perMeasure)
+        let offsets = mutils.perMeasureOffsets(this.selected[0], this.perMeasure)
         return (n <= this.selected[0] + offsets[1]) && (n > this.selected[0] - offsets[0])
       }
     },

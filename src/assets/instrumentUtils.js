@@ -32,12 +32,12 @@ var getNoiseType = function (val) {
   }[val]
 }
 
-var innerDataArrayObj = function () {
+var innerDataArrayObj = function (measureSub = false, pitch = false) {
   return {
-    enabled: false,
-    pitch: false,
+    enabled: pitch || false,
+    pitch: pitch,
     triplet: {enabled: false},
-    measureSub: false,
+    measureSub: measureSub,
     e1: false,
     e2: false
   }
@@ -49,6 +49,25 @@ var qTimeLookup = function (perMeasure) {
     '4 Beats': undefined,
     '5 Beats': undefined
   }[perMeasure]
+}
+
+function getRandomArrayElements (arr, count) {
+  var shuffled = arr.slice(0)
+  var i = arr.length
+  var min = i - count
+  var temp
+  var index
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random())
+    temp = shuffled[index]
+    shuffled[index] = shuffled[i]
+    shuffled[i] = temp
+  }
+  return shuffled.slice(min)
+}
+
+var onlyUnique = function (value, index, self) {
+  return self.indexOf(value) === index
 }
 
 var pitchKeys = [
@@ -152,15 +171,43 @@ var randomPitchForKey = function (pitchKey, selected) {
   return note
 }
 
-var createRandomIBeat = function (perMeasure, randomize = true, pitchKey, instrumentIndex) {
+var chooseRandomMeasureSubs = function (vm, data) {
+  let toChange = getRandomArrayElements(Object.keys(data), parseInt(Object.keys(data).length / 5))
+  let toChangeAll = []
+  for (let i of toChange) {
+    toChangeAll.push(vm.$refs.beatmakerdeep.getTimingChange(i))
+  }
+  toChangeAll = Array.prototype.concat(...toChangeAll).filter(onlyUnique)
+  for (let i of toChangeAll) {
+    if (data[i].measureSub) {
+      data[i].measureSub = false
+    } else {
+      data[i].measureSub = '8t'
+    }
+  }
+  return data
+}
+
+var createNewIBeat = function (randomize, vm) {
+  let pitchKey = vm.pitchKey
+  let perMeasure = vm.perMeasure
+  let data = vm.dataArray[vm.selected[1]]
+  let instrumentIndex = vm.idefLookup[vm.selected[1]]
   let numCols = calcNumCols(perMeasure)
   var inner = {}
   for (var j = 0; j < numCols; j++) {
-    inner[j] = innerDataArrayObj()
-    if (randomize) {
+    let maintainMeasureSub = (vm.deep && randomize) || (vm.deep && vm.$refs.beatmakerdeep.active !== 'Timing')
+    let maintainOldPitch = (vm.deep && vm.$refs.beatmakerdeep.active !== 'Pitch')
+    let oldMeasureSub = maintainMeasureSub && data[j].measureSub || false
+    let oldPitch = maintainOldPitch && data[j].enabled && data[j].pitch || false
+    inner[j] = innerDataArrayObj(oldMeasureSub, oldPitch)
+    if (randomize && !maintainOldPitch) {
       inner[j].enabled = !!(Math.random() < 0.3)
       inner[j].pitch = randomPitchForKey(pitchKey, instrumentIndex)
     }
+  }
+  if (randomize && vm.deep && vm.$refs.beatmakerdeep.active === 'Timing') {
+    inner = chooseRandomMeasureSubs(vm, inner)
   }
   return inner
 }
@@ -183,11 +230,12 @@ export default {
   innerDataArrayObj: innerDataArrayObj,
   calcNumCols: calcNumCols,
   getInstrumentByIndex: getInstrumentByIndex,
-  createRandomIBeat: createRandomIBeat,
+  createNewIBeat: createNewIBeat,
   createRandomIPitch: createRandomIPitch,
   qTimeLookup: qTimeLookup,
   pitchKeys: pitchKeys,
   pitchKeyOptions: makePitchKeyOptions,
   newPitch: newPitch,
-  transposeBeat: transposeBeat
+  transposeBeat: transposeBeat,
+  onlyUnique: onlyUnique
 }

@@ -8,15 +8,17 @@ var testInner = function (component) {
   expect(component.deep).to.be.true
   let found = []
   let msFound = []
+  let pitches = []
   for (let i = 0; i < Object.keys(data).length; i++) {
     if (data[i] && data[i].enabled) {
       found.push(i)
+      pitches.push(data[i].pitch)
     }
     if (data[i] && data[i].measureSub) {
       msFound.push(data[i].measureSub)
     }
   }
-  return [found, msFound]
+  return {found: found, msFound: msFound, pitches: pitches}
 }
 
 // still testing from beatmaker as they do not exist much separately
@@ -121,33 +123,104 @@ describe('BeatMakerDeep.vue', () => {
     component.randomize()
     component.enterUp()
     check(Vue, false, () => {
-      let data = component.dataArray[0]
       expect(component.deep).to.be.true
       let inner = testInner(component)
-      expect(inner[0].length).to.be.above(1)
-      expect(inner[1].length).to.equal(0)
+      expect(inner.found.length).to.be.above(1)
+      expect(inner.msFound.length).to.equal(0)
+      expect(inner.pitches.length).to.be.above(1)
       check(Vue, false, () => {
         component.select()
         check(Vue, false, () => {
           inner = testInner(component)
-          expect(inner[0].length).to.be.above(1)
-          expect(inner[1].length).to.be.above(1)
-          let oldInnerEnabled = inner[0].slice(0)
-          let oldInnerSM = inner[1].slice(0)
+          expect(inner.found.length).to.be.above(1)
+          expect(inner.msFound.length).to.be.above(1)
+          let oldInnerEnabled = inner.found.slice(0)
+          let oldInnerSM = inner.msFound.slice(0)
+          let oldInnerPitches = inner.pitches.slice(0)
           component.randomize()
           check(Vue, false, () => {
             inner = testInner(component)
-            expect(inner[0]).to.eql(oldInnerEnabled)
-            expect(inner[1]).not.to.eql(oldInnerSM)
-            expect(inner[1].length).to.be.above(1)
-            oldInnerEnabled = inner[0].slice(0)
-            oldInnerSM = inner[1].slice(0)
+            expect(inner.found).to.eql(oldInnerEnabled)
+            expect(inner.pitches).to.eql(oldInnerPitches)
+            expect(inner.msFound).not.to.eql(oldInnerSM)
+            expect(inner.msFound.length).to.be.above(1)
+            oldInnerEnabled = inner.found.slice(0)
+            oldInnerSM = inner.msFound.slice(0)
+            oldInnerPitches = inner.pitches.slice(0)
+            component.clearInstrumentRow()
+            check(Vue, false, () => {
+              inner = testInner(component)
+              expect(inner.found).to.eql(oldInnerEnabled)
+              expect(inner.pitches).to.eql(oldInnerPitches)
+              expect(inner.msFound).not.to.eql(oldInnerSM)
+              expect(inner.msFound.length).to.equal(0)
+              oldInnerSM = inner.msFound.slice(0)
+              oldInnerPitches = inner.pitches.slice(0)
+              // quick check to make sure pitch and timing interact well
+              // timing should not change, pitches should
+              component.$refs.beatmakerdeep.active = 'Pitch'
+              check(Vue, false, () => {
+                component.clearInstrumentRow() // reset pitches
+                component.randomize() // randomize pitches
+                check(Vue, done, () => {
+                  inner = testInner(component)
+                  expect(inner.msFound).to.eql(oldInnerSM)
+                  expect(inner.pitches).not.to.eql(oldInnerPitches)
+                })
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('can randomize and clear in deep pitch mode', done => {
+    expect(component.deep).to.equal(0)
+    component.randomize()
+    component.enterUp()
+    check(Vue, false, () => {
+      component.$refs.beatmakerdeep.active = 'Pitch'
+      expect(component.deep).to.be.true
+      let inner = testInner(component)
+      expect(inner.found.length).to.be.above(1)
+      expect(inner.msFound.length).to.equal(0)
+      expect(inner.pitches.length).to.be.above(1)
+      check(Vue, false, () => {
+        let data = component.dataArray[0]
+        if (data[0].enabled) {
+          component.select()
+        }
+        component.select()
+        check(Vue, false, () => {
+          expect(component.dataArray[0][0].enabled).to.be.true
+          expect(component.dataArray[0][0].pitch).to.equal('C5') // for highsynth
+          inner = testInner(component)
+          expect(inner.found.length).to.be.above(1)
+          expect(inner.msFound.length).to.equal(0)
+          let oldInnerEnabled = inner.found.slice(0)
+          let oldInnerSM = inner.msFound.slice(0)
+          let oldInnerPitches = inner.pitches.slice(0)
+          component.randomize()
+          check(Vue, false, () => {
+            inner = testInner(component)
+            expect(inner.found).to.eql(oldInnerEnabled)
+            expect(inner.pitches).not.to.eql(oldInnerPitches)
+            expect(inner.msFound).to.eql(oldInnerSM)
+            expect(inner.msFound.length).to.equal(0)
+            expect(inner.pitches.length).to.be.above(0)
+
+            oldInnerEnabled = inner.found.slice(0)
+            oldInnerSM = inner.msFound.slice(0)
+            oldInnerPitches = inner.pitches.slice(0)
             component.clearInstrumentRow()
             check(Vue, done, () => {
               inner = testInner(component)
-              expect(inner[0]).to.eql(oldInnerEnabled)
-              expect(inner[1]).not.to.eql(oldInnerSM)
-              expect(inner[1].length).to.equal(0)
+              expect(inner.found).to.eql(oldInnerEnabled)
+              expect(inner.pitches).not.to.eql(oldInnerPitches)
+              expect(component.dataArray[0][0].pitch).to.equal('C5')
+              expect(inner.msFound).to.eql(oldInnerSM)
+              expect(inner.msFound.length).to.equal(0)
             })
           })
         })

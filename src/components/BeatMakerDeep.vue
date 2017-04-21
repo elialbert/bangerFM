@@ -43,6 +43,7 @@
           :dataArray="dataArray"
           :pitchKey="pitchKey"
           :visible="visible"
+          :perMeasure="perMeasure"
           :def="def"
           v-on:drawSelect="drawSelect"
         >

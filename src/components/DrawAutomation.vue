@@ -7,7 +7,10 @@
         <div class='draw-square'
           v-on:mouseover="hoverSelect(i, j - 1, $event)" v-on:click="select"
           v-for="j in Object.keys(dataArray).length"
-          :class="{ enabled: isEnabled(i, j - 1) }"
+          :class="{ enabled: isEnabled(i, j - 1),
+            lastBeatInMeasure: (j-1) % perMeasure == (perMeasure - 1),
+            ['numInMeasure' + (j-1) % perMeasure]: true,
+            measureSub: dataArray[j-1].measureSub}"
         >
         </div>
         <div class='note-name'>
@@ -24,7 +27,7 @@ import Tonal from 'tonal'
 
 export default {
   name: 'draw-automation',
-  props: ['active', 'dataArray', 'pitchKey', 'visible', 'def'],
+  props: ['active', 'dataArray', 'pitchKey', 'visible', 'def', 'perMeasure'],
   data: function () {
     return {
       selected: [0, 0]
@@ -118,6 +121,27 @@ export default {
 }
 .draw-square.enabled:hover {
   background-color: orange;
+}
+.draw-square.measureSub.numInMeasure0 {
+  width: calc(90px / 3);
+  left: 0%;
+}
+.draw-square.measureSub.numInMeasure1 {
+  width: calc(90px / 3);
+  left: calc((90px / 3));
+}
+.draw-square.measureSub.numInMeasure2 {
+  width: calc(90px / 3);
+  left: calc(2 * (90px / 3));
+}
+.draw-square.measureSub.numInMeasure3 {
+  width: 0;
+  left: 0%;
+}
+.draw-square.measureSub.lastBeatInMeasure {
+  visibility: hidden;
+  margin: 0px;
+  border: 0px;
 }
 .note-name {
   padding-left: 10px;

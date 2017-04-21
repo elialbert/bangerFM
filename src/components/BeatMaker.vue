@@ -199,10 +199,24 @@ export default {
       return this.selected[0] % this.perMeasure === this.perMeasure - 1
     },
     moveDown: function () {
+      if (this.deep) {
+        if (this.$refs.beatmakerdeep.active === 'Pitch') {
+          return this.sendKey(0, -1)
+        } else {
+          return this.$refs.beatmakerdeep.moveVolProb(-1)
+        }
+      }
       this.selected = mutils.moveDown(this.selected, this.doFBObjLength() - 1)
       if (this.isHiddenSquare()) { return this.moveLeft() }
     },
     moveUp: function () {
+      if (this.deep) {
+        if (this.$refs.beatmakerdeep.active === 'Pitch') {
+          return this.sendKey(0, 1)
+        } else {
+          return this.$refs.beatmakerdeep.moveVolProb(1)
+        }
+      }
       this.selected = mutils.moveUp(this.selected)
       if (this.isHiddenSquare()) { return this.moveLeft() }
     },
@@ -302,6 +316,7 @@ export default {
         this.saveBeat()
         return
       }
+      if (!this.curSquare().enabled) { return }
       this.curSquare().pitch = beatBridge.changePitch(this.curSquare().pitch, direction, this.pitchKey)
       this.networkWait('pitch', () => {
         this.saveBeat()

@@ -91,6 +91,13 @@ export default {
     changeNav: function (key) {
       this.active = key
     },
+    tabOver: function (back = false) {
+      if (this.active === 'Probability' && !back || (this.active === 'Timing' && back)) {
+        return this.$emit('toggleDeep')
+      }
+      let direction = back ? -1 : 1
+      this.active = this.navItems[this.navItems.indexOf(this.active) + direction]
+    },
     hoverSelect: function (x, y, event) {
       if (this.visible === 'songmaker') {
         return
@@ -150,6 +157,16 @@ export default {
         this.$emit('needsToSave')
       })
     },
+    // just for volume and probability - pitch will happen through bm with sendkey
+    moveVolProb: function (direction) {
+      let curSquare = this.dataArray[this.selected[0]]
+      if (!curSquare.enabled) { return }
+      let curValue = this.getCurValue(curSquare)
+      if (curValue === undefined || curValue === false) { return }
+      curValue += direction
+      if (this.valOutOfBounds(curValue)) { return }
+      return this.drawSelect([curValue, this.selected[0]])
+    },
     drawSelect: function (drawSelected) {
       let curSquare = this.dataArray[drawSelected[1]]
       if (!curSquare.enabled) { return }
@@ -180,6 +197,22 @@ export default {
     drawSelectProbability: function (drawSelected, curSquare) {
       curSquare.enabled = true
       curSquare.e2 = drawSelected[0]
+    },
+    // already assumes square is enabled
+    // only does volume and probability
+    getCurValue: function (curSquare) {
+      if (this.active === 'Volume') {
+        return curSquare.e1 || this.def.properties.volume.val
+      } else if (this.active === 'Probability') {
+        return curSquare.e2 || 10
+      }
+    },
+    valOutOfBounds: function (curValue) {
+      if (this.active === 'Volume') {
+        return (curValue > this.def.properties.volume.end) || (curValue < this.def.properties.volume.start)
+      } else if (this.active === 'Probability') {
+        return (curValue > 10 || curValue < 1)
+      }
     }
   },
   computed: {

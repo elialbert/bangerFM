@@ -49,8 +49,8 @@ export default {
     volumeValues: function () {
       let start = this.def.properties.volume.start
       let end = this.def.properties.volume.end
-      return Array.from({length: (end - start)},
-        (v, k) => k + start).reverse()
+      return [end].concat(Array.from({length: (end - start)},
+        (v, k) => k + start).reverse())
     }
   },
   methods: {

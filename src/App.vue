@@ -4,11 +4,12 @@
     @keydown.up.prevent="noArg('moveUp', $event)"
     @keydown.right.prevent="noArg('moveRight', $event)"
     @keydown.left.prevent="noArg('moveLeft', $event)"
-    @keydown.space.prevent="noArg('spaceDown')" 
+    @keydown.space.prevent="noArg('spaceDown')"
     @keyup.space="noArg('spaceUp')"
     @keyup.8="noArg('backspace')"
     @keydown.220="noArg('pipeDown')"
     @keyup.220="noArg('pipeUp')"
+    @keyup.tab.prevent="tabUp($event)"
     @keydown.81="twoArg('sendKey', 0, 1, $event)"
     @keydown.65="twoArg('sendKey', 0, -1, $event)"
     @keydown.87="twoArg('sendKey', 1, 1, $event)"
@@ -239,6 +240,13 @@ export default {
         }
       }
       dest[functionName]()
+    },
+    tabUp: function ($event) {
+      if (this.visible !== 'beatmaker') { return }
+      if (!this.$refs.beatmaker.deep) {
+        return this.noArg('enterUp')
+      }
+      return this.$refs.beatmaker.$refs.beatmakerdeep.tabOver($event.shiftKey)
     },
     cbcb: function () {
       this.$refs.beatmaker.defs = this.$refs.soundsynth.defs1

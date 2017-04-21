@@ -1,6 +1,7 @@
 <template>
   <div id="beatmakerdeep" v-if="dataArray">
     <div class='bmd-nav'>
+      <div class='bmd-nav-item' @click="$emit('toggleDeep')">Beat Maker</div>
       <div class='bmd-nav-item' v-for="key of navItems"
         v-bind:class="{selectedNav: active == key}"
         @click="changeNav(key)"
@@ -187,6 +188,9 @@ export default {
 </script>
 
 <style>
+#beatmakerdeep {
+  margin-top: 10px;
+}
 .bmd-container {
   padding-left: 10px;
   width: 96%;
@@ -204,6 +208,8 @@ export default {
 }
 .bmd-nav-item {
   padding: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   border: 1px solid black;
   background-color: white;
   cursor: pointer; cursor: hand;

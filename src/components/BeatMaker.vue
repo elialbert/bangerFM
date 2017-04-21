@@ -31,38 +31,46 @@
       </span>
     </div>
     <div v-if="loading">Loading...</div>
-    <div v-if="!loading && defs && dataArray && Object.keys(dataArray).length">
-      <instrument-row v-for="(key, index) in sortedDefKeys"
-        v-if="(key != '.key') && !loading && dataArray[index] && !deep"
-        v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
-        v-bind:ref="'instrumentrow' + defs[key].index"
-        v-bind:def="defs[key]"
-        v-bind:selected="selected"
-        v-bind:numCols="numCols"
-        v-bind:enabledArray="dataArray[index]"
-        v-bind:perMeasure="perMeasure"
+    <div class='bm-wrapper' v-if="!loading && defs && dataArray && Object.keys(dataArray).length">
+      <div class='bmd-nav' v-if="!deep">
+        <div class='bmd-nav-item selectedNav'>Beat Maker</div>
+        <div class='bmd-nav-item' @click='enterUp'>Advanced</div>
+      </div>
+
+      <div class='bm-container' v-if="!deep">
+        <instrument-row v-for="(key, index) in sortedDefKeys"
+          v-if="(key != '.key') && !loading && dataArray[index] && !deep"
+          v-on:hoverSelect="hoverSelect" v-on:hoverClick="select"
+          v-bind:ref="'instrumentrow' + defs[key].index"
+          v-bind:def="defs[key]"
+          v-bind:selected="selected"
+          v-bind:numCols="numCols"
+          v-bind:enabledArray="dataArray[index]"
+          v-bind:perMeasure="perMeasure"
+          v-bind:visible="visible"
+          v-bind:bmDeep="false"
+          v-on:toggleDeep="enterUp"
+          v-on:mouseOverName="mouseOverName"
+        >
+        </instrument-row>
+      </div>
+      <beat-maker-deep ref='beatmakerdeep' v-if="deep == 1"
+        v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
         v-bind:visible="visible"
-        v-bind:bmDeep="false"
+        v-bind:selected="selected"
+        v-bind:selectedRow="selected[1]"
+        v-bind:dataArray="dataArray[selected[1]]"
+        v-bind:def="defs[sortedDefKeys[selected[1]]]"
+        v-bind:numCols="numCols"
+        v-bind:perMeasure="perMeasure"
+        v-bind:pitchKey="pitchKey"
+        v-on:changeSelect="changeSelect"
+        v-on:resetBeatRow="resetBeatRow"
+        v-on:needsToSave="saveBeat"
         v-on:toggleDeep="enterUp"
-        v-on:mouseOverName="mouseOverName"
-      ></instrument-row>
-    <beat-maker-deep ref='beatmakerdeep' v-if="deep == 1"
-      v-bind:class="{ visible: deep == 1, hidden: deep == 0}"
-      v-bind:visible="visible"
-      v-bind:selected="selected"
-      v-bind:selectedRow="selected[1]"
-      v-bind:dataArray="dataArray[selected[1]]"
-      v-bind:def="defs[sortedDefKeys[selected[1]]]"
-      v-bind:numCols="numCols"
-      v-bind:perMeasure="perMeasure"
-      v-bind:pitchKey="pitchKey"
-      v-on:changeSelect="changeSelect"
-      v-on:resetBeatRow="resetBeatRow"
-      v-on:needsToSave="saveBeat"
-      v-on:toggleDeep="enterUp"
-      v-on:randomizeRow="randomize"
-    >  
-    </beat-maker-deep>
+        v-on:randomizeRow="randomize"
+      >  
+      </beat-maker-deep>
     </div>
   </div>
 </template>
@@ -350,6 +358,16 @@ export default {
   margin: 2px;
   padding: 4px;
   margin-top: 10px;
+}
+.bm-wrapper {
+  margin-top: 10px;
+}
+.bm-container {
+  border: 1px solid black;
+  padding: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 96%;
 }
 #beat-maker.active {
   border: 2px solid red;

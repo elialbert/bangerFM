@@ -59,6 +59,12 @@ var cpdefRef = function (user, workspace) {
   return db.ref('userDefs/' + user + '/' + workspace + '/cp')
 }
 
+var wsdefRef = function (user, workspace) {
+  if (!workspace) {
+    return db.ref('workspaceDefs/' + user)
+  }
+  return db.ref('workspaceDefs/' + user + '/' + workspace)
+}
 export default {
   fbvm: fbvm,
   fbdb: db,
@@ -67,6 +73,7 @@ export default {
   bmdefRef: bmdefRef,
   smdefRef: smdefRef,
   cpdefRef: cpdefRef,
+  wsdefRef: wsdefRef,
   ui: ui,
   firebase: Firebase,
   fbObjLength: fbObjLength

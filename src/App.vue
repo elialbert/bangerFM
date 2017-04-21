@@ -216,7 +216,9 @@ export default {
       this.$refs.songmaker.loading = false
     },
     forceFocus: function () {
-      this.$refs.app.focus()
+      if (!this.wsEnabled) {
+        this.$refs.app.focus()
+      }
     },
     toggleCP: function (event) {
       if (event.shiftKey || event.metaKey) {
@@ -229,6 +231,9 @@ export default {
       this.cpEnabled = !this.cpEnabled
     },
     getDest: function () {
+      if (this.wsEnabled) {
+        return false
+      }
       return this.$refs[this.visible]
     },
     switchView: function (component) {
@@ -236,6 +241,7 @@ export default {
     },
     noArg: function (functionName, event) {
       var dest = this.getDest()
+      if (!dest) { return }
       if (event && (event.ctrlKey || event.shiftKey)) {
         if (this.visible === 'beatmaker' && ['moveLeft', 'moveRight'].includes(functionName)) {
           return dest.autoFill(functionName)
@@ -268,9 +274,15 @@ export default {
     },
     changeBank: function (num, event) {
       var dest = this.getDest()
+      if (!dest) { return }
       dest.changeBank(num - 1, dest.bankType, event.shiftKey, false, this.cbcb)
     },
     rerouteWorkspace: function (workspaceName) {
+      if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(workspaceName)) {
+        this.publicWorkspace = true
+      } else {
+        this.publicWorkspace = false
+      }
       this.$router.push('/app/' + this.user + '/' + workspaceName)
     },
     changeWorkspace: function (workspaceName) {

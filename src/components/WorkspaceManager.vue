@@ -4,6 +4,24 @@
     v-if="loading"
   >Loading...</div>
   <div class='notloading' v-if="!loading">
+    <p>Current Workspace: <b>{{ workspace }}</b></p>
+    <div class='ws-sharing' v-if="publicWorkspace && workspaces[workspace]">
+      Who can see and play: <br/>
+      <input type="radio" class="wsshare-read-private" value="private" v-model="workspaces[workspace].permissions.read">
+      <label for="read-private">Private</label>
+      <input type="radio" class="wsshare-read-public" value="public" v-model="workspaces[workspace].permissions.read">
+      <label for="wsshare-read-public">Public</label>
+      <br>
+      Who can change things: <br/>
+      <input type="radio" class="wsshare-write-private" value="private" v-model="workspaces[workspace].permissions.write">
+      <label for="wsshare-write-private">Private</label>
+      <input type="radio" class="wsshare-write-public" value="public" v-model="workspaces[workspace].permissions.write">
+      <label for="wsshare-write-public">Public</label>
+      <br/>
+      Individual access control coming soon!
+      <br>
+    </div>
+    <hr/>
     <p>
     Choose from your private workspaces:
     <BankChoice
@@ -14,6 +32,7 @@
     >
     </BankChoice>
     </p>
+    <hr/>
     <p>
     Or save as a separate workspace with a name so you can manage sharing:
     <br/>
@@ -25,6 +44,7 @@
       @click="changeWorkspace(null, $event)"
     >Save</button>
     </p>
+    <hr/>
     <p>
     Or choose from your previously saved workspaces:
     <br/>
@@ -115,5 +135,8 @@ export default {
 .workspace-name-picker {
   width: 50%;
   margin-right: 10px;
+}
+.wsshare-write-public {
+  margin-left: 7px;
 }
 </style>

@@ -146,8 +146,7 @@ export default {
       message: '',
       windowWidth: 0,
       windowHeight: 0,
-      workspace: 1,
-      publicWorkspace: false
+      workspace: 1
     }
   },
   mounted: function () {
@@ -178,6 +177,11 @@ export default {
       if (to.params.workspaceId !== from.params.workspaceId) {
         this.changeWorkspace(to.params.workspaceId)
       }
+    }
+  },
+  computed: {
+    publicWorkspace: function () {
+      return (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(this.workspace))
     }
   },
   methods: {
@@ -278,11 +282,6 @@ export default {
       dest.changeBank(num - 1, dest.bankType, event.shiftKey, false, this.cbcb)
     },
     rerouteWorkspace: function (workspaceName) {
-      if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(workspaceName)) {
-        this.publicWorkspace = true
-      } else {
-        this.publicWorkspace = false
-      }
       this.$router.push('/app/' + this.user + '/' + workspaceName)
     },
     changeWorkspace: function (workspaceName) {
@@ -295,7 +294,7 @@ export default {
         this.$refs.controlpanel.doFBBinding()
         this.$refs.beatmaker.changeBank(0, 'beatBank', false)
         this.$refs.workspacemanager.loading = false
-        if (this.wsEnabled) { this.toggleWS() }
+        if (this.wsEnabled && !this.publicWorkspace) { this.toggleWS() }
       })
     },
     oneArg: function (functionName, argument, event) {

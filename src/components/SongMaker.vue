@@ -4,17 +4,19 @@
     @click="$emit('switchView', 'songmaker')"
   >
     <div v-if="loading">Loading...</div>
-    <song-maker-row v-for="(songArray, songIndex) in songData" v-if="!loading"
-      v-on:hoverSelectSM="hoverSelect" v-on:hoverClickSM="changeBMBank"
-      v-bind:numCols="numCols"
-      v-bind:selected="selected"
-      v-bind:playing="playing[songIndex]"
-      v-bind:songArray="songArray"
-      v-bind:songIndex="songIndex"
-      v-bind:visible="visible"
-      v-bind:ref="'songMakerRow' + songIndex"
-    >
-    </song-maker-row>
+    <div class='sm-container'>
+      <song-maker-row v-for="(songArray, songIndex) in songData" v-if="!loading"
+        v-on:hoverSelectSM="hoverSelect" v-on:hoverClickSM="changeBMBank"
+        v-bind:numCols="numCols"
+        v-bind:selected="selected"
+        v-bind:playing="playing[songIndex]"
+        v-bind:songArray="songArray"
+        v-bind:songIndex="songIndex"
+        v-bind:visible="visible"
+        v-bind:ref="'songMakerRow' + songIndex"
+      >
+      </song-maker-row>
+    </div>
   </div>
 </template>
 
@@ -216,6 +218,10 @@ export default {
 </script>
 
 <style>
+.sm-container {
+  margin-top: 10px;
+  margin-left: 6px;
+}
 #song-maker {
   border: 2px solid black;
   width: 98.5%;

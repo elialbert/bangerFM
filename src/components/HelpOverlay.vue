@@ -43,7 +43,7 @@
       <hr/>
       <div>Undo/Redo works with <span class='bold'>Meta (ctrl or cmd) + Z / Meta + Shift + Z</span></div>
       <p>
-      <div>Is stuff not quite working? Maybe the app has changed and you need to <a v-on:click.stop="resetCookies" href="#">Reset Your Local Data</a>. Or feel free to reach out on <a href='https://github.com/elialbert/bangerFM/issues'>Github Issues</a> to make a bug report.</div>
+      <div>Is stuff not quite working? Maybe the app has changed and you need to <a v-on:click.stop="resetCookies" href="javascript:void(0)">Reset Your Local Data</a>. Or feel free to reach out on <a href='https://github.com/elialbert/bangerFM/issues'>Github Issues</a> to make a bug report.</div>
     </div>
   </div>
 </template>

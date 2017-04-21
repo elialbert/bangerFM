@@ -1,14 +1,19 @@
 <template>
 <div id='workspace-manager'>
-  <p>
-  Choose from your private workspaces:
-  <BankChoice
-    :bankChoiceNum="workspace"
-    :bankType="'workspace'"
-    @changeBank="changeWorkspace"
-  >
-  </BankChoice>
-  </p>
+  <div class='loading-workspace'
+    v-if="loading"
+  >Loading...</div>
+  <div class='notloading' v-if="!loading">
+    <p>
+    Choose from your private workspaces:
+    <BankChoice
+      :bankChoiceNum="workspace"
+      :bankType="'workspace'"
+      @changeBank="changeWorkspace"
+    >
+    </BankChoice>
+    </p>
+  </div>
 <!--   <p>
   Or create a public space:
   <br/>
@@ -32,6 +37,7 @@ export default {
   components: { BankChoice },
   data: function () {
     return {
+      loading: false,
       customName: undefined
     }
   },
@@ -45,7 +51,8 @@ export default {
   },
   methods: {
     changeWorkspace: function (workspaceName) {
-      this.$emit('changeWorkspace', workspaceName)
+      this.loading = true
+      this.$emit('rerouteWorkspace', workspaceName)
     }
   }
 }

@@ -1,6 +1,9 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 
@@ -15,9 +18,19 @@ import App from './App'
 import 'assets/firebaseui.css'
 import 'assets/globalstyles.css'
 
+const routes = [
+  {path: '/', component: App},
+  {path: '/app/:userId/:workspaceId', component: App}
+]
+
+const router = new VueRouter({
+  routes // short for routes: routes
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  router,
   template: '<App/>',
   components: { App }
 })

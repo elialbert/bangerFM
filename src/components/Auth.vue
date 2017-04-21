@@ -4,7 +4,7 @@
       <span v-if="signedIn">
         <span id='workspace-picker'
           @click="wsToggle"
-        ><a href="#">Current Workspace: {{workspace + 1}}</a></span>
+        ><a href="javascript:void(0)">Current Workspace: {{workspace}}</a></span>
         <span id="email">{{userInfo.email}}</span>    
         <button id="sign-out"
           v-on:click="signOut"
@@ -13,7 +13,7 @@
       <div id="user-signed-out" class="hidden"></div>
     </div>
     <div id="sign-in-with-redirect"></div>
-    <span>Loading...</span>
+    <span v-if="loading">Loading...</span>
   </div>
 </template>
 

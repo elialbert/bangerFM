@@ -3,17 +3,18 @@
     @click="$emit('switchView', 'soundsynth')"
   >
     <div id="ss-control">
+      <span class="bank-choice-name">Sample Pad: </span>
       <bank-choice
         v-bind:bankChoiceNum="soundBankChoice"
         v-bind:bankType="bankType"
         v-on:changeBank="changeBank"
         v-bind:ref="'soundBankChoice'"
       ></bank-choice>
-      <span>
+      <span class='control-span'>
         <button id="reset-soundbank"     class="ss-button" type="button" v-on:click="resetSoundbank()">Reset</button>
         <button id="randomize-soundbank" class="ss-button" type="button" v-on:click="randomize()">Randomize</button>
       </span>
-      <span v-if="this.user && this.user.includes('HVbN2g7VmZgkaPaXckqejq2Xs')">
+      <span class='control-span' v-if="this.user && this.user.includes('HVbN2g7VmZgkaPaXckqejq2Xs')">
         <button class="ss-button" type="button" v-on:click="writeToDef()">write(admin)</button>
         <button class="ss-button" type="button" v-on:click="arbWrite()">arb(admin)</button>
       </span>
@@ -263,6 +264,8 @@ export default {
     display: flex;
     height: auto;
     align-items: center;
+    margin-left: 10px;
+    margin-top: 4px;
   }
   .loading {
     background-color: #666;
@@ -278,7 +281,6 @@ export default {
   .ss-button {
     margin-left: 30px;  
     padding: 4px;
-    margin-top: 6px;
   }
   .hidden {
     display: none;

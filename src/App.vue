@@ -63,7 +63,8 @@
       :workspace="workspace"
       :publicWorkspace="publicWorkspace"
       v-bind:class="{ visible: wsEnabled == 1, hidden: wsEnabled == 0}"
-      v-on:changeWorkspace="changeWorkspace"
+      v-on:rerouteWorkspace="rerouteWorkspace"
+      ref='workspacemanager'
     ></workspace-manager>
     <control-panel ref='controlpanel'
       :user="user"
@@ -145,11 +146,14 @@ export default {
       message: '',
       windowWidth: 0,
       windowHeight: 0,
-      workspace: 0,
+      workspace: 1,
       publicWorkspace: false
     }
   },
   mounted: function () {
+    if (this.$route.params.workspaceId && this.$route.params.workspaceId !== this.workspace) {
+      this.changeWorkspace(this.$route.params.workspaceId)
+    }
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
     this.cbcb()
     StartAudioContext(Tone.context)
@@ -167,6 +171,12 @@ export default {
     user: function (val1, val2) {
       if (val2 && !val1) {
         firebaseBridge.fbdb.ref('userDefs/' + val2).off()
+        this.$router.push('/')
+      }
+    },
+    '$route': function (to, from) {
+      if (to.params.workspaceId !== from.params.workspaceId) {
+        this.changeWorkspace(to.params.workspaceId)
       }
     }
   },
@@ -182,6 +192,7 @@ export default {
     },
     doAuth: function (user) {
       this.user = user
+      this.$router.push('/app/' + this.user + '/' + this.workspace)
     },
     crashEvent: function () {
       console.log('crash event!')
@@ -201,6 +212,8 @@ export default {
     },
     doSignout: function () {
       this.user = false
+      console.log(this.$refs.songmaker.loading)
+      this.$refs.songmaker.loading = false
     },
     forceFocus: function () {
       this.$refs.app.focus()
@@ -257,6 +270,9 @@ export default {
       var dest = this.getDest()
       dest.changeBank(num - 1, dest.bankType, event.shiftKey, false, this.cbcb)
     },
+    rerouteWorkspace: function (workspaceName) {
+      this.$router.push('/app/' + this.user + '/' + workspaceName)
+    },
     changeWorkspace: function (workspaceName) {
       this.workspace = workspaceName
       defLoader.clearCookies()
@@ -266,7 +282,8 @@ export default {
         this.$refs.soundsynth.changeBank(0, 'soundBank', false, false, this.cbcb)
         this.$refs.controlpanel.doFBBinding()
         this.$refs.beatmaker.changeBank(0, 'beatBank', false)
-        this.toggleWS()
+        this.$refs.workspacemanager.loading = false
+        if (this.wsEnabled) { this.toggleWS() }
       })
     },
     oneArg: function (functionName, argument, event) {

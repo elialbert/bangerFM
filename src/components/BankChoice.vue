@@ -15,6 +15,10 @@ export default {
   props: ['bankChoiceNum', 'bankType'],
   methods: {
     changeBank: function (n) {
+      // stupid hack to actually store workspaces starting at 1
+      if (this.bankType === 'workspace') {
+        n += 1
+      }
       this.$emit('changeBank', n, this.bankType)
     }
   }

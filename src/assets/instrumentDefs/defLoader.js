@@ -167,7 +167,7 @@ var saveSong = function (user, workspace, obj, skipHistory = false) {
         console.log('Synchronization failed ' + error)
       })
   }
-  saveGeneric('songData', obj, skipHistory)
+  saveGeneric('songData', workspace, obj, skipHistory)
 }
 
 var saveGeneric = function (key, workspace, obj, skipHistory = false) {

@@ -60,28 +60,33 @@
     </help-overlay>
     <workspace-manager
       :user="user"
+      :otherUser="otherUser"
       :workspace="workspace"
       :publicWorkspace="publicWorkspace"
       v-bind:class="{ visible: wsEnabled == 1, hidden: wsEnabled == 0}"
       v-on:rerouteWorkspace="rerouteWorkspace"
       ref='workspacemanager'
+      @readOnly="setReadOnly"
     ></workspace-manager>
     <control-panel ref='controlpanel'
-      :user="user"
+      :user="dataUser"
       :workspace="workspace"
+      :readOnly="readOnly"
       v-bind:class="{ visible: cpEnabled == 1, hidden: cpEnabled == 0}"
     ></control-panel>
     <sound-synth ref='soundsynth'
       v-bind:visible="visible"
-      v-bind:user="user"
+      v-bind:user="dataUser"
       :workspace="workspace"
+      :readOnly="readOnly"
       v-on:updateMessage="updateMessage"
       v-on:switchView="switchView"
     ></sound-synth>
     <beat-maker ref='beatmaker'
       v-bind:visible="visible"
-      v-bind:user="user"
+      v-bind:user="dataUser"
       :workspace="workspace"
+      :readOnly="readOnly"
       v-bind:cbcb="cbcb"
       v-on:updateMessage="updateMessage"
       v-on:switchView="switchView"
@@ -89,8 +94,9 @@
     <song-maker ref='songmaker'
       v-bind:visible="visible"
       v-on:animateSong="animateSong"
-      v-bind:user="user"
+      v-bind:user="dataUser"
       :workspace="workspace"
+      :readOnly="readOnly"
       v-bind:cbcb="cbcb"
       v-on:updateMessage="updateMessage"
       v-on:changeBMBank="changeBMBank"
@@ -147,10 +153,14 @@ export default {
       windowWidth: 0,
       windowHeight: 0,
       workspace: 1,
-      publicWorkspace: false
+      otherUser: false,
+      readOnly: false
     }
   },
   mounted: function () {
+    if (this.$route.params.otherUser) {
+      this.otherUser = this.$route.params.otherUser
+    }
     if (this.$route.params.workspaceId && this.$route.params.workspaceId !== this.workspace) {
       this.changeWorkspace(this.$route.params.workspaceId)
     }
@@ -175,9 +185,20 @@ export default {
       }
     },
     '$route': function (to, from) {
+      if (to.params.otherUser !== from.params.otherUser) {
+        this.otherUser = to.params.otherUser
+      }
       if (to.params.workspaceId !== from.params.workspaceId) {
         this.changeWorkspace(to.params.workspaceId)
       }
+    }
+  },
+  computed: {
+    publicWorkspace: function () {
+      return (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(this.workspace))
+    },
+    dataUser: function () {
+      return this.otherUser || this.user
     }
   },
   methods: {
@@ -190,9 +211,16 @@ export default {
     toggleWS: function () {
       this.wsEnabled = !this.wsEnabled
     },
+    setReadOnly: function (val) {
+      this.readOnly = val
+    },
     doAuth: function (user) {
       this.user = user
-      this.$router.push('/app/' + this.user + '/' + this.workspace)
+      let url = '/app/'
+      if (this.otherUser) {
+        url += this.otherUser + '/'
+      }
+      this.$router.push(url + this.workspace)
     },
     crashEvent: function () {
       console.log('crash event!')
@@ -212,8 +240,8 @@ export default {
     },
     doSignout: function () {
       this.user = false
-      console.log(this.$refs.songmaker.loading)
       this.$refs.songmaker.loading = false
+      this.wsEnabled = false
     },
     forceFocus: function () {
       if (!this.wsEnabled) {
@@ -278,12 +306,11 @@ export default {
       dest.changeBank(num - 1, dest.bankType, event.shiftKey, false, this.cbcb)
     },
     rerouteWorkspace: function (workspaceName) {
-      if (![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(workspaceName)) {
-        this.publicWorkspace = true
-      } else {
-        this.publicWorkspace = false
+      let url = '/app/'
+      if (this.otherUser) {
+        url += this.otherUser + '/'
       }
-      this.$router.push('/app/' + this.user + '/' + workspaceName)
+      this.$router.push(url + workspaceName)
     },
     changeWorkspace: function (workspaceName) {
       this.workspace = workspaceName
@@ -295,7 +322,7 @@ export default {
         this.$refs.controlpanel.doFBBinding()
         this.$refs.beatmaker.changeBank(0, 'beatBank', false)
         this.$refs.workspacemanager.loading = false
-        if (this.wsEnabled) { this.toggleWS() }
+        if (this.wsEnabled && !this.publicWorkspace) { this.toggleWS() }
       })
     },
     oneArg: function (functionName, argument, event) {

@@ -20,7 +20,8 @@ import 'assets/globalstyles.css'
 
 const routes = [
   {path: '/', component: App},
-  {path: '/app/:userId/:workspaceId', component: App}
+  {path: '/app/:workspaceId', component: App},
+  {path: '/app/:otherUser/:workspaceId', component: App}
 ]
 
 const router = new VueRouter({

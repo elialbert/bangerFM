@@ -85,6 +85,11 @@ var save = function (user, workspace, obj, num, skipHistory = false) {
   }
   if (user) {
     firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(obj))
+      .then(function () {
+      })
+      .catch(function (error) {
+        console.log('Synchronization failed ' + error)
+      })
   }
   loaderVm.$localStorage.set('instrumentDefs' + String(num), obj)
   if (!skipHistory) {
@@ -118,6 +123,11 @@ var loadBeat = function (user, workspace, num, perMeasure = 4, pitchKey = 'C Maj
 var saveBeat = function (user, workspace, obj, num, skipFB, skipHistory = false) {
   if (user && !skipFB) {
     firebaseBridge.bmdefRef(user, workspace, num).set(firebaseBridge.removeKey(obj))
+      .then(function () {
+      })
+      .catch(function (error) {
+        console.log('bm Synchronization failed ' + error)
+      })
   }
   loaderVm.$localStorage.set('beatDef' + String(num), JSON.stringify(obj))
   if (!skipHistory) {
@@ -131,6 +141,11 @@ var loadSong = function (user, workspace) {
     firebaseBridge.smdefRef(user, workspace).once('value', snapshot => {
       if (!snapshot.val()) {
         firebaseBridge.smdefRef(user, workspace).set(firebaseBridge.removeKey(data))
+          .then(function () {
+          })
+          .catch(function (error) {
+            console.log('Synchronization failed ' + error)
+          })
       }
     })
   }
@@ -139,6 +154,11 @@ var loadSong = function (user, workspace) {
 var saveSong = function (user, workspace, obj, skipHistory = false) {
   if (user) {
     firebaseBridge.smdefRef(user, workspace).set(firebaseBridge.removeKey(obj))
+      .then(function () {
+      })
+      .catch(function (error) {
+        console.log('Synchronization failed ' + error)
+      })
   }
   saveGeneric('songData', obj, skipHistory)
 }

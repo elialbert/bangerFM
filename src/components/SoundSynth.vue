@@ -198,7 +198,7 @@ export default {
         this.changeBank(this.soundBankChoice, 'soundBank', false, true)
       } else {
         firebaseBridge.fbdb.ref('defs/' + this.soundBankChoice).once('value', snapshot => {
-          var name = Object.keys(this.defs1)[this.selected]
+          let name = this.idefLookup[this.selected].key
           this.defs[name] = snapshot.val()[name]
           this.saveDef()
         })

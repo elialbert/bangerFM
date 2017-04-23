@@ -23,17 +23,6 @@ describe('SoundSynthFB.vue', () => {
     expect(component.defs1.mediumSynth.name).to.equal('mediumSynth')
   })
 
-  it('can be logged in', done => {
-    sinon.stub(component, '$bindAsObject').withArgs('defs', 'path', null, sinon.match.any)
-
-    // spy(component.$bindAsObject)
-    expect(firebaseBridge.idefRef(true, 1)).to.equal('path')
-    vm.user = 'fakeuserid'
-    check(Vue, done, () => {
-      expect(component.$bindAsObject.called).to.be.true
-    })
-  })
-
   it('can go deep', done => {
     component.enterUp()
     check(Vue, false, () => {

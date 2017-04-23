@@ -92,8 +92,10 @@ export default {
       loading: false,
       idefLookup: {},
       defs: defLoader.load(false, 0, 0, false, (data) => {
-        this.defs = data
-        if (!this.user) { this.saveDef(0) }
+        if (!this.user) {
+          this.defs = data
+          this.saveDef(0)
+        }
       })
     }
   },

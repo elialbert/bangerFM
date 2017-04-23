@@ -150,8 +150,6 @@ export default {
       wsEnabled: 0,
       user: false,
       message: '',
-      windowWidth: 0,
-      windowHeight: 0,
       workspace: 1,
       otherUser: false,
       readOnly: false
@@ -167,15 +165,6 @@ export default {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
     this.cbcb()
     StartAudioContext(Tone.context)
-    var self = this
-    this.$nextTick(function () {
-      window.addEventListener('resize', function () {
-        self.windowWidth = document.documentElement.clientWidth
-        self.windowHeight = document.documentElement.clientHeight
-      })
-      this.windowWidth = document.documentElement.clientWidth
-      this.windowHeight = document.documentElement.clientHeight
-    })
   },
   watch: {
     user: function (val1, val2) {
@@ -188,7 +177,7 @@ export default {
       if (to.params.otherUser !== from.params.otherUser) {
         this.otherUser = to.params.otherUser
       }
-      if (to.params.workspaceId !== from.params.workspaceId) {
+      if (to.params.workspaceId !== from.params.workspaceId && (from.params.workspaceId !== undefined)) {
         this.changeWorkspace(to.params.workspaceId)
       }
     }

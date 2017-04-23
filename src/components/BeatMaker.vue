@@ -105,7 +105,7 @@ export default {
   data: function () {
     return {
       perMeasure: 4,
-      defs: defLoader.load(0),
+      defs: defLoader.quickDefLoad(),
       selected: [0, 0],
       running: false,
       beatBankChoice: 0,

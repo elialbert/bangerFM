@@ -49,10 +49,8 @@ var quickDefLoad = function () {
 }
 
 var load = function (user, workspace, num, reset, nonUserResetCB, fbcb) {
-  // grab from local storage
-  console.log('dl load')
   let foundFromBefore = false
-  if (num === undefined || user === undefined) { return }
+  // if (num === undefined || user === undefined) { return }
   let storedDefs = loaderVm.$localStorage.get('instrumentDefs' + String(num))
   if (!storedDefs || !Object.keys(storedDefs).length) {
     storedDefs = clone(instrumentDefs0)
@@ -92,8 +90,6 @@ var save = function (user, workspace, obj, num, skipHistory = false) {
   if (Object.keys(obj).length === 0) {
     return
   }
-  console.log('in save for ' + user)
-  console.log(obj.highSynth.properties.volume.val)
   if (user) {
     firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(obj))
       .then(function () {

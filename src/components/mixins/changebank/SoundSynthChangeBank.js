@@ -5,7 +5,6 @@ module.exports = {
   methods: {
     changeBank: function (soundBankNum, bankType, shifted, reset, fbcb, noBind = false) {
       if (bankType !== this.bankType) { return }
-      console.log('starting ss changebank with user ' + this.user)
       var nonUserResetCB = this.setupResetCB(soundBankNum, shifted)
       if (!shifted) {
         this.changeBankInner(soundBankNum, reset, nonUserResetCB, fbcb, noBind)
@@ -38,10 +37,8 @@ module.exports = {
       this.$refs.soundBankChoice.selected = soundBankNum
       this.soundBankChoice = soundBankNum
       if (!reset) {
-        console.log('finalize savedef with user ' + this.user)
         this.saveDef(soundBankNum)
       }
-      // console.log('not saving!')
     }
   }
 }

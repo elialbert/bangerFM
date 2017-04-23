@@ -241,6 +241,7 @@ export default {
     doSignout: function () {
       this.user = false
       this.$refs.songmaker.loading = false
+      this.wsEnabled = false
     },
     forceFocus: function () {
       if (!this.wsEnabled) {

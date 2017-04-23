@@ -150,6 +150,7 @@ export default {
         }
         this.playing = true
         soundBridge.startSound(this.instrumentIndex(), this.selected)
+        this.$emit('updateMessage', 'Sampling from the Sound Synth.')
       }
     },
     spaceUp: function () {

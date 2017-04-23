@@ -288,7 +288,7 @@ export default {
       }
       this.deepPlaying = false
       this.running = false
-      this.$emit('updateMessage', 'Playing: ' + this.running)
+      this.$emit('updateMessage', 'Current Status: Paused. Press space to play in the selected area.', true)
     },
     startPlaying: function () {
       this.stopPlaying()
@@ -299,7 +299,7 @@ export default {
       this.loop = beatBridge.makeLoop(beatBridge.dataFunc(this, this.animate, this.defs), this.numCols)
       this.loop.start(0)
       this.running = true
-      this.$emit('updateMessage', 'Playing: ' + this.running)
+      this.$emit('updateMessage', 'Current Status: Playing in the Beat Maker.', true)
     },
     instrumentIndex: function () {
       return this.idefLookup[this.selected[1]].iindex

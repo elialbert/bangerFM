@@ -4,6 +4,7 @@
     @click="$emit('switchView', 'songmaker')"
   >
     <div v-if="loading">Loading...</div>
+    <div class='sm-title'><span class='nav-logo'>Song Maker</span>: Choose beats from above to play in sequence by pressing number keys.</div>
     <div class='sm-container'>
       <song-maker-row v-for="(songArray, songIndex) in songData" v-if="!loading"
         v-on:hoverSelectSM="hoverSelect" v-on:hoverClickSM="changeBMBank"
@@ -114,7 +115,11 @@ export default {
       this.defsLength = firebaseBridge.fbObjLength(this.defs)
       this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
       this.running ? this.stopPlaying() : this.startPlaying()
-      this.$emit('updateMessage', 'Playing: ' + this.running)
+      if (this.running) {
+        this.$emit('updateMessage', 'Current Status: Playing in the Song Maker.', true)
+      } else {
+        this.$emit('updateMessage', 'Current Status: Paused. Press space to play in the selected area.', true)
+      }
     },
     stopPlaying: function () {
       if (this.loop) {
@@ -219,8 +224,16 @@ export default {
 
 <style>
 .sm-container {
-  margin-top: 10px;
-  margin-left: 6px;
+  padding: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 96%;
+  border: 1px solid black;
+}
+.sm-title {
+  padding-right: 5px;
+  padding-left: 10px;
+  margin-top: 6px;
 }
 #song-maker {
   border: 2px solid black;

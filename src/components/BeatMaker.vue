@@ -26,7 +26,8 @@
             <option v-for="key in pitchKeyOptions" v-bind:value="key.value">
               {{ key.value }}
             </option>
-          </select>          
+          </select>
+          <HelpButton :helpText="'Use the beat sequencer to string together sounds. Use advanced options for more complex automation.'"></HelpButton>
         </span>
       </span>
     </div>
@@ -90,7 +91,8 @@ import mutils from '../assets/movementUtils'
 import Network from './mixins/Network'
 import BeatMakerFBBinding from './mixins/fbbinding/BeatMakerFBBinding'
 import BeatMakerChangeBank from './mixins/changebank/BeatMakerChangeBank'
-import BeatMakerDeep from '../components/BeatMakerDeep'
+import BeatMakerDeep from './BeatMakerDeep'
+import HelpButton from './HelpButton'
 
 export default {
   name: 'beat-maker',
@@ -100,7 +102,8 @@ export default {
     InstrumentRow,
     Instrument,
     BankChoice,
-    BeatMakerDeep
+    BeatMakerDeep,
+    HelpButton
   },
   data: function () {
     return {

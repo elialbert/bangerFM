@@ -13,6 +13,8 @@
       <span class='control-span'>
         <button id="reset-soundbank"     class="ss-button" type="button" v-on:click="resetSoundbank()">Reset</button>
         <button id="randomize-soundbank" class="ss-button" type="button" v-on:click="randomize()">Randomize</button>
+        <HelpButton :helpText="'Create sound banks and use them in the beatmaker below. Changes here update in real time while your beats are playing.'"></HelpButton>
+
       </span>
       <span class='control-span' v-if="this.user && this.user.includes('HVbN2g7VmZgkaPaXckqejq2Xs')">
         <button class="ss-button" type="button" v-on:click="writeToDef()">write(admin)</button>
@@ -69,6 +71,7 @@ import soundsynthUtils from '../assets/soundsynthUtils'
 import Network from './mixins/Network'
 import SoundSynthFBBinding from './mixins/fbbinding/SoundSynthFBBinding'
 import SoundSynthChangeBank from './mixins/changebank/SoundSynthChangeBank'
+import HelpButton from './HelpButton'
 
 export default {
   name: 'sound-synth',
@@ -76,7 +79,8 @@ export default {
     Instrument,
     Slider,
     BankChoice,
-    SoundSynthDeep
+    SoundSynthDeep,
+    HelpButton
   },
   props: ['visible', 'user', 'workspace', 'cbcb', 'readOnly'],
   mixins: [Network, SoundSynthFBBinding, SoundSynthChangeBank],

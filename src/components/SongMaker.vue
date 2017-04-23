@@ -4,7 +4,9 @@
     @click="$emit('switchView', 'songmaker')"
   >
     <div v-if="loading">Loading...</div>
-    <div class='sm-title' v-if="!loading"><span class='nav-logo'>Song Maker</span>: Choose beats from above to play in sequence by pressing number keys.</div>
+    <div class='sm-title' v-if="!loading"><span class='nav-logo'>Song Maker</span>: Choose beats from above to play in sequence by pressing number keys.
+      <HelpButton :helpText="'You can play many beats at once - each row of the songmaker plays simultaneously.'"></HelpButton>
+    </div>
     <div class='sm-container'>
       <song-maker-row v-for="(songArray, songIndex) in songData" v-if="!loading"
         v-on:hoverSelectSM="hoverSelect" v-on:hoverClickSM="changeBMBank"
@@ -32,13 +34,15 @@ import Tone from '../assets/tone.js'
 import soundsynthUtils from '../assets/soundsynthUtils'
 import SongMakerFBBinding from './mixins/fbbinding/SongMakerFBBinding'
 import SongMakerChangeBank from './mixins/changebank/SongMakerChangeBank'
+import HelpButton from './HelpButton'
 
 export default {
   name: 'song-maker',
   mixins: [SongMakerFBBinding, SongMakerChangeBank],
   props: ['visible', 'user', 'cbcb', 'workspace'],
   components: {
-    SongMakerRow
+    SongMakerRow,
+    HelpButton
   },
   watch: {
     user: function (val1, val2) {
@@ -236,6 +240,7 @@ export default {
   padding-right: 5px;
   padding-left: 10px;
   margin-top: 6px;
+  margin-bottom: 6px;
 }
 #song-maker {
   border: 2px solid black;

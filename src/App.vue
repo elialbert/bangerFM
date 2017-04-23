@@ -149,10 +149,11 @@ export default {
       cpEnabled: 0,
       wsEnabled: 0,
       user: false,
-      message: '',
+      message: 'Welcome! Banger is in beta. If (when) anything goes wrong, just refresh! All data saved automatically.',
       workspace: 1,
       otherUser: false,
-      readOnly: false
+      readOnly: false,
+      statusMessage: 'Current Status: Paused. Press space to play in the selected area.'
     }
   },
   mounted: function () {
@@ -191,10 +192,11 @@ export default {
     }
   },
   methods: {
-    updateMessage: function (message) {
+    updateMessage: function (message, statusUpdate = false) {
       this.message = message
+      if (statusUpdate) { this.statusMessage = message }
       setTimeout(() => {
-        this.message = 'Hi! If (when) anything goes wrong, just refresh!'
+        this.message = this.statusMessage
       }, 3000)
     },
     toggleWS: function () {

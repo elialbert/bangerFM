@@ -15,13 +15,15 @@
         ['numInMeasure' + (n-1) % perMeasure]: true,
         measureSub: enabledArray[n-1].measureSub}"
       >
-    <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
+      <span class='pitchText' v-if="enabledArray[n-1].enabled">{{ enabledArray[n - 1].pitch }}</span>
     </div>
   </div>
   <div class="instrument-name"
     @mouseover="$emit('mouseOverName', def.index)"
     @click="$emit('toggleDeep')"
+    :class="{ selected: this.selected[1] == this.def.index && !bmDeep}"
   >{{ def.name }}</div>
+
 </div>
 </template>
 
@@ -72,6 +74,9 @@ export default {
   padding-top: 4px;
   padding-right: 10px;
   cursor: pointer; cursor: hand;
+}
+.instrument-name.selected {
+  background-color: lightgrey;
 }
 .instrument-name:hover {
   background-color: lightgrey;

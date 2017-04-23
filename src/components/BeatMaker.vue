@@ -26,7 +26,8 @@
             <option v-for="key in pitchKeyOptions" v-bind:value="key.value">
               {{ key.value }}
             </option>
-          </select>          
+          </select>
+          <HelpButton :helpText="'Use the beat sequencer to string together sounds. Use advanced options for more complex automation.'"></HelpButton>
         </span>
       </span>
     </div>
@@ -90,7 +91,8 @@ import mutils from '../assets/movementUtils'
 import Network from './mixins/Network'
 import BeatMakerFBBinding from './mixins/fbbinding/BeatMakerFBBinding'
 import BeatMakerChangeBank from './mixins/changebank/BeatMakerChangeBank'
-import BeatMakerDeep from '../components/BeatMakerDeep'
+import BeatMakerDeep from './BeatMakerDeep'
+import HelpButton from './HelpButton'
 
 export default {
   name: 'beat-maker',
@@ -100,7 +102,8 @@ export default {
     InstrumentRow,
     Instrument,
     BankChoice,
-    BeatMakerDeep
+    BeatMakerDeep,
+    HelpButton
   },
   data: function () {
     return {
@@ -133,7 +136,7 @@ export default {
   watch: {
     user: function (val1, val2) {
       if (val1 && !val2) {
-        this.doFBBinding(this.beatBankChoice)
+        this.doFBBinding(this.beatBankChoice, this.postLoad)
       }
     },
     pitchKey: function (newKey) {
@@ -268,7 +271,11 @@ export default {
         if (col === 29 && clear && !this.deep) {
           var self = this
           setTimeout(function (ii) {
-            self.$refs['instrumentrow' + String(ii)][0].playing = -1
+            try {
+              self.$refs['instrumentrow' + String(ii)][0].playing = -1
+            } catch (err) {
+              console.log(err)
+            }
           }, 100, i)
         }
         if (this.deep) {
@@ -288,7 +295,7 @@ export default {
       }
       this.deepPlaying = false
       this.running = false
-      this.$emit('updateMessage', 'Playing: ' + this.running)
+      this.$emit('updateMessage', 'Current Status: Paused. Press space to play in the selected area.', true)
     },
     startPlaying: function () {
       this.stopPlaying()
@@ -299,7 +306,7 @@ export default {
       this.loop = beatBridge.makeLoop(beatBridge.dataFunc(this, this.animate, this.defs), this.numCols)
       this.loop.start(0)
       this.running = true
-      this.$emit('updateMessage', 'Playing: ' + this.running)
+      this.$emit('updateMessage', 'Current Status: Playing in the Beat Maker.', true)
     },
     instrumentIndex: function () {
       return this.idefLookup[this.selected[1]].iindex

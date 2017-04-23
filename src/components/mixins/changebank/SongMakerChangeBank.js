@@ -7,7 +7,6 @@ module.exports = {
     changeBank: function (num) {
       if (this.beatvsong === 0) { return }
       if (num === undefined) { num = this.songData[this.selected[1]][this.selected[0]] || 0 }
-
       this.fixNullSong()
       let oldVals = mutils.sdKeys(this.songData, this.selected)
 

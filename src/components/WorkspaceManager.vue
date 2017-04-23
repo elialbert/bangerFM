@@ -6,19 +6,22 @@
   <div class='notloading' v-if="!loading">
     <p>Current Workspace: <b>{{ workspace }}</b></p>
     <div class='ws-sharing' v-if="publicWorkspace && workspaces[workspace]">
-      Who can see and play: <br/>
+      <div class='wsshare-label'>Who can see and play: </div>
       <input type="radio" class="wsshare-read-private" value="private" v-model="workspaces[workspace].permissions.read">
       <label for="read-private">Private</label>
       <input type="radio" class="wsshare-read-public" value="public" v-model="workspaces[workspace].permissions.read">
       <label for="wsshare-read-public">Public</label>
       <br>
-      Who can change things: <br/>
-      <input type="radio" class="wsshare-write-private" value="private" v-model="workspaces[workspace].permissions.write">
-      <label for="wsshare-write-private">Private</label>
-      <input type="radio" class="wsshare-write-public" value="public" v-model="workspaces[workspace].permissions.write">
-      <label for="wsshare-write-public">Public</label>
-      <br/>
-      Individual access control coming soon!
+      <div v-if="workspaces[workspace].permissions.read == 'public'">
+        <div class='wsshare-label'>Who can change things: </div>
+        <input type="radio" class="wsshare-write-private" value="private" v-model="workspaces[workspace].permissions.write">
+        <label for="wsshare-write-private">Private</label>
+        <input type="radio" class="wsshare-write-public" value="public" v-model="workspaces[workspace].permissions.write">
+        <label for="wsshare-write-public">Public</label>
+        <div class='wsshare-label'>Individual access control coming soon!</div>
+        <div class='wsshare-label'>For now, share this workspace by sharing the following url with friends: </div>
+        <div class='wsshare-url'>banger.fm/#/app/{{ user }}/workspace</div>
+      </div>
       <br>
     </div>
     <hr/>
@@ -50,7 +53,6 @@
     <br/>
     <select @change="changeWSDropdown">
       <option v-for="wskey in workspaceOptions" v-bind:value="wskey.value"
-        selected="isSelected(wsKey.value)"
       >
         {{ wskey.value }}
       </option>
@@ -80,6 +82,7 @@ export default {
   computed: {
     workspaceOptions: function () {
       let r = []
+      r.push({value: ''})
       for (let key of Object.keys(this.workspaces).filter(key => !['.key'].includes(key))) {
         r.push({value: key})
       }
@@ -116,6 +119,7 @@ export default {
   },
   methods: {
     changeWSDropdown: function ($event) {
+      if (!$event.target.value) { return }
       return this.changeWorkspace($event.target.value)
     },
     changeWorkspace: function (newWorkspace) {
@@ -145,7 +149,6 @@ export default {
   background-color: #63676d;
   color: white;
   height: auto;
-  width: 30%;
   z-index: 39;
 }
 .workspace-name-picker {
@@ -154,5 +157,12 @@ export default {
 }
 .wsshare-write-public {
   margin-left: 7px;
+}
+.wsshare-label {
+  margin-top: 10px;
+}
+div.wsshare-url {
+  user-select: text;
+  cursor: text;
 }
 </style>

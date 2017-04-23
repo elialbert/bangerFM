@@ -150,8 +150,6 @@ export default {
       wsEnabled: 0,
       user: false,
       message: '',
-      windowWidth: 0,
-      windowHeight: 0,
       workspace: 1,
       otherUser: false,
       readOnly: false
@@ -167,20 +165,12 @@ export default {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
     this.cbcb()
     StartAudioContext(Tone.context)
-    var self = this
-    this.$nextTick(function () {
-      window.addEventListener('resize', function () {
-        self.windowWidth = document.documentElement.clientWidth
-        self.windowHeight = document.documentElement.clientHeight
-      })
-      this.windowWidth = document.documentElement.clientWidth
-      this.windowHeight = document.documentElement.clientHeight
-    })
   },
   watch: {
     user: function (val1, val2) {
       if (val2 && !val1) {
         firebaseBridge.fbdb.ref('userDefs/' + val2).off()
+        console.log('changing route for user')
         this.$router.push('/')
       }
     },
@@ -188,7 +178,8 @@ export default {
       if (to.params.otherUser !== from.params.otherUser) {
         this.otherUser = to.params.otherUser
       }
-      if (to.params.workspaceId !== from.params.workspaceId) {
+      if (to.params.workspaceId !== from.params.workspaceId && (from.params.workspaceId !== undefined)) {
+        console.log('goig to change workspace from route ' + from.params.workspaceId)
         this.changeWorkspace(to.params.workspaceId)
       }
     }
@@ -220,6 +211,7 @@ export default {
       if (this.otherUser) {
         url += this.otherUser + '/'
       }
+      console.log('do auth change route')
       this.$router.push(url + this.workspace)
     },
     crashEvent: function () {
@@ -310,6 +302,7 @@ export default {
       if (this.otherUser) {
         url += this.otherUser + '/'
       }
+      console.log('reroute push')
       this.$router.push(url + workspaceName)
     },
     changeWorkspace: function (workspaceName) {
@@ -318,6 +311,7 @@ export default {
       this.$nextTick(() => {
         this.$refs.songmaker.doFBBinding()
         this.$refs.soundsynth.clearWatchers()
+        console.log('gonig to  ss changebank')
         this.$refs.soundsynth.changeBank(0, 'soundBank', false, false, this.cbcb)
         this.$refs.controlpanel.doFBBinding()
         this.$refs.beatmaker.changeBank(0, 'beatBank', false)

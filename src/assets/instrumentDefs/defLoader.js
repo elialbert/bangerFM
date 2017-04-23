@@ -44,12 +44,21 @@ var clearCookies = function () {
   loaderVm.$localStorage.remove('CPDef')
 }
 
+var quickDefLoad = function () {
+  return clone(instrumentDefs0)
+}
+
 var load = function (user, workspace, num, reset, nonUserResetCB, fbcb) {
   // grab from local storage
+  console.log('dl load')
+  let foundFromBefore = false
+  if (num === undefined || user === undefined) { return }
   let storedDefs = loaderVm.$localStorage.get('instrumentDefs' + String(num))
   if (!storedDefs || !Object.keys(storedDefs).length) {
     storedDefs = clone(instrumentDefs0)
-    if (!user) { reset = true }
+    if (user === false) { reset = true }
+  } else {
+    foundFromBefore = true
   }
 
   if (reset) {
@@ -62,8 +71,8 @@ var load = function (user, workspace, num, reset, nonUserResetCB, fbcb) {
     })
   } else { // if it's not there at all, put it there
     if (user) { // if logged in
-      firebaseBridge.idefRef(user, num).once('value', snapshot => {
-        if (!snapshot.val()) {
+      firebaseBridge.idefRef(user, workspace, num).once('value', snapshot => {
+        if (!snapshot.val() && !foundFromBefore) {
           firebaseBridge.fbdb.ref('defs/' + num).once('value', snapshot2 => {
             firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(snapshot2.val()))
             if (fbcb) { fbcb() }
@@ -83,6 +92,8 @@ var save = function (user, workspace, obj, num, skipHistory = false) {
   if (Object.keys(obj).length === 0) {
     return
   }
+  console.log('in save for ' + user)
+  console.log(obj.highSynth.properties.volume.val)
   if (user) {
     firebaseBridge.idefRef(user, workspace, num).set(firebaseBridge.removeKey(obj))
       .then(function () {
@@ -180,6 +191,7 @@ var loadGeneric = function (key, workspace) {
 
 export default {
   load: load,
+  quickDefLoad: quickDefLoad,
   loadBeat: loadBeat,
   save: save,
   saveBeat: saveBeat,

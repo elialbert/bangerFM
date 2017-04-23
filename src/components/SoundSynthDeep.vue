@@ -48,6 +48,7 @@ export default {
       if (this.readOnly) { return }
       let sb = explicitNum || this.soundBankChoice
       Vue.nextTick(() => {
+        console.log('in ssd save')
         defLoader.save(this.user, this.defs, sb)
       })
     }

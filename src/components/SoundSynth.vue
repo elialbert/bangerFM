@@ -92,8 +92,11 @@ export default {
       loading: false,
       idefLookup: {},
       defs: defLoader.load(false, 0, 0, false, (data) => {
-        this.defs = data
-        if (!this.user) { this.saveDef(0) }
+        if (!this.user) {
+          this.defs = data
+          console.log('trigger stupid thing')
+          this.saveDef(0)
+        }
       })
     }
   },
@@ -180,13 +183,16 @@ export default {
     },
     saveDef: function (explicitNum, skipHistory = false) {
       if (this.readOnly) { return }
+      console.log('in ss savedef ' + this.user)
       Vue.nextTick(() => {
         this.networkWait('sssave', () => {
+          console.log('about to save from defloader with user ' + this.user)
           defLoader.save(this.user, this.workspace, this.defs1, explicitNum || this.soundBankChoice, skipHistory)
         })
       })
     },
     resetSoundbank: function () {
+      console.log('in reset soundbank')
       if (!this.deep) {
         this.changeBank(this.soundBankChoice, 'soundBank', false, true)
       } else {

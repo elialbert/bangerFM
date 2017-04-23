@@ -46,8 +46,8 @@ var innerDataArrayObj = function () {
 var qTimeLookup = function (perMeasure) {
   return {
     '3 Beats': '8t',
-    '4 Beats': undefined,
-    '5 Beats': undefined
+    '4 Beats': false,
+    '5 Beats': false
   }[perMeasure]
 }
 

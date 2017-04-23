@@ -1,4 +1,5 @@
 import firebaseBridge from '../../../assets/instrumentDefs/firebaseBridge'
+import defLoader from '../../../assets/instrumentDefs/defLoader'
 
 module.exports = {
   methods: {
@@ -18,6 +19,17 @@ module.exports = {
           }
         }
       })
+    },
+    // need to stick fb beats into local cookie for sm to work from fresh load
+    postLoad: function () {
+      for (let i = 0; i < 9; i++) {
+        firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).once('value', snapshot => {
+          let v = snapshot.val()
+          if (v && Object.keys(v).length) {
+            defLoader.saveBeat(this.user, this.workspace, v, i, true, true)
+          }
+        })
+      }
     }
   }
 }

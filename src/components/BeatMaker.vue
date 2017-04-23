@@ -133,7 +133,7 @@ export default {
   watch: {
     user: function (val1, val2) {
       if (val1 && !val2) {
-        this.doFBBinding(this.beatBankChoice)
+        this.doFBBinding(this.beatBankChoice, this.postLoad)
       }
     },
     pitchKey: function (newKey) {

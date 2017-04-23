@@ -4,7 +4,7 @@
     @click="$emit('switchView', 'songmaker')"
   >
     <div v-if="loading">Loading...</div>
-    <div class='sm-title'><span class='nav-logo'>Song Maker</span>: Choose beats from above to play in sequence by pressing number keys.</div>
+    <div class='sm-title' v-if="!loading"><span class='nav-logo'>Song Maker</span>: Choose beats from above to play in sequence by pressing number keys.</div>
     <div class='sm-container'>
       <song-maker-row v-for="(songArray, songIndex) in songData" v-if="!loading"
         v-on:hoverSelectSM="hoverSelect" v-on:hoverClickSM="changeBMBank"
@@ -174,6 +174,8 @@ export default {
       if (!this.defs1) {
         console.log('no defs!')
       }
+      console.log('loaded dataarray ')
+      console.log(dataArray)
       this.loop = beatBridge.makeLoop(beatBridge.dataFunc({dataArray: dataArray, defsLength: this.defsLength, idefLookup: this.idefLookup}, this.animate, this.defs1, this.nextBeat, songIndex), dataArray[0].length || Object.keys(dataArray[0]).length)
       this.loop.loop = 1
       this.loop.start(this.totalTime[songIndex])

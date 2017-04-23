@@ -271,7 +271,11 @@ export default {
         if (col === 29 && clear && !this.deep) {
           var self = this
           setTimeout(function (ii) {
-            self.$refs['instrumentrow' + String(ii)][0].playing = -1
+            try {
+              self.$refs['instrumentrow' + String(ii)][0].playing = -1
+            } catch (err) {
+              console.log(err)
+            }
           }, 100, i)
         }
         if (this.deep) {

@@ -178,8 +178,6 @@ export default {
       if (!this.defs1) {
         console.log('no defs!')
       }
-      console.log('loaded dataarray ')
-      console.log(dataArray)
       this.loop = beatBridge.makeLoop(beatBridge.dataFunc({dataArray: dataArray, defsLength: this.defsLength, idefLookup: this.idefLookup}, this.animate, this.defs1, this.nextBeat, songIndex), dataArray[0].length || Object.keys(dataArray[0]).length)
       this.loop.loop = 1
       this.loop.start(this.totalTime[songIndex])

@@ -37,7 +37,7 @@
     Or save as a separate workspace with a name so you can manage sharing:
     <br/>
     <input class='workspace-name-picker'
-      v-bind:placeholder="publicWorkspaceName"
+      v-bind:placeholder="'Your workspace name here'"
       v-model='customName'
     ></input>
     <button
@@ -67,25 +67,26 @@ import firebaseBridge from '../assets/instrumentDefs/firebaseBridge'
 
 export default {
   name: 'workspace-manager',
-  props: ['user', 'workspace', 'publicWorkspace'],
+  props: ['user', 'workspace', 'publicWorkspace', 'otherUser'],
   components: { BankChoice },
   data: function () {
     return {
       loading: false,
       customName: undefined,
-      workspaces: {}
+      workspaces: {},
+      otherWorkspaces: {}
     }
   },
   computed: {
-    publicWorkspaceName: function () {
-      return 'Your workspace name here'
-    },
     workspaceOptions: function () {
       let r = []
       for (let key of Object.keys(this.workspaces).filter(key => !['.key'].includes(key))) {
         r.push({value: key})
       }
       return r
+    },
+    readOnly: function () {
+      return this.otherUser && (this.otherWorkspaces[this.workspace].permissions.write === 'private')
     }
   },
   watch: {
@@ -94,6 +95,23 @@ export default {
         this.$bindAsObject('workspaces', firebaseBridge.wsdefRef(this.user), null, () => {
         })
       }
+    },
+    otherUser: function (val1, val2) {
+      if (val1 && !val2) {
+        this.$bindAsObject('otherWorkspaces', firebaseBridge.wsdefRef(this.otherUser), null, () => {
+          this.$emit('readOnly', this.otherWorkspaces[this.workspace].permissions.write === 'private')
+        })
+      }
+    },
+    workspaces: {
+      handler: function (val) {
+        let wsData = firebaseBridge.removeKey(val)
+        if (!wsData || Object.keys(wsData).length === 0) {
+          return
+        }
+        workspaceBridge.updateWorkspaces(this.user, wsData)
+      },
+      deep: true
     }
   },
   methods: {
@@ -104,9 +122,7 @@ export default {
       // first arg should be null if workspace passed in is custom
       if (!newWorkspace) {
         this.loading = true
-        workspaceBridge.saveWorkspace(this.user, this.customName, (err) => {
-          console.log('done ' + err)
-        })
+        workspaceBridge.saveWorkspace(this.user, this.customName)
       } else {
         this.customName = null
       }

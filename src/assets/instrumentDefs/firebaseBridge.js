@@ -31,7 +31,7 @@ var fbvm = new Vue({
 
 var removeKey = function (toSave) {
   return Object.keys(toSave)
-    .filter(key => !['.key'].includes(key))
+    .filter(key => !['.key', '.value'].includes(key))
     .reduce((obj, key) => {
       obj[key] = toSave[key]
       return obj

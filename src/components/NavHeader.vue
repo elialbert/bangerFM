@@ -1,6 +1,6 @@
 <template>
 <div class='nav-header'>
-  <span>BANGER.FM</span>
+  <span class='nav-logo'>BANGER.FM</span>
   <sound-meter
     v-on:crashEvent="crashEvent" ref='soundmeter'
   ></sound-meter>
@@ -43,5 +43,8 @@ export default {
 }
 #workspace-display {
   float: right;
+}
+.nav-logo {
+  font-weight: bolder;
 }
 </style>

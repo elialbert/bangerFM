@@ -49,6 +49,7 @@
       v-bind:user="user"
       v-if="!loading"
       v-on:toggleDeep="enterUp"
+      :readOnly="readOnly"
     >  
     </sound-synth-deep>
   </div>
@@ -77,7 +78,7 @@ export default {
     BankChoice,
     SoundSynthDeep
   },
-  props: ['visible', 'user', 'workspace', 'cbcb'],
+  props: ['visible', 'user', 'workspace', 'cbcb', 'readOnly'],
   mixins: [Network, SoundSynthFBBinding, SoundSynthChangeBank],
   directives: { focus: focus },
   data: function () {
@@ -92,7 +93,7 @@ export default {
       idefLookup: {},
       defs: defLoader.load(false, 0, 0, false, (data) => {
         this.defs = data
-        this.saveDef(0)
+        if (!this.user) { this.saveDef(0) }
       })
     }
   },
@@ -178,12 +179,10 @@ export default {
       instrObj.changeSliderValue(num, direction)
     },
     saveDef: function (explicitNum, skipHistory = false) {
+      if (this.readOnly) { return }
       Vue.nextTick(() => {
         this.networkWait('sssave', () => {
-          let a = () => {
-            defLoader.save(this.user, this.workspace, this.defs1, explicitNum || this.soundBankChoice, skipHistory)
-          }
-          a()
+          defLoader.save(this.user, this.workspace, this.defs1, explicitNum || this.soundBankChoice, skipHistory)
         })
       })
     },

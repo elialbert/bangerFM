@@ -94,7 +94,7 @@ import BeatMakerDeep from '../components/BeatMakerDeep'
 
 export default {
   name: 'beat-maker',
-  props: ['visible', 'workspace', 'user'],
+  props: ['visible', 'workspace', 'user', 'readOnly'],
   mixins: [Network, BeatMakerFBBinding, BeatMakerChangeBank],
   components: {
     InstrumentRow,
@@ -323,9 +323,8 @@ export default {
       })
     },
     saveBeat: function (skipFB = false, explicitNum = null, skipHistory = false) {
-      if (explicitNum === null) {
-        explicitNum = this.beatBankChoice
-      }
+      if (this.readOnly) { return }
+      if (explicitNum === null) { explicitNum = this.beatBankChoice }
       Vue.nextTick(() => {
         defLoader.saveBeat(this.user, this.workspace, this.dataArray, explicitNum, skipFB, skipHistory)
       })

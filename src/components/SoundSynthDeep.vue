@@ -42,9 +42,10 @@ export default {
     InstrumentEnvelope,
     Equalizer
   },
-  props: ['visible', 'selected', 'defs', 'soundBankChoice', 'user'],
+  props: ['visible', 'selected', 'defs', 'soundBankChoice', 'user', 'readOnly'],
   methods: {
     saveDef: function (explicitNum) {
+      if (this.readOnly) { return }
       let sb = explicitNum || this.soundBankChoice
       Vue.nextTick(() => {
         defLoader.save(this.user, this.defs, sb)

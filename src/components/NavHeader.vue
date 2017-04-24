@@ -9,7 +9,11 @@
   >
     <span>?</span>
   </div>
-  <div id='message'>{{ message }}</div>
+  <div class='status-message-container'>
+    <span class='status-message'
+      v-tooltip="message"
+    >{{ message }}</span>
+  </div>
   <Auth
     :user="user"
     :workspace="workspace"
@@ -38,8 +42,16 @@ export default {
   margin-bottom: 20px;
   display: flex;
 }
-#message {
+.status-message-container {
   margin-left: 20px;
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding-left: 20px;
+}
+span.status-message {
+  display: inline-block;
 }
 #workspace-display {
   float: right;

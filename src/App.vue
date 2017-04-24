@@ -149,7 +149,7 @@ export default {
       cpEnabled: 0,
       wsEnabled: 0,
       user: false,
-      message: 'Welcome! Banger is in beta. If (when) anything goes wrong, just refresh! All data saved automatically.',
+      message: 'Welcome! Banger is in beta. If (when) anything goes wrong, just refresh!',
       workspace: 1,
       otherUser: false,
       readOnly: false,

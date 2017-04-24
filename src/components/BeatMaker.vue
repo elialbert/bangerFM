@@ -17,7 +17,7 @@
         </span>
         <span class='control-span-container'>
         Per Measure (erases beat): {{ perMeasure }}
-        <button id="pm-up" type="button" v-on:click="changePerMeasure(1)">UP</button> || 
+        <button id="pm-up" type="button" v-on:click="changePerMeasure(1)">UP</button>
         <button id="pm-down" type="button" v-on:click="changePerMeasure(-1)">DOWN</button>
         </span>
         <span class='control-span-container'>

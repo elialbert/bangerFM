@@ -1,19 +1,25 @@
 <template>
-  <div id='firebaseui-auth-container'>
-    <div id="loaded" v-if="!loading">
-      <span v-if="signedIn">
-        <span id='workspace-picker'
-          @click="wsToggle"
-        ><a href="javascript:void(0)">Current Workspace: {{workspace}}</a></span>
-        <span id="email">{{userInfo.email}}</span>    
-        <button id="sign-out"
-          v-on:click="signOut"
-        >Sign Out</button>
-      </span>
-      <div id="user-signed-out" class="hidden"></div>
+  <div class='auth-container-container'>
+    <div class='signin-instruction-text' v-if="!loading && !signedIn">
+      Sign in to save in the cloud and share:
     </div>
-    <div id="sign-in-with-redirect"></div>
-    <span v-if="loading">Loading...</span>
+
+    <div id='firebaseui-auth-container'>
+      <div id="loaded" v-if="!loading">
+        <span v-if="signedIn">
+          <span id='workspace-picker'
+            @click="wsToggle"
+          ><a href="javascript:void(0)">Current Workspace: {{workspace}}</a></span>
+          <span id="email">{{userInfo.email}}</span>    
+          <button id="sign-out"
+            v-on:click="signOut"
+          >Sign Out</button>
+        </span>
+        <div id="user-signed-out" class="hidden"></div>
+      </div>
+      <div id="sign-in-with-redirect"></div>
+      <span v-if="loading">Loading...</span>
+    </div>
   </div>
 </template>
 
@@ -93,19 +99,24 @@ export default {
 </script>
 
 <style>
+  .auth-container-container {
+    display: flex;
+    margin-left: auto;
+    padding-left: 20px;
+    min-width: 420px;
+  }
   div.firebaseui-card-content {
     padding: 0px;
   }
-  div.firebaseui-container {
+/*  div.firebaseui-container {
     max-width: 800px;
-  }
+  }*/
   ul.firebaseui-idp-list>.firebaseui-list-item {
     float: left;
     margin-left: 10px;
   }
   div#firebaseui-auth-container {
     float: right;
-    padding-left: 40px;
     margin-left: auto;
   }
   div.mdl-card {
@@ -120,10 +131,14 @@ export default {
   ul.firebaseui-id-list li.firebaseui-list-item {
     margin: 0px;
   }
+  li.firebaseui-list-item {
+    margin-bottom: 0px;
+  }
   button.firebaseui-idp-button {
     padding-left: 4px;
     padding-right: 4px;
-    height: 20px;
+    height: 26px;
+    padding: 4px;
     line-height: 12px;
   }
   button#sign-out {
@@ -137,5 +152,13 @@ export default {
   }
   #workspace-picker {
     margin-right: 10px;
+  }
+  span.firebaseui-idp-text {
+    visibility: hidden;
+    padding: 0px;
+  }
+  button.mdl-button {
+    min-width: 20px;
+    width: 26px;
   }
 </style>

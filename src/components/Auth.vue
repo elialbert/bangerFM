@@ -103,21 +103,17 @@ export default {
     display: flex;
     margin-left: auto;
     padding-left: 20px;
-    min-width: 420px;
+    min-width: 360px;
   }
   div.firebaseui-card-content {
     padding: 0px;
   }
-/*  div.firebaseui-container {
-    max-width: 800px;
-  }*/
   ul.firebaseui-idp-list>.firebaseui-list-item {
     float: left;
     margin-left: 10px;
   }
   div#firebaseui-auth-container {
     float: right;
-    margin-left: auto;
   }
   div.mdl-card {
     min-height: 50px;

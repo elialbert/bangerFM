@@ -1,6 +1,6 @@
 <template>
 <div class='nav-footer'>
-  a <a href="http://zap.sexy" target='_blank'>zap.sexy</a> production
+  a <a href="http://zap.sexy" target='_blank'>zap.sexy</a> production: Like it? <a href="https://www.patreon.com/bangerFM">Support us on Patreon!</a>
   <div id='help-overlay-button' 
     v-on:click.stop="helpOverlay(undefined, true, false)"
   >

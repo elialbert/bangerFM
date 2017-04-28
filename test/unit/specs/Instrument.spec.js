@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VTooltip from 'v-tooltip'
 import Instrument from 'src/components/Instrument'
 
 var defData = {
@@ -31,7 +32,7 @@ var defData = {
 
 describe('Instrument.vue', () => {
   it('should change data with slider change', () => {
-    var vm = setupVm(Vue, Instrument, { def: defData }, '<test :def="def"></test>')
+    var vm = setupVm(Vue, Instrument, { def: defData }, '<test :def="def"></test>', VTooltip)
     var component = getComponent(vm)
     expect(component.def.index).to.equal(0)
     expect(component.$children[0].sdata.val).to.equal(.504)
@@ -40,7 +41,7 @@ describe('Instrument.vue', () => {
   })
 
   it('should not change data out of bounds', () => {
-    var vm = setupVm(Vue, Instrument, { def: defData }, '<test :def="def"></test>')
+    var vm = setupVm(Vue, Instrument, { def: defData }, '<test :def="def"></test>', VTooltip)
     var component = getComponent(vm)
     expect(component.$children[1].sdata.val).to.equal(990)
     component.changeSliderValue(1,1)

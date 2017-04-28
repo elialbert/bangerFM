@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import SongMaker from 'src/components/SongMaker'
 import defLoader from 'src/assets/instrumentDefs/defLoader'
+import VTooltip from 'v-tooltip'
 
 describe('SongMaker.vue', () => {
   var vm
@@ -9,7 +10,7 @@ describe('SongMaker.vue', () => {
   beforeEach(function() {
     defLoader.clearCookies()
     vm = setupVm(Vue, SongMaker, {visible: 'songmaker'}, 
-                 '<test :visible="visible"></test>')
+                 '<test :visible="visible"></test>', VTooltip)
     component = getComponent(vm)
     component.defs = defLoader.load(0)
     component.songData = {0: {0: 0, 1: 1, 2: 0, 3: 1}, 1: {}}

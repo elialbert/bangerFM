@@ -125,7 +125,7 @@ import Tone from './assets/tone.js'
 import StartAudioContext from 'startaudiocontext'
 import HistoryModifier from './components/mixins/HistoryModifier'
 import WorkspaceManager from './components/WorkspaceManager'
-import defLoader from './assets/instrumentDefs/defLoader'
+// import defLoader from './assets/instrumentDefs/defLoader'
 import soundsynthUtils from './assets/soundsynthUtils'
 import waveform from './assets/instruments/waveform'
 
@@ -305,7 +305,7 @@ export default {
     },
     changeWorkspace: function (workspaceName) {
       this.workspace = workspaceName
-      defLoader.clearCookies()
+      // defLoader.clearCookies()
       this.$nextTick(() => {
         this.$refs.songmaker.doFBBinding()
         this.$refs.soundsynth.clearWatchers()

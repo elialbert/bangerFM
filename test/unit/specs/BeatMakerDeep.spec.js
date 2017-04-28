@@ -2,6 +2,7 @@ import Vue from 'vue'
 import BeatMaker from 'src/components/BeatMaker'
 import firebaseBridge from 'src/assets/instrumentDefs/firebaseBridge'
 import defLoader from 'src/assets/instrumentDefs/defLoader'
+import VTooltip from 'v-tooltip'
 
 var testInner = function (component) {
   let data = component.dataArray[0]
@@ -30,7 +31,7 @@ describe('BeatMakerDeep.vue', () => {
     defLoader.clearCookies()
     stubFBBridge(firebaseBridge)
     vm = setupVm(Vue, BeatMaker, {visible: 'beatmaker'}, 
-                 '<test :visible="visible"></test>')
+                 '<test :visible="visible"></test>', VTooltip)
     component = getComponent(vm)
   })
 

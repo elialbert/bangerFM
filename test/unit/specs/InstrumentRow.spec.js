@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import InstrumentRow from 'src/components/InstrumentRow'
 import utils from 'src/assets/instrumentUtils'
+import VTooltip from 'v-tooltip'
 
 var defData = {
   name: 'lowSynth',
@@ -43,7 +44,7 @@ describe('InstrumentRow.vue', () => {
                    perMeasure: 4,
                    visible: 'beatmaker'
                  }, 
-                 '<test :def="def" :selected="selected" :numCols="numCols" :enabledArray="enabledArray" :perMeasure="perMeasure" :visible="visible"></test>')
+                 '<test :def="def" :selected="selected" :numCols="numCols" :enabledArray="enabledArray" :perMeasure="perMeasure" :visible="visible"></test>', VTooltip)
     component = getComponent(vm)
   })
 
@@ -66,7 +67,7 @@ describe('InstrumentRow.vue', () => {
                    numCols: 32,
                    enabledArray: enabledArray
                  }, 
-                 '<test :def="def" :selected="selected" :numCols="numCols" :enabledArray="enabledArray"></test>')
+                 '<test :def="def" :selected="selected" :numCols="numCols" :enabledArray="enabledArray"></test>', VTooltip)
     component = getComponent(vm)
     check(Vue, done, () => {
       expect(component.$el.querySelectorAll('.enabled').length).to.equal(3)

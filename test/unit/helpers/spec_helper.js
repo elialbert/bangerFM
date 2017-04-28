@@ -11,14 +11,16 @@ function check( Vue, done, f ) {
 }
 
 
-var setupVm = function (Vue, Component, testData, template) {
-  return new Vue({
+var setupVm = function (Vue, Component, testData, template, VToolTip) {
+  let v = new Vue({
     template: '<div>' + template + '</div>',
     components: {
       'test': Component
     },
     data: testData
   }).$mount()
+  Vue.use(VToolTip)
+  return v
 }
 
 var getComponent = function(vm) {

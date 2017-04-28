@@ -2,6 +2,7 @@ import Vue from 'vue'
 import SoundSynthDeep from 'src/components/SoundSynthDeep'
 import defLoader from 'src/assets/instrumentDefs/defLoader'
 import firebaseBridge from 'src/assets/instrumentDefs/firebaseBridge'
+import VTooltip from 'v-tooltip'
 
 describe('SoundSynthDeep.vue', () => {
   var vm
@@ -11,7 +12,7 @@ describe('SoundSynthDeep.vue', () => {
     defLoader.clearCookies()
     let defs = defLoader.load(0)
     vm = setupVm(Vue, SoundSynthDeep, {visible: 'soundsynth', selected: 0, defs: defs, soundBankChoice: 0}, 
-                 '<test :visible="visible" :user=false :defs="defs" :selected="selected" :soundBankChoice="soundBankChoice"></test>')
+                 '<test :visible="visible" :user=false :defs="defs" :selected="selected" :soundBankChoice="soundBankChoice"></test>', VTooltip)
     component = getComponent(vm)
   })
 

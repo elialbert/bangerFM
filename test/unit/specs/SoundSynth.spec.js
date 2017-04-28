@@ -3,6 +3,7 @@ import SoundSynth from 'src/components/SoundSynth'
 import defLoader from 'src/assets/instrumentDefs/defLoader'
 import firebaseBridge from 'src/assets/instrumentDefs/firebaseBridge'
 import actionHistory from 'src/assets/actionHistory'
+import VTooltip from 'v-tooltip'
 
 describe('SoundSynth.vue', () => {
   var vm
@@ -12,7 +13,7 @@ describe('SoundSynth.vue', () => {
     defLoader.clearCookies()
     stubFBBridge(firebaseBridge)
     vm = setupVm(Vue, SoundSynth, {visible: 'soundsynth'}, 
-                 '<test :visible="visible" :user=false></test>')
+                 '<test :visible="visible" :user=false></test>', VTooltip)
     component = getComponent(vm)
     component.defs = defLoader.load(0)
   })

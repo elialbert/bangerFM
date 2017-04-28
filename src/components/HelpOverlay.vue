@@ -7,6 +7,7 @@
       <div>Use the Sound Synthesis screen to play with individual instrument sounds. Press <span class='bold'>enter</span> with any instrument selected to switch to a deeper sound synthesis view.</div>
       <div>Use the Beatmaker screen to construct beats, and below that the Songmaker to string together layers of beats into songs.</div>
       <div>Press <span class='bold'>Shift+Up</span> and <span class='bold'>Shift+Down</span> to switch between soundsynth, beatmaker and songmaker.</div>
+      <div>Press <span class='bold'>c</span> to toggle the global DJ settings control panel - for things like BPM.</div>
       <br/>
       <div>Keyboard shortcuts for Sound Synthesis</div>
       <hr/>

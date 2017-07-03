@@ -20,7 +20,7 @@
         <label for="wsshare-write-public">Public</label>
         <div class='wsshare-label'>Individual access control coming soon!</div>
         <div class='wsshare-label'>For now, share this workspace by sharing the following url with friends: </div>
-        <div class='wsshare-url'>banger.fm/#/app/{{ user }}/workspace</div>
+        <div class='wsshare-url'>banger.fm/#/app/{{ user }}/{{ workspace }}</div>
       </div>
       <br>
     </div>
@@ -102,6 +102,7 @@ export default {
     otherUser: function (val1, val2) {
       if (val1 && !val2) {
         this.$bindAsObject('otherWorkspaces', firebaseBridge.wsdefRef(this.otherUser), null, () => {
+          if (!this.otherWorkspaces[this.workspace]) { return }
           this.$emit('readOnly', this.otherWorkspaces[this.workspace].permissions.write === 'private')
         })
       }

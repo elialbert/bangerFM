@@ -137,6 +137,7 @@ var startBeat = function (selected, note, time, index, volumeAutomation = false)
     instr.instrument.set('volume', volumeAutomation)
   }
   try {
+    console.log('in try')
     instr.beat(note, time, index)
   } catch (err) {
     console.log(err)

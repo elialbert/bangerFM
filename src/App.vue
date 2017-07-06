@@ -17,13 +17,16 @@ export default {
   },
   data: function () {
     return {
-      landing: true
+      landing: false
     }
   },
-  beforeCreate: function () {
-    this.landing = (this.$route.path !== '/')
+  mounted: function () {
+    this.landing = (this.$route.path === '/landing')
   },
   watch: {
+    '$route': function (newRoute, oldRoute) {
+      this.landing = (this.$route.path === '/landing')
+    }
   },
   computed: {
   },

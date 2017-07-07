@@ -7,6 +7,9 @@ import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
+import 'pixi'
+import 'p2'
+import 'phaser'
 
 if (process.env.NODE_ENV === 'production') {
   Raven

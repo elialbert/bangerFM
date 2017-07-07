@@ -6,6 +6,12 @@
     ></sound-meter>
       testing landing
       <button id="go" type="button" v-on:mousedown="start()" v-on:mouseup="stop()">Sound Check</button>
+    
+      <div id='gametest'>
+      <!-- <canvas width="340" height="600">
+
+      </canvas> -->
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +23,7 @@ import defLoader from '../../assets/instrumentDefs/defLoader'
 // import soundsynthUtils from '../../assets/soundsynthUtils'
 import soundBridge from '../../assets/soundBridge'
 import SoundMeter from '../SoundMeter'
+import Phaser from 'phaser'
 
 export default {
   name: 'landing',
@@ -37,6 +44,7 @@ export default {
   },
   mounted: function () {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
+    this.doGame()
   },
   watch: {
   },
@@ -54,7 +62,20 @@ export default {
     stop: function () {
       soundBridge.stopSound(this.selected)
     },
-    crashEvent: function () {}
+    crashEvent: function () {},
+    doGame: function () {
+      this.game = new Phaser.Game(400, 400, Phaser.CANVAS, 'gametest', { preload: this.preload, create: this.create, render: this.render })
+    },
+    preload: function () {
+
+    },
+    create: function () {
+      this.game.stage.backgroundColor = '#124184'
+      // this.game.physics.enable(sprite1, Phaser.Physics.ARCADE);
+    },
+    render: function () {
+
+    }
   }
 }
 </script>

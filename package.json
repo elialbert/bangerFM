@@ -14,8 +14,10 @@
     "deploy": "./build/deploy.sh"
   },
   "dependencies": {
+    "expose-loader": "^0.7.3",
     "firebase": "^3.7.1",
     "firebaseui": "^1.0.0",
+    "phaser": "^2.6.2",
     "raven-js": "^3.12.1",
     "startaudiocontext": "^1.2.0",
     "tonal": "^0.69.5",

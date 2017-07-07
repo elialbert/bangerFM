@@ -11,6 +11,13 @@ var cssSourceMapDev = (env === 'development' && config.dev.cssSourceMap)
 var cssSourceMapProd = (env === 'production' && config.build.productionSourceMap)
 var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 
+// Phaser webpack config
+var phaserModule = path.join(__dirname, '../node_modules/phaser/');
+var phaser = path.join(phaserModule, 'build/custom/phaser-split.js');
+var pixi = path.join(phaserModule, 'build/custom/pixi.js');
+var p2 = path.join(phaserModule, 'build/custom/p2.js');
+console.log(phaser)
+
 module.exports = {
   entry: {
     app: './src/main.js'
@@ -33,7 +40,10 @@ module.exports = {
       'vue$': 'vue/dist/vue.common.js',
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../src/assets'),
-      'components': path.resolve(__dirname, '../src/components')
+      'components': path.resolve(__dirname, '../src/components'),
+      'phaser': phaser,
+      'pixi': pixi,
+      'p2': p2
     }
   },
   resolveLoader: {
@@ -90,7 +100,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      { test: /pixi\.js/, loader: 'expose?PIXI' },
+      { test: /phaser-split\.js$/, loader: 'expose?Phaser' },
+      { test: /p2\.js/, loader: 'expose?p2' }
     ]
   },
   eslint: {

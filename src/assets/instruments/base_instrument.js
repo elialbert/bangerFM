@@ -8,11 +8,10 @@ export default class BaseInstrument {
   }
 
   start () {
-    if (!window.location.href.includes('simple')) {
+    if (!window.location.href.includes('landing')) {
       this.waveLoop()
       this.instrument.connect(waveform.analyser)
     }
-
     if (!this.startNote) {
       this.instrument.triggerAttack('+0.05')
     } else {
@@ -39,8 +38,6 @@ export default class BaseInstrument {
     if (!this.startNote) {
       this.instrument.triggerAttackRelease(this.noteLength, time)
     } else {
-      console.log(this.instrument)
-      window.t = this.instrument
       this.instrument.triggerAttackRelease(note, this.noteLength, time)
     }
     if (this.hasOwnProperty('noiseEnv')) {

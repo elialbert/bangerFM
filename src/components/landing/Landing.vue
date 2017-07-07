@@ -4,15 +4,15 @@
     v-on:crashEvent="crashEvent" ref='soundmeter'
   ></sound-meter>
     testing landing
-    <button id="go" type="button" v-on:click="go()">Sound Check</button>
+    <button id="go" type="button" v-on:mousedown="start()" v-on:mouseup="stop()">Sound Check</button>
   </div>
 </template>
 
 <script>
 // import Tone from '../../assets/tone.js'
-import defLoader from '../../assets/instrumentDefs/defLoader'
+// import defLoader from '../../assets/instrumentDefs/defLoader'
 import MediumSynth from '../../assets/instruments/mediumSynth'
-import soundsynthUtils from '../../assets/soundsynthUtils'
+// import soundsynthUtils from '../../assets/soundsynthUtils'
 import SoundMeter from '../SoundMeter'
 
 export default {
@@ -22,7 +22,7 @@ export default {
   },
   data: function () {
     return {
-      defs: soundsynthUtils.checkDefs(defLoader.quickDefLoad()),
+      // defs: soundsynthUtils.checkDefs(defLoader.quickDefLoad()),
       selected: 0,
       idefLookup: {},
       instrument: 0,
@@ -31,7 +31,8 @@ export default {
   },
   mounted: function () {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
-    this.ms = new MediumSynth()
+    this.ms = new MediumSynth() // .toMaster().start()
+    // this.ms.instrument.toMaster()
 
     // soundBridge.constructWatchers(this.defs, true)
     // this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
@@ -42,12 +43,17 @@ export default {
   computed: {
   },
   methods: {
-    go: function () {
+    start: function () {
       console.log('going')
       console.log(this.ms)
       // soundBridge.startBeat(this.selected, 'C4', '8m')
-      this.ms.beat('C4', '8n')
+
+      this.ms.start()
       console.log('gone')
+    },
+    stop: function () {
+      this.ms.stop()
+      console.log('stop')
     },
     crashEvent: function () {}
   }

@@ -27,7 +27,7 @@ var highsynth
 
 var constructInstruments = function () {
   ms = new MediumSynth()
-  if (window.location.href.includes('simple')) {
+  if (window.location.href.includes('landing')) {
     return
   }
   bass = new Bass()
@@ -54,7 +54,7 @@ var reconstructInstruments = function (cb) {
 }
 
 var instrumentLookup = function (index) {
-  if (window.location.href.includes('simple')) {
+  if (window.location.href.includes('landing')) {
     return {0: ms}[index]
   }
   return {
@@ -137,7 +137,6 @@ var startBeat = function (selected, note, time, index, volumeAutomation = false)
     instr.instrument.set('volume', volumeAutomation)
   }
   try {
-    console.log('in try')
     instr.beat(note, time, index)
   } catch (err) {
     console.log(err)

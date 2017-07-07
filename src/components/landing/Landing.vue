@@ -11,8 +11,9 @@
 <script>
 // import Tone from '../../assets/tone.js'
 // import defLoader from '../../assets/instrumentDefs/defLoader'
-import MediumSynth from '../../assets/instruments/mediumSynth'
+// import MediumSynth from '../../assets/instruments/mediumSynth'
 // import soundsynthUtils from '../../assets/soundsynthUtils'
+import soundBridge from '../../assets/soundBridge'
 import SoundMeter from '../SoundMeter'
 
 export default {
@@ -31,9 +32,9 @@ export default {
   },
   mounted: function () {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
-    this.ms = new MediumSynth() // .toMaster().start()
+    // this.ms = new MediumSynth() // .toMaster().start()
     // this.ms.instrument.toMaster()
-
+    soundBridge.constructInstruments()
     // soundBridge.constructWatchers(this.defs, true)
     // this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
     // this.instrument = this.idefLookup[this.selected].iindex
@@ -45,14 +46,15 @@ export default {
   methods: {
     start: function () {
       console.log('going')
-      console.log(this.ms)
-      // soundBridge.startBeat(this.selected, 'C4', '8m')
+      // console.log(this.ms)
+      soundBridge.startSound(this.selected)
 
-      this.ms.start()
+      // this.ms.start()
       console.log('gone')
     },
     stop: function () {
-      this.ms.stop()
+      // this.ms.stop()
+      soundBridge.stopSound(this.selected)
       console.log('stop')
     },
     crashEvent: function () {}

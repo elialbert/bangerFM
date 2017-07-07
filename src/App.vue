@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <daw v-if="!landing"></daw>
-    <landing v-if="landing"></landing>
+    <daw v-if="showDaw"></daw>
+    <landing v-if="!showDaw"></landing>
   </div>
 </template>
 
@@ -17,15 +17,15 @@ export default {
   },
   data: function () {
     return {
-      landing: false
+      showDaw: false
     }
   },
   mounted: function () {
-    this.landing = (this.$route.path === '/landing')
+    this.showDaw = !(this.$route.path === '/landing')
   },
   watch: {
     '$route': function (newRoute, oldRoute) {
-      this.landing = (this.$route.path === '/landing')
+      this.showDaw = !(this.$route.path === '/landing')
     }
   },
   computed: {

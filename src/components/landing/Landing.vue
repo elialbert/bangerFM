@@ -1,16 +1,18 @@
 <template>
   <div id="landing" ref='landing'>
-    <sound-meter
-    v-on:crashEvent="crashEvent" ref='soundmeter'
-  ></sound-meter>
-    testing landing
-    <button id="go" type="button" v-on:mousedown="start()" v-on:mouseup="stop()">Sound Check</button>
+    <div id='landingInnder' ng-if='doneLoading'>
+      <sound-meter
+      v-on:crashEvent="crashEvent" ref='soundmeter'
+    ></sound-meter>
+      testing landing
+      <button id="go" type="button" v-on:mousedown="start()" v-on:mouseup="stop()">Sound Check</button>
+    </div>
   </div>
 </template>
 
 <script>
 // import Tone from '../../assets/tone.js'
-// import defLoader from '../../assets/instrumentDefs/defLoader'
+import defLoader from '../../assets/instrumentDefs/defLoader'
 // import MediumSynth from '../../assets/instruments/mediumSynth'
 // import soundsynthUtils from '../../assets/soundsynthUtils'
 import soundBridge from '../../assets/soundBridge'
@@ -23,39 +25,34 @@ export default {
   },
   data: function () {
     return {
-      // defs: soundsynthUtils.checkDefs(defLoader.quickDefLoad()),
       selected: 0,
       idefLookup: {},
       instrument: 0,
-      ms: null
+      doneLoading: false,
+      defs: defLoader.load(false, 0, 0, true, (data) => {
+        this.defs = data
+        this.finishLoading()
+      })
     }
   },
   mounted: function () {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
-    // this.ms = new MediumSynth() // .toMaster().start()
-    // this.ms.instrument.toMaster()
-    soundBridge.constructInstruments()
-    // soundBridge.constructWatchers(this.defs, true)
-    // this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
-    // this.instrument = this.idefLookup[this.selected].iindex
   },
   watch: {
   },
   computed: {
   },
   methods: {
+    finishLoading: function () {
+      soundBridge.constructInstruments()
+      soundBridge.constructWatchers(this.defs, true)
+      this.doneLoading = true
+    },
     start: function () {
-      console.log('going')
-      // console.log(this.ms)
       soundBridge.startSound(this.selected)
-
-      // this.ms.start()
-      console.log('gone')
     },
     stop: function () {
-      // this.ms.stop()
       soundBridge.stopSound(this.selected)
-      console.log('stop')
     },
     crashEvent: function () {}
   }

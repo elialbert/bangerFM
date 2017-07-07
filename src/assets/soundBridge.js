@@ -126,10 +126,12 @@ var constructWatchers = function (defs, run) {
 }
 
 var startSound = function (selected, index) {
-  instrumentLookup(selected) && instrumentLookup(selected).start(index)
+  let i = instrumentLookup(selected)
+  i && i.start(index)
 }
 var stopSound = function (selected, index) {
-  instrumentLookup(selected) && instrumentLookup(selected).stop(index)
+  let i = instrumentLookup(selected)
+  i && i.stop(index)
 }
 var startBeat = function (selected, note, time, index, volumeAutomation = false) {
   let instr = instrumentLookup(selected)

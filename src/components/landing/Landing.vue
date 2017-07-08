@@ -11,12 +11,10 @@
 </template>
 
 <script>
-// import Tone from '../../assets/tone.js'
 import defLoader from '../../assets/instrumentDefs/defLoader'
-// import MediumSynth from '../../assets/instruments/mediumSynth'
-// import soundsynthUtils from '../../assets/soundsynthUtils'
 import soundBridge from '../../assets/soundBridge'
 import SoundMeter from '../SoundMeter'
+import iutils from '../../assets/instrumentUtils'
 
 export default {
   name: 'landing',
@@ -25,12 +23,12 @@ export default {
   },
   data: function () {
     return {
-      selected: 0,
+      selected: 3,
       idefLookup: {},
       instrument: 0,
       doneLoading: false,
       defs: defLoader.load(false, 0, 0, true, (data) => {
-        this.defs = data
+        this.defs = iutils.simpleInstruments(data)
         this.finishLoading()
       })
     }

@@ -43,6 +43,16 @@ var innerDataArrayObj = function () {
   }
 }
 
+var simpleInstruments = function (defs) {
+  let result = {}
+  for (let def of Object.keys(defs)) {
+    if (['highDrum', 'lowDrum', 'mediumDrum', 'noise', 'lowSynth'].indexOf(def) > -1) {
+      result[def] = defs[def]
+    }
+  }
+  return result
+}
+
 var qTimeLookup = function (perMeasure) {
   return {
     '3 Beats': '8t',
@@ -243,5 +253,6 @@ export default {
   newPitch: newPitch,
   transposeBeat: transposeBeat,
   doTransposeForInstrument: doTransposeForInstrument,
-  onlyUnique: onlyUnique
+  onlyUnique: onlyUnique,
+  simpleInstruments: simpleInstruments
 }

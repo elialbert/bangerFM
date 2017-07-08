@@ -26,16 +26,17 @@ var highsynth
 // var backgroundSynth
 
 var constructInstruments = function () {
-  ms = new MediumSynth()
-  if (window.location.href.includes('landing')) {
-    return
-  }
   bass = new Bass()
   noise = new Noise()
-  // noise2 = new Noise()
   highDrum = new HighDrum()
   mediumDrum = new MediumDrum()
   lowDrum = new LowDrum()
+
+  if (window.location.href.includes('landing')) {
+    return
+  }
+  ms = new MediumSynth()
+  // noise2 = new Noise()
   // pluck = new Pluck()
   bell = new Bell()
   highsynth = new HighSynth()
@@ -55,7 +56,7 @@ var reconstructInstruments = function (cb) {
 
 var instrumentLookup = function (index) {
   if (window.location.href.includes('landing')) {
-    return {0: ms}[index]
+    return {3: highDrum, 5: lowDrum, 1: bass, 4: mediumDrum, 2: noise}[index]
   }
   return {
     0: ms,

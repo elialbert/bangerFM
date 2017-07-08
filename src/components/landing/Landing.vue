@@ -6,6 +6,7 @@
     ></sound-meter>
       testing landing
       <button id="go" type="button" v-on:mousedown="start()" v-on:mouseup="stop()">Sound Check</button>
+      <main-box v-bind:defs="defs"></main-box>
     </div>
   </div>
 </template>
@@ -15,11 +16,13 @@ import defLoader from '../../assets/instrumentDefs/defLoader'
 import soundBridge from '../../assets/soundBridge'
 import SoundMeter from '../SoundMeter'
 import iutils from '../../assets/instrumentUtils'
+import MainBox from './MainBox'
 
 export default {
   name: 'landing',
   components: {
-    SoundMeter
+    SoundMeter,
+    MainBox
   },
   data: function () {
     return {

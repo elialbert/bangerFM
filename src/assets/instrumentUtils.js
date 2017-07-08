@@ -114,6 +114,9 @@ var createSongArray = function () {
 }
 
 var calcNumCols = function (perMeasure) {
+  if (window.location.href.includes('landing')) {
+    return 16
+  }
   return (perMeasure * 8 <= 32) ? perMeasure * 8 : perMeasure * 4
 }
 
@@ -122,7 +125,7 @@ var getInstrumentByIndex = function (defs, index) {
     return defs[key].index === index
   })
 }
-window.t = Tonal
+
 var transposeBeat = function (data, newKey, oldKey) {
   let newScale = Tonal.scale(newKey.toLowerCase())
   let oldScale = Tonal.scale(oldKey.toLowerCase())

@@ -1,8 +1,9 @@
 <template>
   <div class="beatbox"
     v-on:mouseover="selected = true" v-on:mouseleave="selected = false"
-    v-bind:class="{ selected: selected, playing: playing }"
+    v-bind:class="{ selected: selected, playing: playing == n - 1 }"
   >
+  {{n - 1}}
   </div>
 </template>
 

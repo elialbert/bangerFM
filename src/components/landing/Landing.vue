@@ -1,12 +1,10 @@
 <template>
   <div id="landing" ref='landing'>
-    <div id='landingInnder' ng-if='doneLoading'>
-      <sound-meter
-      v-on:crashEvent="crashEvent" ref='soundmeter'
-    ></sound-meter>
-      testing landing
-      <button id="go" type="button" v-on:mousedown="start()" v-on:mouseup="stop()">Sound Check</button>
-      <main-box v-bind:defs="defs"></main-box>
+    <div id='landingInner' ng-if='doneLoading'>
+      <landing-header
+        @soundToggle="soundToggle"
+      ></landing-header>
+      <main-box :defs="defs" ref="mainbox"></main-box>
     </div>
   </div>
 </template>
@@ -14,19 +12,18 @@
 <script>
 import defLoader from '../../assets/instrumentDefs/defLoader'
 import soundBridge from '../../assets/soundBridge'
-import SoundMeter from '../SoundMeter'
 import iutils from '../../assets/instrumentUtils'
 import MainBox from './MainBox'
+import LandingHeader from './LandingHeader'
 
 export default {
   name: 'landing',
   components: {
-    SoundMeter,
-    MainBox
+    MainBox,
+    LandingHeader
   },
   data: function () {
     return {
-      selected: 3,
       idefLookup: {},
       instrument: 0,
       doneLoading: false,
@@ -49,13 +46,9 @@ export default {
       soundBridge.constructWatchers(this.defs, true)
       this.doneLoading = true
     },
-    start: function () {
-      soundBridge.startSound(this.selected)
-    },
-    stop: function () {
-      soundBridge.stopSound(this.selected)
-    },
-    crashEvent: function () {}
+    soundToggle: function (soundState) {
+      this.$refs.mainbox.soundToggle(soundState)
+    }
   }
 }
 </script>

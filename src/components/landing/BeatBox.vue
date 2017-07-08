@@ -1,17 +1,20 @@
 <template>
-  <div class="beatbox">
-    
+  <div class="beatbox"
+    v-on:mouseover="selected = true" v-on:mouseleave="selected = false"
+    v-bind:class="{ selected: selected, playing: playing }"
+  >
   </div>
 </template>
 
 <script>
 export default {
   name: 'beat-box',
-  props: [],
+  props: ['n', 'playing'],
   components: {
   },
   data: function () {
     return {
+      selected: false
     }
   },
   mounted: function () {
@@ -31,5 +34,11 @@ export default {
   height: 25%; 
   border: black 1px solid; 
   box-sizing: border-box;
+}
+.selected {
+  background-color: yellow;
+}
+.playing {
+  background-color: red;
 }
 </style>

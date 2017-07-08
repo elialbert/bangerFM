@@ -1,7 +1,11 @@
 <template>
   <div id="mainbox" ref='mainbox' class='centered'>
     <div id='mainbox-inner'>  
-      <beat-box v-for="n in 16" v-bind:ref="'beatbox_'+n"></beat-box>
+      <beat-box v-for="n in 16" 
+        :ref="'beatbox_'+n" 
+        :n="n"
+        :playing="playing == n"
+      ></beat-box>
     </div>
   </div>
 </template>
@@ -9,6 +13,7 @@
 <script>
 import iutils from '../../assets/instrumentUtils'
 import BeatBox from './BeatBox'
+import soundBridge from '../../assets/soundBridge'
 
 export default {
   name: 'main-box',
@@ -18,16 +23,27 @@ export default {
   },
   data: function () {
     return {
-      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues')
+      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues'),
+      playing: -1,
+      selected: 3
     }
   },
   mounted: function () {
+    console.log(this.dataArray)
   },
   watch: {
   },
   computed: {
   },
   methods: {
+    soundToggle: function (soundState) {
+      if (soundState === 'play') {
+        console.log('playing')
+        soundBridge.startSound(this.selected)
+      } else {
+        soundBridge.stopSound(this.selected)
+      }
+    }
   }
 }
 </script>

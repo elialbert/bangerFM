@@ -50,7 +50,7 @@ var reconstructInstruments = function (cb) {
     Tone.setContext(audioContext)
     effects.newMeter()
     constructInstruments()
-    cb()
+    if (cb) { cb() }
   })
 }
 

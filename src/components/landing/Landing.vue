@@ -42,9 +42,10 @@ export default {
   },
   methods: {
     finishLoading: function () {
-      soundBridge.constructInstruments()
-      soundBridge.constructWatchers(this.defs, true)
-      this.doneLoading = true
+      soundBridge.reconstructInstruments(() => {
+        soundBridge.constructWatchers(this.defs, true)
+        this.doneLoading = true
+      })
     },
     soundToggle: function (soundState) {
       this.$refs.mainbox.soundToggle(soundState)

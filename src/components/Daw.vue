@@ -216,10 +216,11 @@ export default {
     crashEvent: function () {
       console.log('crash event!')
       this.message = 'Web Audio has crashed, restarting nodes now. Should be back in no time.'
-      let wasPlayingSM = this.$refs.songmaker.running
-      let wasPlayingBM = this.$refs.beatmaker.running
       this.$refs.songmaker.stopPlaying()
       this.$refs.beatmaker.stopPlaying()
+      this.redoSound(this.$refs.songmaker.running, this.$refs.beatmaker.running)
+    },
+    redoSound: function (wasPlayingSM, wasPlayingBM) {
       soundBridge.reconstructInstruments(() => {
         waveform.analyser = waveform.newAnalyser()
         this.$refs.controlpanel.doSetEQ()

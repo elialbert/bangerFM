@@ -20,7 +20,10 @@ module.exports = {
           this.idefLookup = soundsynthUtils.createIDefLookup(this.defs1)
         }
       })
-      firebaseBridge.idefRef(this.user, this.workspace, sbnum).on('value', snapshot => {
+      if (this.ssRef) {
+        firebaseBridge.idefRef(this.user, this.workspace, sbnum).off('value', this.ssRef)
+      }
+      this.ssRef = firebaseBridge.idefRef(this.user, this.workspace, sbnum).on('value', snapshot => {
         let v = snapshot.val()
         if (v && Object.keys(v).length) {
           for (let key in v) {

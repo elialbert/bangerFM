@@ -122,7 +122,8 @@ export default {
       deep: 0,
       deepPlaying: 0,
       pitchKey: 'C Minor Blues',
-      pitchKeyOptions: iutils.pitchKeyOptions()
+      pitchKeyOptions: iutils.pitchKeyOptions(),
+      backedUp: false
     }
   },
   beforeCreate: function () {

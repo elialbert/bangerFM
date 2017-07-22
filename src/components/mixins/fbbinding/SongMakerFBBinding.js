@@ -7,7 +7,10 @@ module.exports = {
   methods: {
     doFBBinding: function () {
       this.loading = true
-      firebaseBridge.smdefRef(this.user, this.workspace).on('value', snapshot => {
+      if (this.smRef) {
+        firebaseBridge.smdefRef(this.user, this.workspace).off('value', this.smRef)
+      }
+      this.smRef = firebaseBridge.smdefRef(this.user, this.workspace).on('value', snapshot => {
         this.loading = false
         let v = snapshot.val()
         if (!v || !Object.keys(v).length) {

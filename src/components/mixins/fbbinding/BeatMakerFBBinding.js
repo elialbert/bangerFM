@@ -4,8 +4,12 @@ import defLoader from '../../../assets/instrumentDefs/defLoader'
 module.exports = {
   methods: {
     doFBBinding: function (beatBankNum, cb) {
+      this.backedUp = false
       this.loading = true
-      firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).on('value', snapshot => {
+      if (this.bmRef) {
+        firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).off('value', this.bmRef)
+      }
+      this.bmRef = firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).on('value', snapshot => {
         this.loading = false
         let v = snapshot.val()
         if (!v || !Object.keys(v).length) {
@@ -22,6 +26,8 @@ module.exports = {
     },
     // need to stick fb beats into local cookie for sm to work from fresh load
     postLoad: function () {
+      if (this.backedUp) { return }
+      this.backedUp = true
       for (let i = 0; i < 9; i++) {
         firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).once('value', snapshot => {
           let v = snapshot.val()

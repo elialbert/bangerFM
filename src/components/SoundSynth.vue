@@ -114,7 +114,6 @@ export default {
   },
   mounted: function () {
     soundBridge.constructInstruments()
-    this.clearWatchers()
     this.reconstructWatchers()
     this.idefLookup = soundsynthUtils.createIDefLookup(this.defs1)
   },
@@ -136,6 +135,7 @@ export default {
       }
     },
     reconstructWatchers: function () {
+      this.clearWatchers()
       var watchers = soundBridge.constructWatchers(this.defs1, true)
       for (let key in watchers) {
         this.watcherList.push(this.$watch(key, watchers[key]))

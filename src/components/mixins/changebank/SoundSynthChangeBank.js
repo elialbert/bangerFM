@@ -29,7 +29,7 @@ module.exports = {
         this.defs = stored
         this.reconstructWatchers()
       } else {
-        if (noBind || soundBankNum === this.soundBankChoice) { return }
+        if ((noBind || (soundBankNum === this.soundBankChoice)) && !reset) { return }
         this.doFBBinding(soundBankNum, fbcb)
       }
     },

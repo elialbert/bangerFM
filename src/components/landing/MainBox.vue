@@ -2,9 +2,11 @@
   <div id="mainbox" ref='mainbox' class='centered'>
     <div id='mainbox-inner'>  
       <beat-box v-for="n in 16" 
-        :ref="'beatbox_'+n-1" 
+        v-bind:ref="'beatbox_' + (n-1)" 
+        :dataArray="dataArray"
         :n="n"
         :playing="playing"
+        @innerClick="innerClick"
       ></beat-box>
     </div>
   </div>
@@ -17,6 +19,7 @@ import BeatBox from './BeatBox'
 import beatBridge from '../../assets/beatBridge'
 import soundsynthUtils from '../../assets/soundsynthUtils'
 
+// handles playing
 export default {
   name: 'main-box',
   props: ['defs', 'dataArray'],
@@ -32,16 +35,16 @@ export default {
     }
   },
   mounted: function () {
-    for (var i = 0; i < 16; i++) {
-      this.dataArray[1][i].enabled = true
-      this.dataArray[1][i].pitch = 'C2'
-      if (i % 4 === 0) {
-        this.dataArray[2][i].enabled = true
-        this.dataArray[2][i].pitch = 'C2'
-        this.dataArray[4][i].enabled = true
-        this.dataArray[4][i].pitch = 'C2'
-      }
-    }
+    // for (var i = 0; i < 16; i++) {
+    //   this.dataArray[1][i].enabled = true
+    //   this.dataArray[1][i].pitch = 'C2'
+    //   if (i % 4 === 0) {
+    //     this.dataArray[2][i].enabled = true
+    //     this.dataArray[2][i].pitch = 'C2'
+    //     this.dataArray[4][i].enabled = true
+    //     this.dataArray[4][i].pitch = 'C2'
+    //   }
+    // }
     this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
@@ -73,6 +76,15 @@ export default {
     },
     animate: function (col, clear) {
       this.playing = col
+    },
+    innerClick: function (m, n, state) {
+      this.$emit('innerClick', m, n, state)
+    },
+    // do the drawing from new data
+    setState: function (v) {
+      for (let i = 0; i < 16; i++) {
+        this.$refs['beatbox_' + String(i)][0].setState(v)
+      }
     }
   }
 }
@@ -94,7 +106,6 @@ export default {
   position: fixed;
   top: 50%;
   left: 50%;
-  /* bring your own prefixes */
   transform: translate(-50%, -50%);
 }
 </style>

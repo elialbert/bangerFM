@@ -36,6 +36,9 @@ module.exports = {
         this.perMeasure = v.perMeasure
         this.pitchKey = v.pitchKey || 'C Minor Blues'
         this.dataArray = v
+        console.log('HERE')
+        console.log(v[1][0].enabled)
+        this.$refs.mainbox.setState(v)
       })
     }
   }

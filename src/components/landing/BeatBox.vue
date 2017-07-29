@@ -1,21 +1,29 @@
 <template>
   <div class="beatbox"
-    v-on:mouseover="selected = true" v-on:mouseleave="selected = false"
-    v-bind:class="{ selected: selected, playing: playing == n - 1 }"
+    v-bind:class="{ playing: playing == n - 1 }"
   >
-  {{n - 1}}
+    <div class="innerBoxWrapper">
+      <inner-box v-for="m in 9" v-bind:ref="'innerbox_' + (m-1)"
+        :m="m" :n="n"
+        @innerClick="innerClick"
+        :dataArray="dataArray"
+      ></inner-box>
+    </div>
   </div>
 </template>
 
 <script>
+import InnerBox from './InnerBox'
+
+// handles sliders
 export default {
   name: 'beat-box',
-  props: ['n', 'playing'],
+  props: ['n', 'playing', 'dataArray'],
   components: {
+    InnerBox
   },
   data: function () {
     return {
-      selected: false
     }
   },
   mounted: function () {
@@ -25,6 +33,14 @@ export default {
   computed: {
   },
   methods: {
+    innerClick: function (m, n, state) {
+      this.$emit('innerClick', m, n, state)
+    },
+    setState: function (v) {
+      for (let i = 0; i < 9; i++) {
+        this.$refs['innerbox_' + String(i)][0].setState(v)
+      }
+    }
   }
 }
 </script>
@@ -33,13 +49,18 @@ export default {
 .beatbox {
   width: 25%; 
   height: 25%; 
-  border: black 1px solid; 
+  border: black 2px solid; 
   box-sizing: border-box;
 }
-.selected {
-  background-color: yellow;
+.innerBoxWrapper {
+  display: flex;
+  flex-direction: row; 
+  flex-wrap: wrap; 
+  height: 100%;
+  width: 100%;
 }
 .playing {
   background-color: red;
+  opacity: 0.6;
 }
 </style>

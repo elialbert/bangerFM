@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import iutils from '../../assets/instrumentUtils'
+// import iutils from '../../assets/instrumentUtils'
 import BeatBox from './BeatBox'
 // import soundBridge from '../../assets/soundBridge'
 import beatBridge from '../../assets/beatBridge'
@@ -19,13 +19,12 @@ import soundsynthUtils from '../../assets/soundsynthUtils'
 
 export default {
   name: 'main-box',
-  props: ['defs'],
+  props: ['defs', 'dataArray'],
   components: {
     BeatBox
   },
   data: function () {
     return {
-      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues'),
       playing: -1,
       running: false,
       defsLength: 5,
@@ -43,6 +42,7 @@ export default {
         this.dataArray[4][i].pitch = 'C2'
       }
     }
+    this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
     defs: function () {

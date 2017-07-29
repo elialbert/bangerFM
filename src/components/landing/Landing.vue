@@ -1,10 +1,11 @@
 <template>
   <div id="landing" ref='landing'>
+    <div v-if="!doneLoading">Loading...</div>
     <div id='landingInner' ng-if='doneLoading'>
       <landing-header
         @soundToggle="soundToggle"
       ></landing-header>
-      <main-box :defs="defs" ref="mainbox"></main-box>
+      <main-box :defs="defs" :dataArray="dataArray" ref="mainbox"></main-box>
     </div>
   </div>
 </template>
@@ -15,6 +16,7 @@ import soundBridge from '../../assets/soundBridge'
 import iutils from '../../assets/instrumentUtils'
 import MainBox from './MainBox'
 import LandingHeader from './LandingHeader'
+import landingFBBinding from '../mixins/fbbinding/landingFBBinding'
 
 export default {
   name: 'landing',
@@ -22,19 +24,23 @@ export default {
     MainBox,
     LandingHeader
   },
+  mixins: [landingFBBinding],
   data: function () {
     return {
-      idefLookup: {},
+      loading: true,
+      user: 'landing',
+      workspace: 0,
       instrument: 0,
       doneLoading: false,
-      defs: defLoader.load(false, 0, 0, true, (data) => {
-        this.defs = iutils.simpleInstruments(data)
-        this.finishLoading()
-      })
+      beatBankChoice: 0,
+      defs: defLoader.load(false, 0, 0, false),
+      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues')
     }
   },
   mounted: function () {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
+    this.doFBBinding()
+    this.doBeat()
   },
   watch: {
   },

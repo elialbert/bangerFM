@@ -61,15 +61,15 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
         qTime = Tone.Time(time).quantize(square.measureSub).toSeconds()
       }
       if (square.enabled) {
-        if (!square.triplet || !square.triplet.enabled || (square.triplet.first === null) || (square.triplet.first === true)) {
+        if (!square.triplet || !square.triplet.enabled || (square.triplet.first === null) || (!!square.triplet.first)) {
           soundBridge.startBeat(idef.iindex, square.pitch, qTime, i, square.e1)
         }
       }
       if (square.enabled && square.triplet.enabled) {
-        if (square.triplet.second === null || square.triplet.second === true) {
+        if (square.triplet.second === null || !!square.triplet.second) {
           soundBridge.startBeat(idef.iindex, square.pitch, qTime + tripletTime, i, square.e1)
         }
-        if (square.triplet.third === null || square.triplet.third === true) {
+        if (square.triplet.third === null || !!square.triplet.third) {
           soundBridge.startBeat(idef.iindex, square.pitch, qTime + doubledTripletTime, i, square.e1)
         }
       }

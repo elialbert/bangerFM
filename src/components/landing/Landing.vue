@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import defLoader from '../../assets/instrumentDefs/defLoader'
 import soundBridge from '../../assets/soundBridge'
 import iutils from '../../assets/instrumentUtils'
@@ -20,7 +21,7 @@ import beatUtils from '../../assets/beatUtils'
 import MainBox from './MainBox'
 import LandingHeader from './LandingHeader'
 import landingFBBinding from '../mixins/fbbinding/landingFBBinding'
-// import soundsynthUtils from '../../assets/soundsynthUtils'
+import Network from '../mixins/Network'
 
 // in charge of local and remote data mutation
 export default {
@@ -29,7 +30,7 @@ export default {
     MainBox,
     LandingHeader
   },
-  mixins: [landingFBBinding],
+  mixins: [Network, landingFBBinding],
   data: function () {
     return {
       loading: true,
@@ -46,7 +47,6 @@ export default {
     document.getElementsByClassName('loading-app')[0] && document.getElementsByClassName('loading-app')[0].remove() // get rid of pre vue loading info
     this.doFBBinding()
     this.doBeat()
-    // this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
   },
@@ -63,7 +63,13 @@ export default {
       this.$refs.mainbox.soundToggle(soundState)
     },
     innerClick: function (m, n, state) {
+      console.log(m, n, 'landing setting state', state)
       beatUtils.landingClick(this.dataArray, m, n, state)
+      this.networkWait('landingBeat', () => {
+        Vue.nextTick(() => {
+          defLoader.saveBeat(this.user, this.workspace, this.dataArray, 0, false, true)
+        })
+      })
     }
   }
 }

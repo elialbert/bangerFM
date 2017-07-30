@@ -69,6 +69,7 @@ export default {
       this.running = true
     },
     stopPlaying: function () {
+      this.playing = -1
       if (this.loop) {
         beatBridge.stopTransport()
       }

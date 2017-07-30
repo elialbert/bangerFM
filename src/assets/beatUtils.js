@@ -21,27 +21,19 @@ var getTriplet = function (m) {
 }
 
 export default {
+  // everything else in this file is landing specific
   transformFBBeat: function (dataArray) {
     if (dataArray && dataArray['.value']) {
       return dataArray['.value']
     }
     return dataArray
-    // return dataArray.map(function (el) {
-    //   if (el['.value']) {
-    //     return el['.value']
-    //   } else {
-    //     return el
-    //   }
-    // })
   },
   landingClick: function (data, m, n, state) {
     let iindexes = getInstrument(m)
     let beat = n - 1
     let triplet = getTriplet(m)
-    console.log(iindexes, beat, triplet)
 
     for (let iindex of iindexes) {
-      console.log('setting', iindex)
       let obj = data[iindex][beat]
       if (state === 0) {
         obj.triplet[triplet] = null
@@ -52,14 +44,15 @@ export default {
         obj.enabled = true
         obj.pitch = 'C3'
         obj.triplet.enabled = true
-        obj.triplet[triplet] = true
+        obj.triplet[triplet] = state
       }
     }
   },
+  // triggered per square by firebase
   getState: function (data, m, n) {
     let iindexes = getInstrument(m)
     let beat = n - 1
     let triplet = getTriplet(m)
-    return data[iindexes[0]][beat].triplet && data[iindexes[0]][beat].triplet[triplet] && 1
+    return data[iindexes[0]][beat].triplet && data[iindexes[0]][beat].triplet[triplet]
   }
 }

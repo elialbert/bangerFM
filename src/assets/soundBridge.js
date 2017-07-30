@@ -191,6 +191,10 @@ var precision = function (a) {
   return p
 }
 
+var pitchFromColor = function (colorNum) {
+  return utils.noteFromScale(colorNum)
+}
+
 export default {
   constructWatchers: constructWatchers,
   reconstructInstruments: reconstructInstruments,
@@ -199,5 +203,6 @@ export default {
   stopSound: stopSound,
   startBeat: startBeat,
   watchers: constructWatchers,
-  randomize: randomize
+  randomize: randomize,
+  pitchFromColor: pitchFromColor
 }

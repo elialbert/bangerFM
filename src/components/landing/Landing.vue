@@ -4,6 +4,7 @@
     <div id='landingInner' ng-if='doneLoading'>
       <landing-header
         @soundToggle="soundToggle"
+        @reset="reset"
       ></landing-header>
       <main-box :defs="defs" :dataArray="dataArray" ref="mainbox"
         @innerClick="innerClick"
@@ -63,13 +64,15 @@ export default {
       this.$refs.mainbox.soundToggle(soundState)
     },
     innerClick: function (m, n, state) {
-      console.log(m, n, 'landing setting state', state)
       beatUtils.landingClick(this.dataArray, m, n, state)
       this.networkWait('landingBeat', () => {
         Vue.nextTick(() => {
           defLoader.saveBeat(this.user, this.workspace, this.dataArray, 0, false, true)
         })
       })
+    },
+    reset: function () {
+      defLoader.saveBeat(this.user, this.workspace, iutils.createDataArray(4, 5, 'C Minor Blues'), 0, false, true)
     }
   }
 }

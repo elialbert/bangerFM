@@ -1,7 +1,6 @@
 import Tone from './tone.js'
 import Tonal from 'tonal'
 import soundBridge from './soundBridge.js'
-// import utils from './instrumentUtils.js'
 
 var startTransport = function () {
   Tone.Transport.start()
@@ -62,15 +61,16 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
       }
       if (square.enabled) {
         if (!square.triplet || !square.triplet.enabled || (square.triplet.first === null) || (!!square.triplet.first)) {
-          soundBridge.startBeat(idef.iindex, square.pitch, qTime, i, square.e1)
+          let fpitch = square.triplet && (square.triplet.first || {}).pitch || square.pitch
+          soundBridge.startBeat(idef.iindex, fpitch, qTime, i, square.e1)
         }
       }
       if (square.enabled && square.triplet.enabled) {
         if (square.triplet.second === null || !!square.triplet.second) {
-          soundBridge.startBeat(idef.iindex, square.pitch, qTime + tripletTime, i, square.e1)
+          soundBridge.startBeat(idef.iindex, (square.triplet.second || {}).pitch || square.pitch, qTime + tripletTime, i, square.e1)
         }
         if (square.triplet.third === null || !!square.triplet.third) {
-          soundBridge.startBeat(idef.iindex, square.pitch, qTime + doubledTripletTime, i, square.e1)
+          soundBridge.startBeat(idef.iindex, (square.triplet.third || {}).pitch || square.pitch, qTime + doubledTripletTime, i, square.e1)
         }
       }
       if (vm.deep && vm.deepPlaying) {

@@ -7,6 +7,7 @@
         :m="m" :n="n"
         @innerClick="innerClick"
         :dataArray="dataArray"
+        :drawMode="drawMode"
       ></inner-box>
     </div>
   </div>
@@ -18,7 +19,7 @@ import InnerBox from './InnerBox'
 // handles sliders
 export default {
   name: 'beat-box',
-  props: ['n', 'playing', 'dataArray'],
+  props: ['n', 'playing', 'dataArray', 'drawMode'],
   components: {
     InnerBox
   },
@@ -33,8 +34,8 @@ export default {
   computed: {
   },
   methods: {
-    innerClick: function (m, n, state) {
-      this.$emit('innerClick', m, n, state)
+    innerClick: function (m, n, state, drawMode) {
+      this.$emit('innerClick', m, n, state, drawMode)
     },
     setState: function (v) {
       for (let i = 0; i < 9; i++) {

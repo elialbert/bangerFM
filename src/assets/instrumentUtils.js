@@ -184,6 +184,13 @@ var randomPitchForKey = function (pitchKey, selected) {
   return note
 }
 
+var noteFromScale = function (noteNum) {
+  let notes = Tonal.scale('c minor blues')
+  let choice = notes[noteNum % notes.length]
+  let note = choice + 3
+  return doTransposeForInstrument(note, 1)
+}
+
 var chooseRandomMeasureSubs = function (vm, data) {
   let toChange = getRandomArrayElements(Object.keys(data), parseInt(Object.keys(data).length / 5))
   let toChangeAll = []
@@ -254,6 +261,7 @@ export default {
   pitchKeys: pitchKeys,
   pitchKeyOptions: makePitchKeyOptions,
   newPitch: newPitch,
+  noteFromScale: noteFromScale,
   transposeBeat: transposeBeat,
   doTransposeForInstrument: doTransposeForInstrument,
   onlyUnique: onlyUnique,

@@ -6,6 +6,7 @@
         :dataArray="dataArray"
         :n="n"
         :playing="playing"
+        :drawMode="drawMode"
         @innerClick="innerClick"
       ></beat-box>
     </div>
@@ -31,7 +32,8 @@ export default {
       playing: -1,
       running: false,
       defsLength: 5,
-      idefLookup: {}
+      idefLookup: {},
+      drawMode: true
     }
   },
   mounted: function () {
@@ -78,8 +80,12 @@ export default {
     animate: function (col, clear) {
       this.playing = col
     },
-    innerClick: function (m, n, state) {
-      this.$emit('innerClick', m, n, state)
+    innerClick: function (m, n, state, drawMode) {
+      if (drawMode !== null) {
+        console.log('mainbox setting draw mode to', drawMode)
+        this.drawMode = drawMode
+      }
+      this.$emit('innerClick', m, n, state, drawMode)
     },
     // do the drawing from new data
     setState: function (v) {

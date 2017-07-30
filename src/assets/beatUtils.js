@@ -1,3 +1,5 @@
+import soundBridge from './soundBridge'
+
 var getInstrument = function (m) {
   return {
     1: [1, 2],
@@ -44,7 +46,7 @@ export default {
         obj.enabled = true
         obj.pitch = 'C3'
         obj.triplet.enabled = true
-        obj.triplet[triplet] = state
+        obj.triplet[triplet] = {state: state, pitch: soundBridge.pitchFromColor(state)}
       }
     }
   },
@@ -53,6 +55,6 @@ export default {
     let iindexes = getInstrument(m)
     let beat = n - 1
     let triplet = getTriplet(m)
-    return data[iindexes[0]][beat].triplet && data[iindexes[0]][beat].triplet[triplet]
+    return (((data[iindexes[0]][beat] || {}).triplet || {})[triplet] || {}).state
   }
 }

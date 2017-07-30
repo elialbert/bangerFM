@@ -14,7 +14,7 @@
 }(this, function(){
 
   "use strict";
-  
+  var numConnections = 0
   var Tone;
   //constructs the main Tone object
   function Main(func){
@@ -304,6 +304,7 @@
      *  @returns {Tone} this
      */
       Tone.prototype.connect = function (unit, outputNum, inputNum) {
+          console.log(numConnections); numConnections += 1
           if (Array.isArray(this.output)) {
               outputNum = this.defaultArg(outputNum, 0);
               this.output[outputNum].connect(unit, 0, inputNum);

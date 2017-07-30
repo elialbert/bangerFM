@@ -2,6 +2,8 @@
   <div class="landing-header" ref='landing-header'>
     <span class='nav-logo'>BANGER.FM</span>
     <button id="go" type="button" v-on:click="playPause()">{{text}}</button>
+    <button id="reset" type="button" v-on:click="$emit('reset')">reset</button>
+
     <sound-meter
       v-on:crashEvent="crashEvent" ref='soundmeter'
     ></sound-meter>

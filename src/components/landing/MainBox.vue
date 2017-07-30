@@ -37,16 +37,6 @@ export default {
     }
   },
   mounted: function () {
-    // for (var i = 0; i < 16; i++) {
-    //   this.dataArray[1][i].enabled = true
-    //   this.dataArray[1][i].pitch = 'C2'
-    //   if (i % 4 === 0) {
-    //     this.dataArray[2][i].enabled = true
-    //     this.dataArray[2][i].pitch = 'C2'
-    //     this.dataArray[4][i].enabled = true
-    //     this.dataArray[4][i].pitch = 'C2'
-    //   }
-    // }
     this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
   },
   watch: {
@@ -82,7 +72,6 @@ export default {
     },
     innerClick: function (m, n, state, drawMode) {
       if (drawMode !== null) {
-        console.log('mainbox setting draw mode to', drawMode)
         this.drawMode = drawMode
       }
       this.$emit('innerClick', m, n, state, drawMode)

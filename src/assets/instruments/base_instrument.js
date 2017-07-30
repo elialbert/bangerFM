@@ -8,7 +8,7 @@ export default class BaseInstrument {
   }
 
   start () {
-    if (!window.location.href.includes('landing')) {
+    if (!window.LANDINGMODE) {
       this.waveLoop()
       this.instrument.connect(waveform.analyser)
     }

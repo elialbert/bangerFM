@@ -32,7 +32,7 @@ var constructInstruments = function () {
   mediumDrum = new MediumDrum()
   lowDrum = new LowDrum()
 
-  if (window.location.href.includes('landing')) {
+  if (window.LANDINGMODE) {
     return
   }
   ms = new MediumSynth()
@@ -55,7 +55,7 @@ var reconstructInstruments = function (cb) {
 }
 
 var instrumentLookup = function (index) {
-  if (window.location.href.includes('landing')) {
+  if (window.LANDINGMODE) {
     return {3: highDrum, 5: lowDrum, 1: bass, 4: mediumDrum, 2: noise}[index]
   }
   return {

@@ -14,12 +14,21 @@
 <script>
 import Effects from '../assets/instruments/effects.js'
 import Slider from './Slider'
+import Tone from '../assets/tone.js'
 
 export default {
   name: 'sound-meter',
   components: { Slider },
   props: ['crashEvent'],
   mounted: function () {
+    var lowBump = new Tone.Filter(200, 'lowshelf')
+    var meter = new Tone.Meter('level')
+    if (window.LANDINGMODE) {
+      setTimeout(() => {
+        console.log('chaining')
+        Tone.Master.chain(lowBump, meter)
+      })
+    }
     this.doMeter()
   },
   data: function () {

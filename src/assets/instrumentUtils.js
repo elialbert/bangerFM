@@ -114,7 +114,7 @@ var createSongArray = function () {
 }
 
 var calcNumCols = function (perMeasure) {
-  if (window.location.href.includes('landing')) {
+  if (window.LANDINGMODE) {
     return 16
   }
   return (perMeasure * 8 <= 32) ? perMeasure * 8 : perMeasure * 4

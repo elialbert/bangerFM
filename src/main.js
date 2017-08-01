@@ -29,7 +29,7 @@ const router = new VueRouter({
   routes // short for routes: routes
 })
 
-window.LANDINGMODE = window.location.href.includes('landing')
+window.LANDINGMODE = !window.location.href.includes('app')
 
 /* eslint-disable no-new */
 new Vue({

@@ -23,13 +23,15 @@ export default {
     }
   },
   mounted: function () {
-    this.showDaw = !(this.$route.path === '/landing')
-    this.showLanding = !this.showDaw
+    this.showLanding = !(this.$route.path.includes('/app'))
+    this.showDaw = !this.showLanding
   },
   watch: {
     '$route': function (newRoute, oldRoute) {
-      this.showDaw = !(this.$route.path === '/landing')
-      this.showLanding = !this.showDaw
+      console.log('in rute with', newRoute, oldRoute)
+      this.showLanding = !(this.$route.path.includes('/app'))
+      this.showDaw = !this.showLanding
+
       if (this.showDaw) {
         Vue.nextTick(() => {
           this.$refs.daw.redoSound(false, false)

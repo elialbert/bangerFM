@@ -70,7 +70,7 @@ export default {
       this.playing = col
     },
     innerClick: function (m, n, state, drawMode) {
-      if (drawMode !== null) {
+      if (drawMode !== null && drawMode !== undefined) {
         this.drawMode = drawMode
       }
       this.$emit('innerClick', m, n, state, drawMode)

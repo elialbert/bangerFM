@@ -1,13 +1,13 @@
 <template>
   <div id="landing" ref='landing'>
-    <div v-if="!doneLoading">Loading...</div>
-    <div id='landingInner' ng-if='doneLoading'>
+    <div id='landingInner'>
       <landing-header
+        :doneLoading="doneLoading"
         @soundToggle="soundToggle"
         @reset="reset"
       ></landing-header>
       <main-box :defs="defs" :dataArray="dataArray" ref="mainbox"
-        @innerClick="innerClick"
+        @innerClick="innerClick" v-if='doneLoading'
       ></main-box>
     </div>
   </div>

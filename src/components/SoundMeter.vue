@@ -25,7 +25,6 @@ export default {
     var meter = new Tone.Meter('level')
     if (window.LANDINGMODE) {
       setTimeout(() => {
-        console.log('chaining')
         Tone.Master.chain(lowBump, meter)
       })
     }

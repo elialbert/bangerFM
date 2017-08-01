@@ -19,7 +19,7 @@ import beatBridge from '../../assets/beatBridge'
 import soundsynthUtils from '../../assets/soundsynthUtils'
 import beatUtils from '../../assets/beatUtils'
 
-// handles playing and ridiculous state setting
+// handles playing and state setting
 export default {
   name: 'main-box',
   props: ['defs', 'dataArray'],
@@ -55,7 +55,7 @@ export default {
     startPlaying: function () {
       this.stopPlaying()
       beatBridge.startTransport()
-      this.loop = beatBridge.makeLoop(beatBridge.dataFunc(this, this.animate, this.defs), 16)
+      this.loop = beatBridge.makeLoop(beatBridge.landingDataFunc(this, this.animate, this.defs), 16)
       this.loop.start(0)
       this.running = true
     },
@@ -76,11 +76,9 @@ export default {
       this.$emit('innerClick', m, n, state, drawMode)
     },
     // do the drawing from new data
-    setState: function (instr, col, v) {
-      let coords = beatUtils.getCoords(instr, col, v)
-      for (let coord of coords) {
-        this.$refs['beatbox_' + String(coord[1])][0].$refs['innerbox_' + String(coord[0] - 1)][0].state = coord[2]
-      }
+    setState: function (instr, col, v, triplet) {
+      let m = beatUtils.getCoord(instr, triplet)
+      this.$refs['beatbox_' + String(col)][0].$refs['innerbox_' + String(m - 1)][0].state = v.state
     }
   }
 }

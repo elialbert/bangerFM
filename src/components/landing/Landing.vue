@@ -68,10 +68,12 @@ export default {
       let objs = clickData[0]
       let instrs = clickData[1]
       let beat = clickData[2]
+      let triplet = clickData[3]
       for (let i = 0; i < instrs.length; i++) {
         let instr = instrs[i]
         let obj = objs[i]
-        defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat)
+        if (obj === null) { continue }
+        defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat, triplet)
       }
     },
     reset: function () {

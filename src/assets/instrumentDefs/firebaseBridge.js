@@ -51,8 +51,8 @@ var bmdefRef = function (user, workspace, beatBankNum) {
   return db.ref('userDefs/' + user + '/' + workspace + '/beats/' + beatBankNum)
 }
 
-var bmOneDefRef = function (user, workspace, beatBankNum, instr, col) {
-  return db.ref('userDefs/' + user + '/' + workspace + '/beats/' + beatBankNum + '/' + instr + '/' + col)
+var bmOneDefRef = function (user, workspace, beatBankNum, instr, col, triplet) {
+  return db.ref('userDefs/' + user + '/' + workspace + '/beats/' + beatBankNum + '/' + instr + '/' + col + '/triplet/' + triplet)
 }
 
 var smdefRef = function (user, workspace) {

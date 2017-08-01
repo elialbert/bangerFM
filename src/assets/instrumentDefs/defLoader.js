@@ -142,8 +142,8 @@ var saveBeat = function (user, workspace, obj, num, skipFB, skipHistory = false)
   }
 }
 
-var saveOneBeat = function (user, workspace, obj, num, instr, col) {
-  firebaseBridge.bmOneDefRef(user, workspace, num, instr, col).set(firebaseBridge.removeKey(obj))
+var saveOneBeat = function (user, workspace, obj, num, instr, col, triplet) {
+  firebaseBridge.bmOneDefRef(user, workspace, num, instr, col, triplet).set(firebaseBridge.removeKey(obj))
     .then(function () {
     })
     .catch(function (error) {

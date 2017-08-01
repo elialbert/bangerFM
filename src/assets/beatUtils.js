@@ -15,11 +15,7 @@ var getInstrument = function (m) {
 }
 
 var getTriplet = function (m) {
-  return {
-    0: 'first',
-    1: 'second',
-    2: 'third'
-  }[(m - 1) % 3]
+  return (m - 1) % 3
 }
 
 var mReverse = function (instr, t) {
@@ -36,7 +32,7 @@ var mReverse = function (instr, t) {
     '4.1': 7,
     '4.2': 8,
     '4.3': 9
-  }[String(instr) + '.' + t]
+  }[String(instr) + '.' + String(t + 1)]
 }
 
 export default {
@@ -55,8 +51,9 @@ export default {
     for (let iindex of iindexes) {
       let obj = data[iindex][beat]
       if (state === 0) {
-        obj.triplet[triplet] = null
-        if (!(obj.triplet.first || obj.triplet.second || obj.triplet.third)) {
+        obj.triplet[triplet] = {state: 0}
+        obj.triplet.enabled = false
+        if (!(obj.triplet[1] || obj.triplet[2] || obj.triplet[3])) {
           obj.enabled = false
         }
       } else {
@@ -65,9 +62,9 @@ export default {
         obj.triplet.enabled = true
         obj.triplet[triplet] = {state: state, pitch: soundBridge.pitchFromColor(state)}
       }
-      objs.push(obj)
+      objs.push(obj.triplet[triplet])
     }
-    return [objs, iindexes, beat]
+    return [objs, iindexes, beat, triplet]
   },
   // triggered per square by firebase
   getState: function (data, m, n) {
@@ -76,17 +73,7 @@ export default {
     let triplet = getTriplet(m)
     return (((data[iindexes[0]][beat] || {}).triplet || {})[triplet] || {}).state
   },
-  getCoords: function (instr, col, obj) {
-    let result = []
-    if ((obj.triplet || {}).first) {
-      result.push([mReverse(instr, '1'), col, obj.triplet.first.state])
-    }
-    if ((obj.triplet || {}).second) {
-      result.push([mReverse(instr, '2'), col, obj.triplet.second.state])
-    }
-    if ((obj.triplet || {}).third) {
-      result.push([mReverse(instr, '3'), col, obj.triplet.third.state])
-    }
-    return result
+  getCoord: function (instr, triplet) {
+    return mReverse(instr, triplet)
   }
 }

@@ -31,15 +31,17 @@ module.exports = {
       }
       for (let instr of [1, 2, 3, 4]) {
         for (let col of [...Array(16).keys()]) {
-          this.bmRef = firebaseBridge.bmOneDefRef(this.user, this.workspace, this.beatBankChoice, instr, col).on('value', snapshot => {
-            let v = snapshot.val()
-            if (!v) { return }
-            this.dataArray[instr][col] = v
-            this.$refs.mainbox.setState(instr, col, v)
-            if (instr === 4 && col === 15) {
-              this.doneLoading = true
-            }
-          })
+          for (let triplet of [0, 1, 2]) {
+            this.bmRef = firebaseBridge.bmOneDefRef(this.user, this.workspace, this.beatBankChoice, instr, col, triplet).on('value', snapshot => {
+              let v = snapshot.val()
+              if (!v) { return }
+              this.dataArray[instr][col].triplet[triplet] = v
+              this.$refs.mainbox.setState(instr, col, v, triplet)
+              if (instr === 4 && col === 15) {
+                this.doneLoading = true
+              }
+            })
+          }
         }
       }
     }

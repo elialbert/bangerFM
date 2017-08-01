@@ -60,21 +60,51 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
         qTime = Tone.Time(time).quantize(square.measureSub).toSeconds()
       }
       if (square.enabled) {
-        if (!square.triplet || !square.triplet.enabled || (square.triplet.first === null) || (!!square.triplet.first)) {
-          let fpitch = square.triplet && (square.triplet.first || {}).pitch || square.pitch
-          soundBridge.startBeat(idef.iindex, fpitch, qTime, i, square.e1)
-        }
+        soundBridge.startBeat(idef.iindex, square.pitch, qTime, i, square.e1)
       }
       if (square.enabled && square.triplet.enabled) {
-        if (square.triplet.second === null || !!square.triplet.second) {
-          soundBridge.startBeat(idef.iindex, (square.triplet.second || {}).pitch || square.pitch, qTime + tripletTime, i, square.e1)
-        }
-        if (square.triplet.third === null || !!square.triplet.third) {
-          soundBridge.startBeat(idef.iindex, (square.triplet.third || {}).pitch || square.pitch, qTime + doubledTripletTime, i, square.e1)
-        }
+        soundBridge.startBeat(idef.iindex, square.pitch, qTime + tripletTime, i, square.e1)
+        soundBridge.startBeat(idef.iindex, square.pitch, qTime + doubledTripletTime, i, square.e1)
       }
       if (vm.deep && vm.deepPlaying) {
         break
+      }
+    }
+    Tone.Draw.schedule(function () {
+      animateFunc(col, !endcb, songIndex)
+    }, time)
+
+    if (endcb && col === (getLength(vm.dataArray[0]) - 1)) {
+      endcb(songIndex)
+    }
+  }
+}
+
+var landingDataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
+  return function (time, col) {
+    for (var i = 0; i < vm.defsLength; i++) {
+      if (vm.deep && vm.deepPlaying) {
+        i = vm.selected[1]
+      }
+      var square = (vm.dataArray[i] || {})[col]
+      if (!square || !square.triplet) {
+        continue
+      }
+      let idef = vm.idefLookup[i]
+      let qTime = time
+      if (square.measureSub) {
+        qTime = Tone.Time(time).quantize(square.measureSub).toSeconds()
+      }
+      let triplet = square.triplet
+      if ((triplet[0] || {}).state > 0) {
+        let fpitch = (square.triplet[0] || {}).pitch || square.pitch
+        soundBridge.startBeat(idef.iindex, fpitch, qTime, i, square.e1)
+      }
+      if ((triplet[1] || {}).state > 0) {
+        soundBridge.startBeat(idef.iindex, (square.triplet[1] || {}).pitch || square.pitch, qTime + tripletTime, i, square.e1)
+      }
+      if ((triplet[2] || {}).state > 0) {
+        soundBridge.startBeat(idef.iindex, (square.triplet[2] || {}).pitch || square.pitch, qTime + doubledTripletTime, i, square.e1)
       }
     }
     Tone.Draw.schedule(function () {
@@ -102,6 +132,7 @@ var makeLoop = function (dataFunc, numCols) {
 export default {
   makeLoop: makeLoop,
   dataFunc: dataFunc,
+  landingDataFunc,
   startTransport: startTransport,
   changePitch: changePitch,
   stopTransport: stopTransport

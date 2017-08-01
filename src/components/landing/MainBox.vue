@@ -77,8 +77,12 @@ export default {
     },
     // do the drawing from new data
     setState: function (instr, col, v, triplet) {
-      let m = beatUtils.getCoord(instr, triplet)
-      this.$refs['beatbox_' + String(col)][0].$refs['innerbox_' + String(m - 1)][0].state = v.state
+      if (instr === 0) {
+        this.$refs['beatbox_' + String(col)][0].horizontalSlider = v.state
+      } else {
+        let m = beatUtils.getCoord(instr, triplet)
+        this.$refs['beatbox_' + String(col)][0].$refs['innerbox_' + String(m - 1)][0].state = v.state
+      }
     }
   }
 }

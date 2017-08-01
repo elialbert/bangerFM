@@ -2,6 +2,7 @@ import soundBridge from './soundBridge'
 
 var getInstrument = function (m) {
   return {
+    0: [0],
     1: [1, 2],
     2: [1, 2],
     3: [1, 2],
@@ -15,6 +16,7 @@ var getInstrument = function (m) {
 }
 
 var getTriplet = function (m) {
+  if (m === 0) { return 0 }
   return (m - 1) % 3
 }
 

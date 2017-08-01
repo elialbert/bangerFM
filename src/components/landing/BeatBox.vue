@@ -2,6 +2,10 @@
   <div class="beatbox"
     v-bind:class="{ playing: playing == n - 1 }"
   >
+    <vue-slider v-model="horizontalSlider"
+      tooltip="never" :dotSize="24" :lazy="true"
+      @callback="doSlider"
+    ></vue-slider>
     <div class="innerBoxWrapper">
       <inner-box v-for="m in 9" v-bind:ref="'innerbox_' + (m-1)"
         :m="m" :n="n"
@@ -15,16 +19,21 @@
 
 <script>
 import InnerBox from './InnerBox'
+import vueSlider from 'vue-slider-component'
 
 // handles sliders
 export default {
   name: 'beat-box',
   props: ['n', 'playing', 'dataArray', 'drawMode'],
   components: {
-    InnerBox
+    InnerBox,
+    vueSlider
   },
   data: function () {
     return {
+      verticalSlider: {value: 50},
+      horizontalSlider: 0,
+      sliderStyle: {position: 'absolute'}
     }
   },
   mounted: function () {
@@ -36,6 +45,9 @@ export default {
   methods: {
     innerClick: function (m, n, state, drawMode) {
       this.$emit('innerClick', m, n, state, drawMode)
+    },
+    doSlider: function (v) {
+      this.$emit('innerClick', 0, this.n, v)
     }
   }
 }
@@ -47,6 +59,7 @@ export default {
   height: 25%; 
   border: black 2px solid; 
   box-sizing: border-box;
+  position: relative;
 }
 .innerBoxWrapper {
   display: flex;
@@ -55,8 +68,19 @@ export default {
   height: 100%;
   width: 100%;
 }
-.playing {
-  background-color: red;
+.beatbox.playing {
+  background-color: pink;
   opacity: 0.6;
+}
+.beatbox .vue-slider-wrap {
+  position: absolute !important;
+  width: 100% !important;
+  top: -16px !important;
+}
+.beatbox .vue-slider-wrap .vue-slider {
+  background-color: unset !important;
+}
+.beatbox .vue-slider div.vue-slider-process {
+  background-color: unset !important; 
 }
 </style>

@@ -29,7 +29,7 @@ module.exports = {
       if (this.bmRef) {
         firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).off('value', this.bmRef)
       }
-      for (let instr of [1, 2, 3, 4]) {
+      for (let instr of [0, 1, 2, 3, 4]) {
         for (let col of [...Array(16).keys()]) {
           for (let triplet of [0, 1, 2]) {
             this.bmRef = firebaseBridge.bmOneDefRef(this.user, this.workspace, this.beatBankChoice, instr, col, triplet).on('value', snapshot => {

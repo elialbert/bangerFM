@@ -83,9 +83,6 @@ var dataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
 var landingDataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
   return function (time, col) {
     for (var i = 0; i < vm.defsLength; i++) {
-      if (vm.deep && vm.deepPlaying) {
-        i = vm.selected[1]
-      }
       var square = (vm.dataArray[i] || {})[col]
       if (!square || !square.triplet) {
         continue

@@ -36,11 +36,6 @@ export default {
   methods: {
     innerClick: function (m, n, state, drawMode) {
       this.$emit('innerClick', m, n, state, drawMode)
-    },
-    setState: function (v) {
-      for (let i = 0; i < 9; i++) {
-        this.$refs['innerbox_' + String(i)][0].setState(v)
-      }
     }
   }
 }

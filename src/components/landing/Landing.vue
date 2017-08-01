@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+// import Vue from 'vue'
 import defLoader from '../../assets/instrumentDefs/defLoader'
 import soundBridge from '../../assets/soundBridge'
 import iutils from '../../assets/instrumentUtils'
@@ -64,12 +64,15 @@ export default {
       this.$refs.mainbox.soundToggle(soundState)
     },
     innerClick: function (m, n, state) {
-      beatUtils.landingClick(this.dataArray, m, n, state)
-      this.networkWait('landingBeat', () => {
-        Vue.nextTick(() => {
-          defLoader.saveBeat(this.user, this.workspace, this.dataArray, 0, false, true)
-        })
-      })
+      let clickData = beatUtils.landingClick(this.dataArray, m, n, state)
+      let objs = clickData[0]
+      let instrs = clickData[1]
+      let beat = clickData[2]
+      for (let i = 0; i < instrs.length; i++) {
+        let instr = instrs[i]
+        let obj = objs[i]
+        defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat)
+      }
     },
     reset: function () {
       defLoader.saveBeat(this.user, this.workspace, iutils.createDataArray(4, 5, 'C Minor Blues'), 0, false, true)

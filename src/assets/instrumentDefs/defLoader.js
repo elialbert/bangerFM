@@ -142,6 +142,15 @@ var saveBeat = function (user, workspace, obj, num, skipFB, skipHistory = false)
   }
 }
 
+var saveOneBeat = function (user, workspace, obj, num, instr, col) {
+  firebaseBridge.bmOneDefRef(user, workspace, num, instr, col).set(firebaseBridge.removeKey(obj))
+    .then(function () {
+    })
+    .catch(function (error) {
+      console.log('bm Synchronization failed ' + error)
+    })
+}
+
 var loadSong = function (user, workspace) {
   let data = loadGeneric('songData') || iutils.createSongArray()
   if (user) {
@@ -191,6 +200,7 @@ export default {
   loadBeat: loadBeat,
   save: save,
   saveBeat: saveBeat,
+  saveOneBeat: saveOneBeat,
   saveGeneric: saveGeneric,
   loadGeneric: loadGeneric,
   saveSong: saveSong,

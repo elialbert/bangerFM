@@ -14,13 +14,12 @@
 </template>
 
 <script>
-// import iutils from '../../assets/instrumentUtils'
 import BeatBox from './BeatBox'
-// import soundBridge from '../../assets/soundBridge'
 import beatBridge from '../../assets/beatBridge'
 import soundsynthUtils from '../../assets/soundsynthUtils'
+import beatUtils from '../../assets/beatUtils'
 
-// handles playing
+// handles playing and ridiculous state setting
 export default {
   name: 'main-box',
   props: ['defs', 'dataArray'],
@@ -77,9 +76,10 @@ export default {
       this.$emit('innerClick', m, n, state, drawMode)
     },
     // do the drawing from new data
-    setState: function (v) {
-      for (let i = 0; i < 16; i++) {
-        this.$refs['beatbox_' + String(i)][0].setState(v)
+    setState: function (instr, col, v) {
+      let coords = beatUtils.getCoords(instr, col, v)
+      for (let coord of coords) {
+        this.$refs['beatbox_' + String(coord[1])][0].$refs['innerbox_' + String(coord[0] - 1)][0].state = coord[2]
       }
     }
   }

@@ -29,15 +29,19 @@ module.exports = {
       if (this.bmRef) {
         firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).off('value', this.bmRef)
       }
-      this.bmRef = firebaseBridge.bmdefRef(this.user, this.workspace, this.beatBankChoice).on('value', snapshot => {
-        this.doneLoading = true
-        let v = snapshot.val()
-        if (!v) { return }
-        this.perMeasure = v.perMeasure
-        this.pitchKey = v.pitchKey || 'C Minor Blues'
-        this.dataArray = v
-        this.$refs.mainbox.setState(v)
-      })
+      for (let instr of [1, 2, 3, 4]) {
+        for (let col of [...Array(16).keys()]) {
+          this.bmRef = firebaseBridge.bmOneDefRef(this.user, this.workspace, this.beatBankChoice, instr, col).on('value', snapshot => {
+            let v = snapshot.val()
+            if (!v) { return }
+            this.dataArray[instr][col] = v
+            this.$refs.mainbox.setState(instr, col, v)
+            if (instr === 4 && col === 15) {
+              this.doneLoading = true
+            }
+          })
+        }
+      }
     }
   }
 }

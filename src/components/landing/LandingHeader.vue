@@ -4,7 +4,7 @@
     <button id="go" type="button" v-on:click="playPause()"><b>{{text}}</b></button>
     <!-- <button id="reset" type="button" v-on:click="$emit('reset')">reset</button> -->
     <span v-if="!doneLoading">Loading...</span><span v-if="doneLoading">This is a networked in-browser music demo. Click/drag around! Don't forget to press play...</span>
-    <span class='advanced-link'><a href="https://banger.fm/app">Try advanced mode</a></span>
+    <span class='advanced-link'><a href="https://banger.fm/#/app">Try advanced mode</a></span>
   </div>
 </template>
 

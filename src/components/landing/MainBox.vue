@@ -90,8 +90,8 @@ export default {
 
 <style>
 #mainbox-inner {
-  height: 80vw;
-  width: 80vw;
+  height: 80vmin;
+  width: 80vmin;
   max-width: 800px;
   max-height: 800px;
   border: 4px solid black;

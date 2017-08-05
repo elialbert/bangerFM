@@ -17,7 +17,10 @@ module.exports = {
         if (v && Object.keys(v).length) {
           for (let key in v) {
             for (let propKey in v[key].properties) {
-              this.defs[key].properties[propKey].val = v[key].properties[propKey].val
+              if ((((this.defs[key] || {}).properties || {})[propKey] || {}) &&
+                  ((((v[key] || {}).properties || {})[propKey] || {}))) {
+                this.defs[key].properties[propKey].val = v[key].properties[propKey].val
+              }
             }
           }
         }

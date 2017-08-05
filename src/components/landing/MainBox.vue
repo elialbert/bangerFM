@@ -92,6 +92,8 @@ export default {
 #mainbox-inner {
   height: 80vmin;
   width: 80vmin;
+  height: 80vm;
+  width: 80vm;
   max-width: 800px;
   max-height: 800px;
   border: 4px solid black;
@@ -100,10 +102,20 @@ export default {
   flex-wrap: wrap; 
   box-sizing: border-box;
 }
-.centered {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+@media (min-width: 480px) {
+  .centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@media (max-width: 480px) {
+  .centered {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>

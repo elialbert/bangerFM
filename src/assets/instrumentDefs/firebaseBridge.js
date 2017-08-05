@@ -54,6 +54,9 @@ var bmdefRef = function (user, workspace, beatBankNum) {
 var bmOneDefRef = function (user, workspace, beatBankNum, instr, col, triplet) {
   return db.ref('userDefs/' + user + '/' + workspace + '/beats/' + beatBankNum + '/' + instr + '/' + col + '/triplet/' + triplet)
 }
+var idefOneRef = function (user, workspace, soundBankNum, instr, prop) {
+  return db.ref('userDefs/' + user + '/' + workspace + '/sounds/' + soundBankNum + '/' + instr + '/properties/' + prop + '/val')
+}
 
 var smdefRef = function (user, workspace) {
   return db.ref('userDefs/' + user + '/' + workspace + '/song')
@@ -74,6 +77,7 @@ export default {
   fbdb: db,
   removeKey: removeKey,
   idefRef: idefRef,
+  idefOneRef: idefOneRef,
   bmdefRef: bmdefRef,
   bmOneDefRef: bmOneDefRef,
   smdefRef: smdefRef,

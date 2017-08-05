@@ -7,24 +7,18 @@ module.exports = {
       firebaseBridge.idefRef(this.user, 0, 0).once('value', snapshot => {
         this.defs = iutils.simpleInstruments(snapshot.val())
         this.finishLoading()
+        this.setupIndividualBindings()
       })
-      let sbnum = 0
-      if (this.ssRef) {
-        firebaseBridge.idefRef(this.user, this.workspace, sbnum).off('value', this.ssRef)
-      }
-      this.ssRef = firebaseBridge.idefRef(this.user, this.workspace, sbnum).on('value', snapshot => {
-        let v = snapshot.val()
-        if (v && Object.keys(v).length) {
-          for (let key in v) {
-            for (let propKey in v[key].properties) {
-              if ((((this.defs[key] || {}).properties || {})[propKey] || {}).val !== undefined &&
-                  ((((v[key] || {}).properties || {})[propKey] || {})).val !== undefined) {
-                this.defs[key].properties[propKey].val = v[key].properties[propKey].val
-              }
-            }
-          }
+    },
+    setupIndividualBindings: function () {
+      for (let key in this.defs) {
+        for (let propKey in this.defs[key].properties) {
+          firebaseBridge.idefOneRef(this.user, this.workspace, 0, key, propKey).on('value', snapshot => {
+            let v = snapshot.val()
+            this.defs[key].properties[propKey].val = v
+          })
         }
-      })
+      }
     },
 
     doBeat: function () {

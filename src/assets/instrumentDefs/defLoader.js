@@ -86,7 +86,7 @@ var clone = function (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
-var save = function (user, workspace, obj, num, skipHistory = false) {
+var save = function (user, workspace, obj, num, skipHistory = false, skipLocal = false) {
   if (Object.keys(obj).length === 0) {
     return
   }
@@ -98,7 +98,9 @@ var save = function (user, workspace, obj, num, skipHistory = false) {
         console.log('Synchronization failed ' + error)
       })
   }
-  loaderVm.$localStorage.set('instrumentDefs' + String(num), obj)
+  if (!skipLocal) {
+    loaderVm.$localStorage.set('instrumentDefs' + String(num), obj)
+  }
   if (!skipHistory) {
     actionHistory.push('ss', num, clone(obj))
   }
@@ -144,6 +146,15 @@ var saveBeat = function (user, workspace, obj, num, skipFB, skipHistory = false)
 
 var saveOneBeat = function (user, workspace, obj, num, instr, col, triplet) {
   firebaseBridge.bmOneDefRef(user, workspace, num, instr, col, triplet).set(firebaseBridge.removeKey(obj))
+    .then(function () {
+    })
+    .catch(function (error) {
+      console.log('bm Synchronization failed ' + error)
+    })
+}
+
+var saveOneSound = function (user, workspace, num, key, propKey, val) {
+  firebaseBridge.idefOneRef(user, workspace, 0, key, propKey).set(val)
     .then(function () {
     })
     .catch(function (error) {
@@ -199,6 +210,7 @@ export default {
   quickDefLoad: quickDefLoad,
   loadBeat: loadBeat,
   save: save,
+  saveOneSound: saveOneSound,
   saveBeat: saveBeat,
   saveOneBeat: saveOneBeat,
   saveGeneric: saveGeneric,

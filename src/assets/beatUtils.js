@@ -37,6 +37,29 @@ var mReverse = function (instr, t) {
   }[String(instr) + '.' + String(t + 1)]
 }
 
+var getDefLookup = function (instr, triplet) {
+  return {
+    '0.1': ['lowSynth', 'oscillatorType'],
+    '0.2': ['lowSynth', 'tremelo'],
+    '1.1': ['noise', 'noiseType'],
+    '1.2': ['noise', 'bffrequency'],
+    '2.1': ['highDrum', 'oscillatorType'],
+    '2.2': ['highDrum', 'octaves'],
+    '3.1': ['mediumDrum', 'oscillatorType'],
+    '3.2': ['mediumDrum', 'octaves'],
+    '4.1': ['lowDrum', 'oscillatorType'],
+    '4.2': ['lowDrum', 'octaves']
+  }[String(instr) + '.' + String(triplet)]
+}
+
+var sliderVal = function (def, state) {
+  var newVal = (state / 10.0) * (def.end - def.start) + def.start
+  if (parseInt(def.step) === def.step) {
+    newVal = parseInt(newVal)
+  }
+  return newVal
+}
+
 export default {
   // everything else in this file is landing specific
   transformFBBeat: function (dataArray) {
@@ -77,5 +100,14 @@ export default {
   },
   getCoord: function (instr, triplet) {
     return mReverse(instr, triplet)
+  },
+  mutateDefs: function (defs, instr, triplet, state) {
+    if (triplet === 0) {
+      return false
+    }
+    let defLookup = getDefLookup(instr, triplet)
+    let def = defs[defLookup[0]].properties[defLookup[1]]
+    def.val = sliderVal(def, state)
+    return [defLookup[0], defLookup[1], def.val]
   }
 }

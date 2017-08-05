@@ -97,10 +97,13 @@ var landingDataFunc = function (vm, animateFunc, defs, endcb, songIndex) {
         let fpitch = (square.triplet[0] || {}).pitch || square.pitch
         soundBridge.startBeat(idef.iindex, fpitch, qTime, i, square.e1)
       }
-      if ((triplet[1] || {}).state > 0) {
+
+      let rand = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10][Math.floor(Math.random() * 10)]
+
+      if ((triplet[1] || {}).state > 8 && rand > 7) {
         soundBridge.startBeat(idef.iindex, (square.triplet[1] || {}).pitch || square.pitch, qTime + tripletTime, i, square.e1)
       }
-      if ((triplet[2] || {}).state > 0) {
+      if ((triplet[2] || {}).state > 8 && rand > 6) {
         soundBridge.startBeat(idef.iindex, (square.triplet[2] || {}).pitch || square.pitch, qTime + doubledTripletTime, i, square.e1)
       }
     }

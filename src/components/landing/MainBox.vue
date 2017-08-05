@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     redoDefs: function () {
+      console.log('in mainbox redodefs')
       this.idefLookup = soundsynthUtils.createIDefLookup(this.defs)
     },
     soundToggle: function (soundState) {

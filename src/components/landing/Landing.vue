@@ -14,7 +14,7 @@
 </template>
 
 <script>
-// import Vue from 'vue'
+import Vue from 'vue'
 import defLoader from '../../assets/instrumentDefs/defLoader'
 import soundBridge from '../../assets/soundBridge'
 import iutils from '../../assets/instrumentUtils'
@@ -41,7 +41,8 @@ export default {
       doneLoading: false,
       beatBankChoice: 0,
       defs: defLoader.load(false, 0, 0, false),
-      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues')
+      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues'),
+      watcherList: []
     }
   },
   mounted: function () {
@@ -55,8 +56,12 @@ export default {
   },
   methods: {
     finishLoading: function () {
+      this.watcherList.forEach(function (unwatcher) { unwatcher() })
       soundBridge.reconstructInstruments(() => {
-        soundBridge.constructWatchers(this.defs, true)
+        var watchers = soundBridge.constructWatchers(this.defs, true)
+        for (let key in watchers) {
+          this.watcherList.push(this.$watch(key, watchers[key]))
+        }
         this.doneLoading = true
       })
     },
@@ -74,6 +79,12 @@ export default {
         let obj = objs[i]
         if (obj === null) { continue }
         defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat, triplet)
+        let soundResult = beatUtils.mutateDefs(this.defs, instr, triplet, state)
+        if (soundResult) {
+          Vue.nextTick(() => {
+            defLoader.saveOneSound(this.user, this.workspace, 0, soundResult[0], soundResult[1], soundResult[2])
+          })
+        }
       }
     },
     reset: function () {

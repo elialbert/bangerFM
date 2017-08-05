@@ -17,8 +17,8 @@ module.exports = {
         if (v && Object.keys(v).length) {
           for (let key in v) {
             for (let propKey in v[key].properties) {
-              if ((((this.defs[key] || {}).properties || {})[propKey] || {}) &&
-                  ((((v[key] || {}).properties || {})[propKey] || {}))) {
+              if ((((this.defs[key] || {}).properties || {})[propKey] || {}).val !== undefined &&
+                  ((((v[key] || {}).properties || {})[propKey] || {})).val !== undefined) {
                 this.defs[key].properties[propKey].val = v[key].properties[propKey].val
               }
             }
@@ -39,7 +39,9 @@ module.exports = {
               let v = snapshot.val()
               if (!v) { return }
               this.dataArray[instr][col].triplet[triplet] = v
-              this.$refs.mainbox.setState(instr, col, v, triplet)
+              if (this.$refs && this.$refs.mainbox) {
+                this.$refs.mainbox.setState(instr, col, v, triplet)
+              }
               if (instr === 4 && col === 15) {
                 this.doneLoading = true
               }

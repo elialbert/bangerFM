@@ -41,7 +41,7 @@ export default {
       doneLoading: false,
       beatBankChoice: 0,
       defs: defLoader.load(false, 0, 0, false),
-      dataArray: iutils.createDataArray(4, 5, 'C Minor Blues'),
+      dataArray: iutils.createDataArray(4, 6, 'C Minor Blues'),
       watcherList: []
     }
   },
@@ -79,7 +79,7 @@ export default {
         let obj = objs[i]
         if (obj === null) { continue }
         defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat, triplet)
-        let soundResult = beatUtils.mutateDefs(this.defs, instr, triplet, state)
+        let soundResult = beatUtils.mutateDefs(this.defs, instr, triplet, beat, state)
         if (soundResult) {
           Vue.nextTick(() => {
             defLoader.saveOneSound(this.user, this.workspace, 0, soundResult[0], soundResult[1], soundResult[2])

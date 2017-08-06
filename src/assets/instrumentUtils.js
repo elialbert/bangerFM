@@ -46,7 +46,7 @@ var innerDataArrayObj = function () {
 var simpleInstruments = function (defs) {
   let result = {}
   for (let def of Object.keys(defs)) {
-    if (['highDrum', 'lowDrum', 'mediumDrum', 'noise', 'lowSynth'].indexOf(def) > -1) {
+    if (['highDrum', 'lowDrum', 'mediumDrum', 'noise', 'lowSynth', 'metal'].indexOf(def) > -1) {
       result[def] = defs[def]
     }
   }

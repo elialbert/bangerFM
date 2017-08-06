@@ -6,9 +6,9 @@ var getInstrument = function (m) {
     1: [1, 2],
     2: [1, 2],
     3: [1, 2],
-    4: [3],
-    5: [3],
-    6: [3],
+    4: [3, 5],
+    5: [3, 5],
+    6: [3, 5],
     7: [4],
     8: [4],
     9: [4]
@@ -33,23 +33,65 @@ var mReverse = function (instr, t) {
     '3.3': 6,
     '4.1': 7,
     '4.2': 8,
-    '4.3': 9
+    '4.3': 9,
+    '5.1': 4,
+    '5.2': 5,
+    '5.3': 6
   }[String(instr) + '.' + String(t + 1)]
 }
 
-var getDefLookup = function (instr, triplet) {
+var getDefLookup = function (instr, triplet, beat) {
   return {
-    '0.1': ['lowSynth', 'oscillatorType'],
-    '0.2': ['lowSynth', 'tremelo'],
-    '1.1': ['noise', 'noiseType'],
-    '1.2': ['noise', 'bffrequency'],
-    '2.1': ['highDrum', 'oscillatorType'],
-    '2.2': ['highDrum', 'octaves'],
-    '3.1': ['mediumDrum', 'oscillatorType'],
-    '3.2': ['mediumDrum', 'octaves'],
-    '4.1': ['lowDrum', 'oscillatorType'],
-    '4.2': ['lowDrum', 'octaves']
-  }[String(instr) + '.' + String(triplet)]
+    '0.1.0': ['lowSynth', 'oscillatorType'],
+    '0.2.0': ['lowSynth', 'tremelo'],
+    '1.1.0': ['noise', 'noiseType'],
+    '1.2.0': ['noise', 'bffrequency'],
+    '2.1.0': ['highDrum', 'oscillatorType'],
+    '2.2.0': ['highDrum', 'octaves'],
+    '3.1.0': ['mediumDrum', 'oscillatorType'],
+    '3.2.0': ['mediumDrum', 'octaves'],
+    '4.1.0': ['lowDrum', 'oscillatorType'],
+    '4.2.0': ['lowDrum', 'octaves'],
+    '5.1.0': ['metal', 'phaser'],
+    '5.2.0': ['metal', 'echo'],
+    '0.1.1': ['lowSynth', 'autoFilter'],
+    '0.2.1': ['lowSynth', 'distortion'],
+    '1.1.1': ['noise', 'low'],
+    '1.2.1': ['noise', 'bffrequency'],
+    '2.1.1': ['highDrum', 'pitchDecay'],
+    '2.2.1': ['highDrum', 'echo'],
+    '3.1.1': ['mediumDrum', 'attack'],
+    '3.2.1': ['mediumDrum', 'echo'],
+    '4.1.1': ['lowDrum', 'oscillatorType'],
+    '4.2.1': ['lowDrum', 'high'],
+    '5.1.1': ['metal', 'volume'],
+    '5.2.1': ['metal', 'frequency'],
+    '0.1.2': ['lowSynth', 'decay'],
+    '0.2.2': ['lowSynth', 'attack'],
+    '1.1.2': ['noise', 'low'],
+    '1.2.2': ['noise', 'high'],
+    '2.1.2': ['highDrum', 'decay'],
+    '2.2.2': ['highDrum', 'echo'],
+    '3.1.2': ['mediumDrum', 'high'],
+    '3.2.2': ['mediumDrum', 'octaves'],
+    '4.1.2': ['lowDrum', 'oscillatorType'],
+    '4.2.2': ['lowDrum', 'octaves'],
+    '5.1.2': ['metal', 'phaser'],
+    '5.2.2': ['metal', 'frequency'],
+    '0.1.3': ['lowSynth', 'oscillatorType'],
+    '0.2.3': ['lowSynth', 'distortion'],
+    '1.1.3': ['noise', 'noiseType'],
+    '1.2.3': ['noise', 'attack'],
+    '2.1.3': ['highDrum', 'high'],
+    '2.2.3': ['highDrum', 'low'],
+    '3.1.3': ['mediumDrum', 'oscillatorType'],
+    '3.2.3': ['mediumDrum', 'echo'],
+    '4.1.3': ['lowDrum', 'mid'],
+    '4.2.3': ['lowDrum', 'octaves'],
+    '5.1.3': ['metal', 'high'],
+    '5.2.3': ['metal', 'volume']
+
+  }[String(instr) + '.' + String(triplet) + '.' + String(beat % 4)]
 }
 
 var sliderVal = function (def, state) {
@@ -101,11 +143,11 @@ export default {
   getCoord: function (instr, triplet) {
     return mReverse(instr, triplet)
   },
-  mutateDefs: function (defs, instr, triplet, state) {
+  mutateDefs: function (defs, instr, triplet, beat, state) {
     if (triplet === 0) {
       return false
     }
-    let defLookup = getDefLookup(instr, triplet)
+    let defLookup = getDefLookup(instr, triplet, beat)
     let def = defs[defLookup[0]].properties[defLookup[1]]
     def.val = sliderVal(def, state)
     return [defLookup[0], defLookup[1], def.val]

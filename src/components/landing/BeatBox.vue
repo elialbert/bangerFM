@@ -2,10 +2,6 @@
   <div class="beatbox"
     v-bind:class="{ playing: playing == n - 1 }"
   >
-<!--     <vue-slider v-model="horizontalSlider"
-      tooltip="never" :dotSize="24" :lazy="true"
-      @callback="doSlider"
-    ></vue-slider> -->
     <div class="innerBoxWrapper">
       <inner-box v-for="m in 9" v-bind:ref="'innerbox_' + (m-1)"
         :m="m" :n="n"
@@ -48,7 +44,7 @@ export default {
       for (let ref of Object.values(this.$refs)) {
         total += ref[0].state
       }
-      this.$emit('innerClick', 0, n, total % 4)
+      this.$emit('innerClick', 0, n, total % 2)
       this.$emit('innerClick', m, n, state, drawMode)
     },
     doSlider: function (v) {

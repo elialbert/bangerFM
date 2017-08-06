@@ -30,7 +30,7 @@ export default {
     return {
       playing: -1,
       running: false,
-      defsLength: 5,
+      defsLength: 6,
       idefLookup: {},
       drawMode: true
     }
@@ -113,7 +113,7 @@ export default {
 @media (max-width: 480px) {
   .centered {
     position: fixed;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }

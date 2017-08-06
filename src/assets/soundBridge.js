@@ -31,6 +31,7 @@ var constructInstruments = function () {
   highDrum = new HighDrum()
   mediumDrum = new MediumDrum()
   lowDrum = new LowDrum()
+  bell = new Bell()
 
   if (window.LANDINGMODE) {
     return
@@ -38,7 +39,6 @@ var constructInstruments = function () {
   ms = new MediumSynth()
   // noise2 = new Noise()
   // pluck = new Pluck()
-  bell = new Bell()
   highsynth = new HighSynth()
   // ride = new MediumDrum()
   // backgroundSynth = new MediumSynth()
@@ -56,7 +56,7 @@ var reconstructInstruments = function (cb) {
 
 var instrumentLookup = function (index) {
   if (window.LANDINGMODE) {
-    return {3: highDrum, 5: lowDrum, 1: bass, 4: mediumDrum, 2: noise}[index]
+    return {3: highDrum, 5: lowDrum, 1: bass, 4: mediumDrum, 2: noise, 6: bell}[index]
   }
   return {
     0: ms,

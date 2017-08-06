@@ -3,12 +3,16 @@
     <div id='landingInner'>
       <landing-header
         :doneLoading="doneLoading"
+        :numOnline="numOnline"
         @soundToggle="soundToggle"
         @reset="reset"
       ></landing-header>
       <main-box :defs="defs" :dataArray="dataArray" ref="mainbox"
         @innerClick="innerClick" v-if='doneLoading'
       ></main-box>
+    </div>
+    <div class='landingFooter'>
+      a <a href="http://zap.sexy" target='_blank'>zap.sexy</a> production.
     </div>
   </div>
 </template>
@@ -42,7 +46,8 @@ export default {
       beatBankChoice: 0,
       defs: defLoader.load(false, 0, 0, false),
       dataArray: iutils.createDataArray(4, 6, 'C Minor Blues'),
-      watcherList: []
+      watcherList: [],
+      numOnline: 0
     }
   },
   mounted: function () {
@@ -97,4 +102,14 @@ export default {
 </script>
 
 <style>
+#landingInner {
+  min-height: calc(100vh - 60px); 
+}
+.landingFooter {
+  height: 50px;
+  background-color: gray;
+  color: white;
+  padding: 6px;
+  margin-bottom: 8px;
+}
 </style>

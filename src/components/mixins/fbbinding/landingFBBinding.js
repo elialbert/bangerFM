@@ -8,10 +8,7 @@ module.exports = {
         this.defs = iutils.simpleInstruments(snapshot.val())
         this.finishLoading()
         this.setupIndividualBindings()
-      })
-      firebaseBridge.fbdb.ref('defs/' + 0).once('value', snapshot => {
-        window.t = snapshot.val()
-        window.tt = firebaseBridge
+        this.setupPresence()
       })
     },
     setupIndividualBindings: function () {
@@ -47,6 +44,22 @@ module.exports = {
           }
         }
       }
+    },
+
+    setupPresence: function () {
+      let self = this
+      let listRef = firebaseBridge.fbdb.ref('userDefs/landing/presence/')
+      let userRef = listRef.push()
+      let presenceRef = firebaseBridge.fbdb.ref('.info/connected')
+      presenceRef.on('value', function (snapshot) {
+        if (snapshot.val()) {
+          userRef.onDisconnect().remove()
+          userRef.set(true)
+        }
+      })
+      listRef.on('value', function (snapshot) {
+        self.numOnline = snapshot.numChildren()
+      })
     }
   }
 }

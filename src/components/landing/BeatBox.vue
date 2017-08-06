@@ -44,7 +44,9 @@ export default {
       for (let ref of Object.values(this.$refs)) {
         total += ref[0].state
       }
-      this.$emit('innerClick', 0, n, total % 2)
+      if ((total > 50) || (total < 6)) {
+        this.$emit('innerClick', 0, n, total % 2)
+      }
       this.$emit('innerClick', m, n, state, drawMode)
     },
     doSlider: function (v) {

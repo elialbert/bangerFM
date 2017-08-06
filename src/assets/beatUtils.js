@@ -64,7 +64,7 @@ var getDefLookup = function (instr, triplet, beat) {
     '3.2.1': ['mediumDrum', 'echo'],
     '4.1.1': ['lowDrum', 'oscillatorType'],
     '4.2.1': ['lowDrum', 'high'],
-    '5.1.1': ['metal', 'volume'],
+    '5.1.1': ['metal', 'echo'],
     '5.2.1': ['metal', 'frequency'],
     '0.1.2': ['lowSynth', 'decay'],
     '0.2.2': ['lowSynth', 'attack'],
@@ -89,7 +89,7 @@ var getDefLookup = function (instr, triplet, beat) {
     '4.1.3': ['lowDrum', 'mid'],
     '4.2.3': ['lowDrum', 'octaves'],
     '5.1.3': ['metal', 'high'],
-    '5.2.3': ['metal', 'volume']
+    '5.2.3': ['metal', 'phaser']
 
   }[String(instr) + '.' + String(triplet) + '.' + String(beat % 4)]
 }

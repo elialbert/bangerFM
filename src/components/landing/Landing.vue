@@ -78,7 +78,9 @@ export default {
         let instr = instrs[i]
         let obj = objs[i]
         if (obj === null) { continue }
-        defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat, triplet)
+        Vue.nextTick(() => {
+          defLoader.saveOneBeat(this.user, this.workspace, obj, 0, instr, beat, triplet)
+        })
         let soundResult = beatUtils.mutateDefs(this.defs, instr, triplet, beat, state)
         if (soundResult) {
           Vue.nextTick(() => {

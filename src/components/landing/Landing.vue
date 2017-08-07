@@ -107,7 +107,7 @@ export default {
 }
 .landingFooter {
   height: 50px;
-  background-color: gray;
+  background-color: #D8BFD8;
   color: white;
   padding: 6px;
   margin-bottom: 8px;

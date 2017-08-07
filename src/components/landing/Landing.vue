@@ -1,5 +1,5 @@
 <template>
-  <div id="landing" ref='landing'>
+  <div id="landing" class='noselect' ref='landing'>
     <div id='landingInner'>
       <landing-header
         :doneLoading="doneLoading"
@@ -104,6 +104,15 @@ export default {
 <style>
 #landingInner {
   min-height: calc(100vh - 60px); 
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
 .landingFooter {
   height: 50px;

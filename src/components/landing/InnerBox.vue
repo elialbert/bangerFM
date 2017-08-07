@@ -41,7 +41,7 @@ export default {
     },
     hoverClick: function (event) {
       this.selected = true
-      if (event.buttons === 1) {
+      if (event.buttons === 1 || event.which === 1) {
         this.click(false)
       }
     }

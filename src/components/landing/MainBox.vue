@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import Tone from '../../assets/tone.js'
 import BeatBox from './BeatBox'
 import beatBridge from '../../assets/beatBridge'
 import soundsynthUtils from '../../assets/soundsynthUtils'
@@ -53,6 +54,7 @@ export default {
       soundState === 'play' ? this.startPlaying() : this.stopPlaying()
     },
     startPlaying: function () {
+      Tone.start()
       this.stopPlaying()
       beatBridge.startTransport()
       this.loop = beatBridge.makeLoop(beatBridge.landingDataFunc(this, this.animate, this.defs), 16)

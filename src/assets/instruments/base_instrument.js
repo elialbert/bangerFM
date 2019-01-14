@@ -35,6 +35,7 @@ export default class BaseInstrument {
   }
 
   beat (note, time) {
+    if (time === Infinity) { return }
     if (!this.startNote) {
       this.instrument.triggerAttackRelease(this.noteLength, time)
     } else {

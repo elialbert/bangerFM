@@ -12,7 +12,7 @@
       ></main-box>
     </div>
     <div class='landingFooter'>
-      a <a href="http://zap.sexy" target='_blank'>zap.sexy</a> production.
+      a <a href="https://elialbert.com" target='_blank'>crumble</a> production.
     </div>
   </div>
 </template>

@@ -5,7 +5,7 @@
     <!-- <span v-if="doneLoading">Mystery Music Box. Click and drag. Press play ==> </span> -->
     <button id="go" type="button" class='goButton' v-on:click="playPause()"><b>{{text}}</b></button>
     <span v-if="doneLoading">Currently online: {{numOnline}}</span>
-    <span class='advanced-link'><a href="https://banger.fm/#/app">Try advanced mode</a></span>
+    <span class='advanced-link'><a href="https://bloop.elialbert.com/#/app">Try advanced mode</a></span>
   </div>
 </template>
 
